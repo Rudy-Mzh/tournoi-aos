@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournoi AoS - La Porte de Poitiers</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .faction-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .tab-active {
+            background: #667eea;
+            color: white;
+        }
+        .threat-critical { background: #fecaca; color: #7f1d1d; border-left: 4px solid #dc2626; }
+        .threat-high { background: #fee2e2; color: #991b1b; }
+        .threat-medium { background: #fef3c7; color: #92400e; }
+        .threat-low { background: #dcfce7; color: #166534; }
+        .impact-critical { border-left: 4px solid #dc2626; }
+        .impact-important { border-left: 4px solid #f59e0b; }
+        .impact-moderate { border-left: 4px solid #10b981; }
+        .updated { 
+            background: #dcfce7; 
+            color: #166534; 
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 2px solid #16a34a;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const STORAGE_KEY = 'tournoi_aos_edits';
+
+        function loadEdits() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                return saved ? JSON.parse(saved) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveEdits(edits) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(edits));
+            } catch (e) {
+                console.error('Erreur sauvegarde:', e);
+            }
+        }
+
+        const playersDataOriginal = [
+            // 1. Simon - Sylvaneth
+            {
+                id: 1,
+                name: "Simon Midy",
+                nickname: "Mictlantecuhtli",
+                faction: "Sylvaneth",
+                formation: "Wargrove of the Burgeoning",
+                formationDescription: "Formation axée sur la croissance et l'expansion rapide. Bonus de régénération et synergies avec les Wyldwoods.",
+                points: 1990,
+                drops: 4,
+                battleTactics: ["Scouting Force", "Restless Energy"],
+                spellLore: "Lore of the Deepwood",
+                spellLoreDescription: [
+                    "Treesong : Invoque de nouveaux Awakened Wyldwoods ou soigne ceux existants",
+                    "Wrathful Spirits : Améliore le Rend (+1) des armes de mêlée proches d'un Wyldwood",
+                    "The Dwellers Below : Racines et tentacules infligeant blessures mortelles"
+                ],
+                manifestationLore: "Aetherwrought Machineries",
+                manifestationLoreDescription: [
+                    "Chronomantic Cogs : Manipulation du temps",
+                    "Autres manifestations génériques"
+                ],
+                terrain: "Awakened Wyldwood",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Warsong Revenant", points: 220, reinforced: false, role: "General", threat: "high", notes: "General + Spellsinger (20pts)" },
+                            { name: "Dryads", points: 180, reinforced: true, role: "Battleline", threat: "medium" },
+                            { name: "Tree-Revenants", points: 90, reinforced: false, role: "Support", threat: "low" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Branchwych", points: 110, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Kurnoth Hunters with Scythes", points: 380, reinforced: true, role: "Elite", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Drycha Hamadreth (SoG)", points: 300, reinforced: false, role: "Monster", threat: "critical", notes: "Scourge of Ghyran" },
+                            { name: "Revenant Seekers (SoG)", points: 230, reinforced: false, role: "Fast Attack", threat: "high" },
+                            { name: "Spite-Revenants", points: 160, reinforced: true, role: "Infantry", threat: "medium" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 3",
+                        units: [
+                            { name: "Spirit of Durthu", points: 320, reinforced: false, role: "Monster", threat: "critical", notes: "Glamourweave" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Glamourweave", unit: "Spirit of Durthu", impact: "important", effect: "Protection améliorée" },
+                    { type: "Enhancement", name: "Spellsinger", unit: "Warsong Revenant", impact: "moderate", effect: "+20pts amélioration magique" }
+                ],
+                analysis: {
+                    strengths: "Mobilité via Wyldwoods, régénération D3, unités puissantes (Drycha, Durthu)",
+                    weaknesses: "Dépendant des Wyldwoods, vulnérable au tir de masse",
+                    keyThreats: ["Drycha Hamadreth", "Spirit of Durthu", "Kurnoth Hunters"],
+                    tacticalNotes: "Contrôler les Wyldwoods = neutraliser 50% de leur mobilité"
+                }
+            },
+
+            // 2. Xavier - Kharadron Overlords
+            {
+                id: 2,
+                name: "Xavier Pateau",
+                nickname: "Xato",
+                faction: "Kharadron Overlords",
+                formation: "Endrineers Guild Expeditionary Force",
+                formationDescription: "Force expéditionnaire des ingénieurs. Bonus de réparation et redéploiement des unités volantes.",
+                points: 2000,
+                drops: 3,
+                battleTactics: ["Master the Paths", "Restless Energy"],
+                terrain: "Zontari Endrin Dock (20 pts)",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Drekki Flynt", points: 130, reinforced: false, role: "General", threat: "medium" },
+                            { name: "Arkanaut Frigate", points: 300, reinforced: false, role: "War Machine", threat: "critical", notes: "Zonbarcorp Dealbreaker Battle Ram" },
+                            { name: "6x Skywardens", points: 260, reinforced: true, role: "Fast Attack", threat: "high" },
+                            { name: "5x Vongrim Harpoon Crew", points: 110, reinforced: false, role: "Artillery", threat: "medium" },
+                            { name: "6x Skywardens", points: 260, reinforced: true, role: "Fast Attack", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Codewright", points: 80, reinforced: false, role: "Hero", threat: "medium", notes: "Voidstone Orb" },
+                            { name: "5x Grundstok Thunderers", points: 130, reinforced: false, role: "Elite", threat: "high", notes: "2x Mortar/Aethercannon" },
+                            { name: "Grundstok Gunhauler", points: 160, reinforced: false, role: "War Machine", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Aether-Khemist", points: 120, reinforced: false, role: "Hero", threat: "medium", notes: "Shrewd Opportunist" },
+                            { name: "20x Arkanaut Company", points: 180, reinforced: true, role: "Battleline", threat: "medium", notes: "4x Heavy Weapon, 2x Skypike" },
+                            { name: "5x Vongrim Salvagers", points: 120, reinforced: false, role: "Support", threat: "low" },
+                            { name: "5x Vongrim Salvagers", points: 120, reinforced: false, role: "Support", threat: "low" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Voidstone Orb", unit: "Codewright", impact: "important", effect: "Anti-magie" },
+                    { type: "Trait", name: "Shrewd Opportunist", unit: "Aether-Khemist", impact: "important", effect: "Buff attaque" }
+                ],
+                analysis: {
+                    strengths: "Tir puissant, mobilité aérienne excellente, flexibilité",
+                    weaknesses: "Fragile au corps-à-corps, dépendant du positionnement",
+                    keyThreats: ["Arkanaut Frigate", "Skywardens x2", "Grundstok Thunderers"],
+                    tacticalNotes: "Armée de tir mobile. Neutraliser l'artillerie prioritaire. Voidstone Orb = danger anti-magie"
+                }
+            },
+
+            // 3. Thibault - Daughters of Khaine
+            {
+                id: 3,
+                name: "Thibault Fournier",
+                nickname: "Yaratchiku",
+                faction: "Daughters of Khaine",
+                formation: "Scáthcoven",
+                formationDescription: "Coven des ombres. Formation élite Morathi + Blood Sisters. Bonus sauvegardes et télé portation.",
+                points: 2000,
+                drops: 2,
+                battleTactics: ["Intercept and Recover", "Restless Energy"],
+                spellLore: "Lore of Shadows",
+                spellLoreDescription: [
+                    "✅ Mirror of Smoke (CV 6): +1 save contre tir/missiles pour 1 unité friendly dans 12\"",
+                    "✅ Enfeebling Foe (CV 7): -1 Attaque sur armes de mêlée pour 1 unité ennemie dans 12\"",
+                    "✅ The Withering (CV 8): -1 Toughness pour 1 unité ennemie dans 18\""
+                ],
+                prayerLore: "Prayers of the Khainite Cult",
+                spellLoreDescription: [
+                    "✅ Catechism of Murder (BV 4): +1 Rend pour 1 unité Daughters of Khaine dans 12\"",
+                    "✅ Blessing of Khaine (BV 4): Ward 6+ pour 1 unité Daughters of Khaine dans 12\"",
+                    "✅ Martyrs Sacrifice (BV 4): D3 MW sur unité ennemie si hero Khaine meurt à 3\" ou moins"
+                ],
+                manifestationLore: "Manifestations of Khaine",
+                manifestationLoreDescription: [
+                    "Avatar of Khaine : Manifestation de guerre Khainite"
+                ],
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Morathi-Khaine", points: 760, reinforced: false, role: "General", threat: "critical", notes: "DOUBLE FORME!" },
+                            { name: "Blood Sisters", points: 280, reinforced: true, role: "Elite", threat: "critical" },
+                            { name: "Blood Sisters", points: 280, reinforced: true, role: "Elite", threat: "critical" },
+                            { name: "Blood Sisters", points: 280, reinforced: true, role: "Elite", threat: "critical" },
+                            { name: "The Shadow Queen", points: 0, reinforced: false, role: "Monster", threat: "critical", notes: "Forme 2 Morathi" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Hag Queen", points: 140, reinforced: false, role: "Priest", threat: "medium", notes: "Zealous Orator + Khainite Pendant" },
+                            { name: "Avatar of Khaine", points: 110, reinforced: false, role: "Manifestation", threat: "medium" },
+                            { name: "Doomfire Warlocks", points: 150, reinforced: false, role: "Fast Attack", threat: "medium" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Khainite Pendant", unit: "Hag Queen", impact: "important", effect: "Protection prayers" },
+                    { type: "Trait", name: "Zealous Orator", unit: "Hag Queen", impact: "important", effect: "Buff prières" },
+                    { type: "Special", name: "Morathi Double Form", unit: "Morathi", impact: "critical", effect: "2 FORMES = 2 activations!!! Max 3 dégâts/phase" }
+                ],
+                analysis: {
+                    strengths: "MORATHI quasi-immortelle (3 dégâts max/phase), 3x Blood Sisters renforcées",
+                    weaknesses: "Peu de drops (2), vulnérable alpha strike si Morathi focus",
+                    keyThreats: ["MORATHI (priorité absolue)", "3x Blood Sisters (poison mortel)"],
+                    tacticalNotes: "⚠️ MORATHI = FOCUS ABSOLU. Nécessite concentration de feu sur plusieurs phases. Blood Sisters = poison dangereux."
+                }
+            },
+
+            // 4. Romain - Stormcast Eternals
+            {
+                id: 4,
+                name: "Romain Pouyé",
+                nickname: "Valdak",
+                faction: "Stormcast Eternals",
+                formation: "Sentinels of the Bleak Citadels",
+                formationDescription: "Sentinelles défensives. Bonus résistance et contre-attaque via lightning strikes.",
+                points: 2000,
+                drops: 4,
+                battleTactics: ["Wrathful Cycles", "Restless Energy"],
+                spellLore: "Lore of the Storm",
+                spellLoreDescription: [
+                    "✅ Lightning Bolt (CV 5): D3 MW sur 1 unité ennemie visible dans 18\", D6 MW si roulé 10+",
+                    "✅ Stormcaller (CV 6): +1 Charge pour 1 unité Stormcast dans 12\"",
+                    "✅ Celestial Blades (CV 7): +1 Rend armes mêlée pour 1 unité Stormcast dans 12\""
+                ],
+                prayerLore: "Prayers of the Stormhosts",
+                prayerLoreDescription: [
+                    "✅ Bless Weapons (BV 4): +1 Wound armes pour 1 unité Stormcast dans 18\"",
+                    "✅ God-King's Aspect (BV 5): Réroll charges ratées pour unités Stormcast dans 12\"",
+                    "✅ Translocation (BV 6): Remove + redeploy 1 unité Stormcast dans 12\" du priest"
+                ],
+                manifestationLore: "Manifestations of the Storm",
+                manifestationLoreDescription: [
+                    "Manifestations liées aux tempêtes (non détaillé)"
+                ],
+                terrain: "Stormreach Portal (20pts)",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Ionus Cryptborn", points: 380, reinforced: false, role: "General", threat: "critical", notes: "Warden of Lost Souls" },
+                            { name: "Lord-Terminos", points: 140, reinforced: false, role: "Hero", threat: "high", notes: "Quicksilver Draught + Legendary Tenacity" },
+                            { name: "Reclusians", points: 280, reinforced: true, role: "Elite", threat: "high" },
+                            { name: "Vanguard-Palladors (Javelins)", points: 480, reinforced: true, role: "Fast Attack", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Knight-Arcanum", points: 120, reinforced: false, role: "Wizard", threat: "medium" },
+                            { name: "Liberators", points: 90, reinforced: false, role: "Battleline", threat: "low" },
+                            { name: "Liberators", points: 90, reinforced: false, role: "Battleline", threat: "low" },
+                            { name: "Vigilors", points: 140, reinforced: false, role: "Support", threat: "medium" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Knight-Judicator + Gryph-hounds", points: 130, reinforced: false, role: "Hero", threat: "medium" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 3",
+                        units: [
+                            { name: "Knight-Judicator + Gryph-hounds", points: 130, reinforced: false, role: "Hero", threat: "medium" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Quicksilver Draught", unit: "Lord-Terminos", impact: "important", effect: "Vitesse" },
+                    { type: "Trait", name: "Legendary Tenacity", unit: "Lord-Terminos", impact: "important", effect: "Résistance" }
+                ],
+                analysis: {
+                    strengths: "Ionus = powerhouse, cavalerie mobile, résilience",
+                    weaknesses: "Peu de battleline, dépendant des héros",
+                    keyThreats: ["Ionus Cryptborn", "Vanguard-Palladors", "Lord-Terminos"],
+                    tacticalNotes: "Ionus prioritaire. Cavalerie rapide = harcèlement. Portal = mobilité"
+                }
+            },
+
+            // 5. Maxime - Disciples of Tzeentch
+            {
+                id: 5,
+                name: "Maxime Pichard",
+                nickname: "Draz",
+                faction: "Disciples of Tzeentch",
+                formation: "Wyrdflame Host",
+                formationDescription: "Hôte de la flamme changeante. Bonus aux sorts de feu et manipulation du destin.",
+                points: 1990,
+                drops: 2,
+                battleTactics: ["Restless Energy", "Wrathful Cycles"],
+                spellLore: "Lore of Change",
+                spellLoreDescription: [
+                    "✅ Bolt of Change (CV 7): D3+3 MW sur 1 unité ennemie visible dans 18\"",
+                    "✅ Arcane Transformation (CV 7): +1 save et ignore modificateurs négatifs de move pour 1 unité Tzeentch dans 18\"",
+                    "✅ Tzeentch's Firestorm (CV 7): D3 MW sur jusqu'à 3 unités ennemies différentes dans 18\""
+                ],
+                manifestationLore: "Morbid Conjuration",
+                manifestationLoreDescription: [
+                    "Manifestations diverses du chaos"
+                ],
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Kairos Fateweaver", points: 420, reinforced: false, role: "General", threat: "critical", notes: "Oracle du destin" },
+                            { name: "Burning Chariot", points: 100, reinforced: false, role: "Monster", threat: "medium" },
+                            { name: "Chaos Spawn", points: 60, reinforced: false, role: "Beast", threat: "low" },
+                            { name: "Flamers", points: 120, reinforced: false, role: "Elite", threat: "high" },
+                            { name: "The Changeling", points: 160, reinforced: false, role: "Hero", threat: "high", notes: "Infiltration" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Lord of Change", points: 360, reinforced: false, role: "Monster", threat: "critical", notes: "Nexus of Fate, Mutating Blade, Baleful Sword" },
+                            { name: "Blue & Brimstone Horrors", points: 280, reinforced: true, role: "Battleline", threat: "medium" },
+                            { name: "Changecaster", points: 110, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Pink Horrors", points: 320, reinforced: true, role: "Battleline", threat: "high" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Nexus of Fate", unit: "Lord of Change", impact: "critical", effect: "Manipulation destin" },
+                    { type: "Weapon", name: "Mutating Blade", unit: "Lord of Change", impact: "important", effect: "Arme améliorée" }
+                ],
+                analysis: {
+                    strengths: "Magie puissante (Kairos + LoC), manipulation du destin, Horrors régénérants",
+                    weaknesses: "Peu de drops, vulnérable au corps-à-corps",
+                    keyThreats: ["Kairos Fateweaver", "Lord of Change", "Pink Horrors"],
+                    tacticalNotes: "Kairos = priorité. Horrors se divisent = focus fire nécessaire. Changeling = infiltrateur"
+                }
+            },
+
+            // 6. Robert - Skaven
+            {
+                id: 6,
+                name: "Robert Jenkins",
+                nickname: "RobJenx",
+                faction: "Skaven",
+                formation: "Fleshmeld Menagerie",
+                formationDescription: "Ménagerie de chair mutée. Bonus aux monstres et créatures mutantes.",
+                points: 1970,
+                drops: 3,
+                battleTactics: ["Intercept and Recover", "Restless Energy"],
+                spellLore: "Lore of Ruin",
+                spellLoreDescription: [
+                    "✅ Warp Lightning (CV 7): D3 MW sur 1 unité ennemie visible dans 13\", +D3 MW si 10+",
+                    "✅ Skitterleap (CV 6): Téléporte 1 hero Skaven (pas named/mount/monstre) dans 13\" ailleurs sur table à 9\"+ ennemis",
+                    "✅ Death Frenzy (CV 6): Si hero Skaven meurt, peut faire Shoot/Fight au début de charge phase suivante"
+                ],
+                prayerLore: "Noxious Prayers",
+                prayerLoreDescription: [
+                    "✅ Rabid Fervor (BV 4): +1 Attack armes mêlée pour 1 unité Skaven dans 13\"",
+                    "✅ Pestilent Breath (BV 4): Roll D6 pour chaque modèle ennemi dans 6\", MW sur 6+",
+                    "✅ Plague (BV 5): -1 Toughness unité ennemie dans 13\""
+                ],
+                manifestationLore: "Manifestations of Doom",
+                manifestationLoreDescription: [
+                    "Manifestations liées au Rat Cornu"
+                ],
+                terrain: "Gnawhole",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Vizzik Skour", points: 380, reinforced: false, role: "General", threat: "critical", notes: "Prophet of Horned Rat" },
+                            { name: "Clanrats", points: 150, reinforced: false, role: "Battleline", threat: "low" },
+                            { name: "Clanrats", points: 150, reinforced: false, role: "Battleline", threat: "low" },
+                            { name: "Brood Terror (SoG)", points: 240, reinforced: false, role: "Monster", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Master Moulder", points: 80, reinforced: false, role: "Hero", threat: "low" },
+                            { name: "Rat Ogors", points: 280, reinforced: true, role: "Elite", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Grey Seer on Screaming Bell (SoG)", points: 330, reinforced: false, role: "Hero", threat: "critical", notes: "Skavenbrew, Fleshmeddler" },
+                            { name: "Master Moulder", points: 80, reinforced: false, role: "Hero", threat: "low" },
+                            { name: "Rat Ogors", points: 280, reinforced: true, role: "Elite", threat: "high" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Skavenbrew", unit: "Grey Seer", impact: "important", effect: "Potion" },
+                    { type: "Trait", name: "Fleshmeddler", unit: "Grey Seer", impact: "important", effect: "Buff monstres" }
+                ],
+                analysis: {
+                    strengths: "Rat Ogors x2 renforcés, Screaming Bell puissant, Vizzik",
+                    weaknesses: "Clanrats faibles, dépendant des monstres",
+                    keyThreats: ["Vizzik Skour", "Grey Seer on Bell", "2x Rat Ogors reinforced"],
+                    tacticalNotes: "Focus les Rat Ogors. Screaming Bell = buff massif. Gnawhole = téléportation"
+                }
+            },
+
+            // 7. Yann - Sylvaneth
+            {
+                id: 7,
+                name: "Yann Hascoet",
+                nickname: "Zoko",
+                faction: "Sylvaneth",
+                formation: "Wargrove of Everdusk",
+                formationDescription: "Bosquet du crépuscule. Bonus en fin de tour et synergies nocturnes.",
+                points: 2000,
+                drops: 2,
+                battleTactics: ["Scouting Force", "Master The Paths"],
+                spellLore: "Lore of the Deepwood",
+                spellLoreDescription: [
+                    "Treesong : Invoque de nouveaux Awakened Wyldwoods ou soigne ceux existants",
+                    "Wrathful Spirits : Améliore le Rend (+1) des armes de mêlée proches d'un Wyldwood",
+                    "The Dwellers Below : Racines et tentacules infligeant blessures mortelles"
+                ],
+                manifestationLore: "Manifestations of the Deepwood",
+                manifestationLoreDescription: [
+                    "Spiteswarm Hive : Nuée d'insectes",
+                    "Vengeful Skullroot : Arbre maudit",
+                    "Gladewyrm : Serpent de forêt"
+                ],
+                terrain: "Awakened Wyldwood",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Warsong Revenant", points: 220, reinforced: false, role: "General", threat: "high", notes: "General, Spellsinger (20pts), Ranu's Lamentiri" },
+                            { name: "Kurnoth Hunters (Greatswords)", points: 420, reinforced: true, role: "Elite", threat: "critical" },
+                            { name: "Kurnoth Hunters (Scythes)", points: 380, reinforced: true, role: "Elite", threat: "critical" },
+                            { name: "Kurnoth Hunters (Scythes)", points: 380, reinforced: true, role: "Elite", threat: "critical" },
+                            { name: "Revenant Seekers (SoG)", points: 230, reinforced: false, role: "Fast Attack", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Branchwych", points: 110, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Dryads", points: 90, reinforced: false, role: "Battleline", threat: "low" },
+                            { name: "Spite-Revenants", points: 80, reinforced: false, role: "Infantry", threat: "low" },
+                            { name: "Tree-Revenants", points: 90, reinforced: false, role: "Support", threat: "low" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Ranu's Lamentiri", unit: "Warsong Revenant", impact: "important", effect: "Artefact puissant" },
+                    { type: "Enhancement", name: "Spellsinger", unit: "Warsong Revenant", impact: "moderate", effect: "+20pts magie" }
+                ],
+                analysis: {
+                    strengths: "3x Kurnoth Hunters reinforced = ÉNORME damage, mobilité Wyldwood",
+                    weaknesses: "Peu de drops (2), concentration des points sur Kurnoth",
+                    keyThreats: ["3x Kurnoth Hunters (1180 pts!)", "Revenant Seekers"],
+                    tacticalNotes: "⚠️ KURNOTH MASS. Focus fire absolu nécessaire. Elite army pure."
+                }
+            },
+
+            // 8. Grégory - Ogor Mawtribes
+            {
+                id: 8,
+                name: "Grégory Perlade",
+                nickname: "Yroge",
+                faction: "Ogor Mawtribes",
+                formation: "Beast Handlers",
+                formationDescription: "Maîtres des bêtes. Bonus aux monstres montés et créatures.",
+                points: 2000,
+                drops: 4,
+                battleTactics: ["Intercept and Recover", "Restless Energy"],
+                spellLore: "Lore of the Gut-magic",
+                spellLoreDescription: [
+                    "✅ Ribcracker (CV 6): -1 Save pour 1 unité ennemie dans 18\"",
+                    "✅ Fleshcrave Curse (CV 7): D3 MW sur 1 unité ennemie dans 18\", si tue modèle heal D3 wounds sur Butcher",
+                    "✅ Bloodgruel (CV 6): +1 Wound rolls pour armes mêlée d'1 unité Mawtribes dans 12\""
+                ],
+                prayerLore: "Everwinter Prayers",
+                prayerLoreDescription: [
+                    "✅ Keening Gale (BV 5): -1 Charge aux ennemis dans 18\"",
+                    "✅ Call of the Blizzard (BV 4): D3 MW sur unité ennemie dans 18\", roll D6 par modèle MW sur 6",
+                    "✅ Pulverising Hailstorm (BV 6): 1 unité Ogor dans 18\" auto-wound sur 6+ to hit jusqu'à prochain hero phase"
+                ],
+                manifestationLore: "Primal Energy",
+                manifestationLoreDescription: [
+                    "Manifestations primitives de Ghur"
+                ],
+                terrain: "Mawpit",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Tyrant", points: 130, reinforced: false, role: "General", threat: "high", notes: "General, Fang of Ghur" },
+                            { name: "Ironguts", points: 480, reinforced: true, role: "Elite", threat: "critical" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Frostlord on Stonehorn", points: 330, reinforced: false, role: "Monster", threat: "critical", notes: "Great Gutlord" },
+                            { name: "Ironblaster (SoG)", points: 180, reinforced: false, role: "War Machine", threat: "high" },
+                            { name: "Ironblaster (SoG)", points: 180, reinforced: false, role: "War Machine", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Butcher", points: 150, reinforced: false, role: "Wizard", threat: "medium" },
+                            { name: "Ogor Gluttons", points: 230, reinforced: false, role: "Battleline", threat: "medium" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 3",
+                        units: [
+                            { name: "Huskard on Stonehorn", points: 300, reinforced: false, role: "Monster", threat: "critical", notes: "Mage-swallower, Chaintrap" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Fang of Ghur", unit: "Tyrant", impact: "important", effect: "Arme puissante" },
+                    { type: "Trait", name: "Great Gutlord", unit: "Frostlord", impact: "important", effect: "Buff général" },
+                    { type: "Trait", name: "Mage-swallower", unit: "Huskard", impact: "important", effect: "Anti-magie" }
+                ],
+                analysis: {
+                    strengths: "2 Stonehorns, Ironguts reinforced, tir Ironblasters",
+                    weaknesses: "Lent, vulnérable contrôle objectifs",
+                    keyThreats: ["Frostlord on Stonehorn", "Huskard on Stonehorn", "Ironguts reinforced"],
+                    tacticalNotes: "Stonehorns = priorité. Ironblasters = tir dangereux. Contrôle objectifs = clé"
+                }
+            },
+
+            // 9. Rudy - Sylvaneth
+            {
+                id: 9,
+                name: "Rudy Mezoughi",
+                nickname: "Rudy_Mzh",
+                faction: "Sylvaneth",
+                formation: "Wargrove of the Burgeoning",
+                formationDescription: "Formation axée sur la croissance et l'expansion rapide. Bonus de régénération.",
+                points: 2000,
+                drops: 4,
+                battleTactics: ["Intercept and Recover", "Restless Energy"],
+                spellLore: "Lore of the Deepwood",
+                spellLoreDescription: [
+                    "Treesong : Invoque de nouveaux Awakened Wyldwoods ou soigne ceux existants",
+                    "Wrathful Spirits : Améliore le Rend (+1) des armes de mêlée proches d'un Wyldwood",
+                    "The Dwellers Below : Racines et tentacules infligeant blessures mortelles"
+                ],
+                manifestationLore: "Manifestations of the Deepwood",
+                manifestationLoreDescription: [
+                    "Spiteswarm Hive : Nuée d'insectes",
+                    "Vengeful Skullroot : Arbre maudit",
+                    "Gladewyrm : Serpent de forêt"
+                ],
+                terrain: "Awakened Wyldwood",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Warsong Revenant", points: 200, reinforced: false, role: "General", threat: "high", notes: "Warsinger, Ranu's Lamentiri" },
+                            { name: "Kurnoth Hunters (Greatbows)", points: 200, reinforced: false, role: "Elite", threat: "medium" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Belthanos, First Thorn", points: 350, reinforced: false, role: "Monster", threat: "critical", notes: "Héros légendaire" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Drycha Hamadreth (SoG)", points: 300, reinforced: false, role: "Monster", threat: "critical" },
+                            { name: "Revenant Seekers (SoG)", points: 460, reinforced: true, role: "Fast Attack", threat: "critical" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 3",
+                        units: [
+                            { name: "Branchwych", points: 110, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Kurnoth Hunters (Scythes)", points: 380, reinforced: true, role: "Elite", threat: "high" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Ranu's Lamentiri", unit: "Warsong Revenant", impact: "important", effect: "Artefact" },
+                    { type: "Enhancement", name: "Warsinger", unit: "Warsong Revenant", impact: "moderate", effect: "+2\" mouvement" }
+                ],
+                analysis: {
+                    strengths: "Belthanos + Drycha = double menace monstre, Revenant Seekers reinforced",
+                    weaknesses: "Concentration points sur quelques unités",
+                    keyThreats: ["Belthanos", "Drycha", "Revenant Seekers reinforced"],
+                    tacticalNotes: "Belthanos = run+charge aura. Drycha + Seekers = combo mortel"
+                }
+            },
+
+            // 10. Jean-Yves - Blades of Khorne
+            {
+                id: 10,
+                name: "Jean-Yves Moreau",
+                nickname: "Le-Coronel",
+                faction: "Blades of Khorne",
+                formation: "The Baleful Lords (Army of Renown)",
+                formationDescription: "ARMÉE DE RENOM : 5 Bloodthirsters uniquement. Puissance brute maximale.",
+                points: 2000,
+                drops: 5,
+                battleTactics: ["Master The Paths", "Intercept and Recover"],
+                prayerLore: "Blood Blessings of Khorne",
+                prayerLoreDescription: [
+                    "✅ Bronze Flesh (BV 4): 5+ Ward pour 1 unité Khorne dans 16\"",
+                    "✅ Blood Sacrifice (BV 5): Inflige D3 MW sur propre unité dans 16\" puis elle +1 Attack jusqu'à prochain hero phase",
+                    "✅ Brazen Fury (BV 4): +1 Charge pour 1 unité Khorne dans 16\""
+                ],
+                manifestationLore: "Judgements of Khorne",
+                manifestationLoreDescription: [
+                    "Hexgorger Skulls: Anti-magic skulls",
+                    "Bleeding Icon: Icon sanglant",
+                    "Wrath-Axe: Hache de colère"
+                ],
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Bloodthirster of Unfettered Fury", points: 390, reinforced: false, role: "General", threat: "critical", notes: "Crown of Slaughterborn" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Skarbrand", points: 430, reinforced: false, role: "Monster", threat: "critical", notes: "LÉGENDE" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Bloodthirster of Unfettered Fury", points: 390, reinforced: false, role: "Monster", threat: "critical" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 3",
+                        units: [
+                            { name: "Bloodthirster of Unfettered Fury", points: 390, reinforced: false, role: "Monster", threat: "critical" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 4",
+                        units: [
+                            { name: "Wrath of Khorne Bloodthirster", points: 400, reinforced: false, role: "Monster", threat: "critical", notes: "Unrivalled Battlelust" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Crown of Slaughterborn", unit: "Bloodthirster (General)", impact: "critical", effect: "Buff massif" },
+                    { type: "Trait", name: "Unrivalled Battlelust", unit: "Wrath BT", impact: "critical", effect: "Combat amélioré" }
+                ],
+                analysis: {
+                    strengths: "5 BLOODTHIRSTERS VOLANTS. Puissance de frappe démentielle. Régénération.",
+                    weaknesses: "Aucune infanterie. Vulnérable contrôle objectifs. Peu de drops.",
+                    keyThreats: ["SKARBRAND", "4x autres Bloodthirsters", "TOUS"],
+                    tacticalNotes: "🔥 CAUCHEMAR ABSOLU. Impossible à ignorer. Contrôle objectifs = SEULE solution. Ne PAS combattre directement."
+                }
+            },
+
+            // 11. Geoffrey - Nighthaunt
+            {
+                id: 11,
+                name: "Geoffrey Mancuso",
+                nickname: "Karrman",
+                faction: "Nighthaunt",
+                formation: "Death Stalkers",
+                formationDescription: "Traqueurs de mort. Bonus d'embuscade et surprise.",
+                points: 2000,
+                drops: 3,
+                battleTactics: ["Scouting Force", "Attuned to Ghyran"],
+                spellLore: "Lore of the Underworlds",
+                spellLoreDescription: [
+                    "✅ Lifestealer (CV 6): D6 MW sur unité ennemie dans 12\", si tue modèle heal D3 sur caster",
+                    "✅ Spectral Tether (CV 6): -3\" Move pour 1 unité ennemie dans 18\"",
+                    "✅ Shademist (CV 5): 1 unité Nighthaunt dans 18\" ignore cover jusqu'au prochain hero phase"
+                ],
+                manifestationLore: "Infernal Sorceries",
+                manifestationLoreDescription: [
+                    "Manifestations démoniaques génériques"
+                ],
+                terrain: "Nexus of Grief",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Lady Olynder", points: 300, reinforced: false, role: "General", threat: "critical", notes: "Mortarch of Grief" },
+                            { name: "Pyregheists", points: 150, reinforced: false, role: "Elite", threat: "high" },
+                            { name: "Pyregheists", points: 150, reinforced: false, role: "Elite", threat: "high" },
+                            { name: "Pyregheists", points: 150, reinforced: false, role: "Elite", threat: "high" },
+                            { name: "Spirit Torment", points: 120, reinforced: false, role: "Hero", threat: "medium" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Krulghast Cruciator", points: 140, reinforced: false, role: "Hero", threat: "medium", notes: "Mirror of Echoing Failures" },
+                            { name: "Pyregheists", points: 150, reinforced: false, role: "Elite", threat: "high" },
+                            { name: "Pyregheists", points: 150, reinforced: false, role: "Elite", threat: "high" },
+                            { name: "Pyregheists", points: 150, reinforced: false, role: "Elite", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Lord Vitriolic", points: 120, reinforced: false, role: "Hero", threat: "medium", notes: "Deathly Possessor" },
+                            { name: "Black Coach (SoG)", points: 300, reinforced: false, role: "Monster", threat: "critical" },
+                            { name: "Spirit Hosts", points: 120, reinforced: false, role: "Support", threat: "low" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Mirror of Echoing Failures", unit: "Krulghast", impact: "important", effect: "Debuff" },
+                    { type: "Trait", name: "Deathly Possessor", unit: "Lord Vitriolic", impact: "important", effect: "Possession" }
+                ],
+                analysis: {
+                    strengths: "6x Pyregheists, Lady Olynder, éthéré (ignore terrain), Black Coach",
+                    weaknesses: "Vulnérable au tir magique, dépendant de Lady Olynder",
+                    keyThreats: ["Lady Olynder", "6x Pyregheists", "Black Coach"],
+                    tacticalNotes: "Pyregheists = MSU. Lady Olynder = debuff massif. Éthéré = traversent terrain"
+                }
+            },
+
+            // 12. Aidan - Sylvaneth
+            {
+                id: 12,
+                name: "Aidan Dousson",
+                nickname: "Murderface",
+                faction: "Sylvaneth",
+                formation: "Wargrove of the Burgeoning",
+                formationDescription: "Formation axée sur la croissance et l'expansion rapide. Bonus de régénération.",
+                points: 2000,
+                drops: 5,
+                battleTactics: ["Wrathful Cycles", "Intercept and Recover"],
+                manifestationLore: "Aetherwrought Machineries",
+                manifestationLoreDescription: [
+                    "Chronomantic Cogs : Manipulation du temps",
+                    "Autres manifestations génériques"
+                ],
+                terrain: "Awakened Wyldwood",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Warsong Revenant", points: 200, reinforced: false, role: "General", threat: "high" },
+                            { name: "Revenant Seekers (SoG)", points: 230, reinforced: false, role: "Fast Attack", threat: "high" },
+                            { name: "Spiterider Lancers", points: 380, reinforced: true, role: "Fast Attack", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Belthanos, First Thorn", points: 350, reinforced: false, role: "Monster", threat: "critical" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Drycha Hamadreth (SoG)", points: 300, reinforced: false, role: "Monster", threat: "critical" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 3",
+                        units: [
+                            { name: "Branchwych", points: 110, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Tree-Revenants", points: 90, reinforced: false, role: "Support", threat: "low" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 4",
+                        units: [
+                            { name: "Spirit of Durthu", points: 340, reinforced: false, role: "Monster", threat: "critical", notes: "Spellsinger (20pts), Glamourweave" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Glamourweave", unit: "Spirit of Durthu", impact: "important", effect: "Protection" },
+                    { type: "Enhancement", name: "Spellsinger", unit: "Spirit of Durthu", impact: "moderate", effect: "+20pts magie" }
+                ],
+                analysis: {
+                    strengths: "Belthanos + Drycha + Durthu = triple menace monstre. Cavalerie rapide.",
+                    weaknesses: "Peu de battleline, drops élevés",
+                    keyThreats: ["Belthanos", "Drycha", "Spirit of Durthu"],
+                    tacticalNotes: "Triple monstre. Spiterider Lancers = cavalerie choc. Belthanos = aura run+charge"
+                }
+            },
+
+            // 13. Thomas - Nighthaunt
+            {
+                id: 13,
+                name: "Thomas Gomez",
+                nickname: "Gliiitchz",
+                faction: "Nighthaunt",
+                formation: "Death Stalkers",
+                formationDescription: "Traqueurs de mort. Bonus d'embuscade et surprise.",
+                points: 2000,
+                drops: 5,
+                battleTactics: ["Restless Energy", "Intercept and Recover"],
+                spellLore: "Lore of the Underworlds",
+                spellLoreDescription: [
+                    "✅ Lifestealer (CV 6): D6 MW sur unité ennemie dans 12\", si tue modèle heal D3 sur caster",
+                    "✅ Spectral Tether (CV 6): -3\" Move pour 1 unité ennemie dans 18\"",
+                    "✅ Shademist (CV 5): 1 unité Nighthaunt dans 18\" ignore cover jusqu'au prochain hero phase"
+                ],
+                manifestationLore: "Infernal Sorceries",
+                manifestationLoreDescription: [
+                    "Manifestations démoniaques génériques"
+                ],
+                terrain: "Nexus of Grief",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Reikenor the Grimhailer", points: 240, reinforced: false, role: "General", threat: "high" },
+                            { name: "Black Coach", points: 230, reinforced: false, role: "Monster", threat: "critical" },
+                            { name: "Scriptor Mortis", points: 120, reinforced: false, role: "Hero", threat: "medium" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Knight of Shrouds", points: 120, reinforced: false, role: "Hero", threat: "medium", notes: "Lightshard (20pts)" },
+                            { name: "Lord Vitriolic", points: 120, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Spirit Hosts", points: 120, reinforced: false, role: "Support", threat: "low" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Guardian of Souls", points: 160, reinforced: false, role: "Hero", threat: "medium", notes: "Ruler of Spectral Hosts (20pts)" },
+                            { name: "Craventhrone Guard", points: 100, reinforced: false, role: "Elite", threat: "medium" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 3",
+                        units: [
+                            { name: "Krulghast Cruciator", points: 140, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Myrmourn Banshees", points: 180, reinforced: true, role: "Elite", threat: "high" },
+                            { name: "Pyregheists", points: 150, reinforced: false, role: "Elite", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 4",
+                        units: [
+                            { name: "Krulghast Cruciator", points: 140, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Myrmourn Banshees", points: 180, reinforced: true, role: "Elite", threat: "high" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Lightshard of Harvest Moon", unit: "Knight of Shrouds", impact: "important", effect: "Éclairage" },
+                    { type: "Trait", name: "Ruler of Spectral Hosts", unit: "Guardian of Souls", impact: "important", effect: "Buff fantômes" }
+                ],
+                analysis: {
+                    strengths: "Black Coach, 2x Myrmourn Banshees (anti-magie), multi-héros",
+                    weaknesses: "Beaucoup de drops (5), fragile individuellement",
+                    keyThreats: ["Black Coach", "Myrmourn Banshees", "Reikenor"],
+                    tacticalNotes: "Myrmourn = anti-magie. Black Coach = chariot mortel. Éthéré = traversent terrain"
+                }
+            },
+
+            // 14. Guillaume - Daughters of Khaine
+            {
+                id: 14,
+                name: "Guillaume Milcent",
+                nickname: "G-1100",
+                faction: "Daughters of Khaine",
+                formation: "Scáthcoven",
+                formationDescription: "Coven des ombres. Formation élite Morathi. Bonus sauvegardes.",
+                points: 1990,
+                drops: 2,
+                battleTactics: ["Intercept and Recover", "Restless Energy"],
+                spellLore: "Lore of Shadows",
+                spellLoreDescription: [
+                    "✅ Mirror of Smoke (CV 6): +1 save contre tir/missiles pour 1 unité friendly dans 12\"",
+                    "✅ Enfeebling Foe (CV 7): -1 Attaque sur armes de mêlée pour 1 unité ennemie dans 12\"",
+                    "✅ The Withering (CV 8): -1 Toughness pour 1 unité ennemie dans 18\""
+                ],
+                prayerLore: "Prayers of the Khainite Cult",
+                prayerLoreDescription: [
+                    "✅ Catechism of Murder (BV 4): +1 Rend pour 1 unité Daughters of Khaine dans 12\"",
+                    "✅ Blessing of Khaine (BV 4): Ward 6+ pour 1 unité Daughters of Khaine dans 12\"",
+                    "✅ Martyrs Sacrifice (BV 4): D3 MW sur unité ennemie si hero Khaine meurt à 3\" ou moins"
+                ],
+                manifestationLore: "Aetherwrought Machineries",
+                manifestationLoreDescription: [
+                    "Chronomantic Cogs : Manipulation du temps",
+                    "Autres manifestations génériques"
+                ],
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Morathi-Khaine", points: 760, reinforced: false, role: "General", threat: "critical", notes: "DOUBLE FORME!" },
+                            { name: "Blood Sisters", points: 280, reinforced: true, role: "Elite", threat: "critical" },
+                            { name: "Blood Sisters", points: 280, reinforced: true, role: "Elite", threat: "critical" },
+                            { name: "Blood Stalkers", points: 260, reinforced: true, role: "Elite", threat: "high" },
+                            { name: "The Shadow Queen", points: 0, reinforced: false, role: "Monster", threat: "critical", notes: "Forme 2 Morathi" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Hag Queen", points: 140, reinforced: false, role: "Priest", threat: "medium", notes: "Zealous Orator, Khainite Pendant" },
+                            { name: "Doomfire Warlocks", points: 150, reinforced: false, role: "Fast Attack", threat: "medium" },
+                            { name: "Khainite Shadowstalkers", points: 120, reinforced: false, role: "Infantry", threat: "medium" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Khainite Pendant", unit: "Hag Queen", impact: "important", effect: "Protection" },
+                    { type: "Trait", name: "Zealous Orator", unit: "Hag Queen", impact: "important", effect: "Buff prières" },
+                    { type: "Special", name: "Morathi Double", unit: "Morathi", impact: "critical", effect: "2 formes, max 3 dégâts/phase" }
+                ],
+                analysis: {
+                    strengths: "MORATHI, 2x Blood Sisters + Blood Stalkers",
+                    weaknesses: "Peu de drops (2)",
+                    keyThreats: ["MORATHI", "2x Blood Sisters", "Blood Stalkers"],
+                    tacticalNotes: "Morathi = priorité absolue. Blood Stalkers = tir poison. Concentration feu nécessaire"
+                }
+            },
+
+            // 15. Antoine - Skaven
+            {
+                id: 15,
+                name: "Antoine Casanova",
+                nickname: "Rhotgarr",
+                faction: "Skaven",
+                formation: "Warpcog Convocation",
+                formationDescription: "Convocation des rouages corrompus. Bonus aux machines de guerre.",
+                points: 2000,
+                drops: 5,
+                battleTactics: ["Wrathful Cycles", "Restless Energy"],
+                spellLore: "Lore of Ruin",
+                spellLoreDescription: [
+                    "✅ Warp Lightning (CV 7): D3 MW sur 1 unité ennemie visible dans 13\", +D3 MW si 10+",
+                    "✅ Skitterleap (CV 6): Téléporte 1 hero Skaven (pas named/mount/monstre) dans 13\" ailleurs sur table à 9\"+ ennemis",
+                    "✅ Death Frenzy (CV 6): Si hero Skaven meurt, peut faire Shoot/Fight au début de charge phase suivante"
+                ],
+                prayerLore: "Noxious Prayers",
+                prayerLoreDescription: [
+                    "✅ Rabid Fervor (BV 4): +1 Attack armes mêlée pour 1 unité Skaven dans 13\"",
+                    "✅ Pestilent Breath (BV 4): Roll D6 pour chaque modèle ennemi dans 6\", MW sur 6+",
+                    "✅ Plague (BV 5): -1 Toughness unité ennemie dans 13\""
+                ],
+                manifestationLore: "Manifestations of Doom",
+                manifestationLoreDescription: [
+                    "Manifestations liées au Rat Cornu"
+                ],
+                terrain: "Gnawhole",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Grey Seer", points: 120, reinforced: false, role: "General", threat: "medium", notes: "Scurry Away" },
+                            { name: "Clanrats", points: 300, reinforced: true, role: "Battleline", threat: "medium" },
+                            { name: "Warplock Jezzails", points: 130, reinforced: false, role: "Elite", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Warlock Engineer", points: 110, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Doomwheel", points: 100, reinforced: false, role: "War Machine", threat: "high" },
+                            { name: "Doomwheel", points: 100, reinforced: false, role: "War Machine", threat: "high" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Grey Seer", points: 120, reinforced: false, role: "Hero", threat: "medium", notes: "Foulhide" },
+                            { name: "Rat Ogors", points: 140, reinforced: false, role: "Elite", threat: "high" },
+                            { name: "Stormfiends", points: 250, reinforced: false, role: "Elite", threat: "critical", notes: "Diverses armes" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 3",
+                        units: [
+                            { name: "Clawlord on Gnaw-beast", points: 110, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Clanrats", points: 150, reinforced: false, role: "Battleline", threat: "low" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 4",
+                        units: [
+                            { name: "Warlock Engineer", points: 110, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Ratling Warpblaster", points: 140, reinforced: false, role: "War Machine", threat: "high" },
+                            { name: "Warp Lightning Cannon", points: 120, reinforced: false, role: "War Machine", threat: "high" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Trait", name: "Scurry Away", unit: "Grey Seer (General)", impact: "moderate", effect: "Mobilité" },
+                    { type: "Trait", name: "Foulhide", unit: "Grey Seer", impact: "moderate", effect: "Protection" }
+                ],
+                analysis: {
+                    strengths: "Machines de guerre multiples (Doomwheels, canons), Stormfiends, Clanrats reinforced",
+                    weaknesses: "Beaucoup de drops (5), fragile individuellement",
+                    keyThreats: ["Stormfiends", "Warp Lightning Cannon", "Doomwheels"],
+                    tacticalNotes: "Machines = tir puissant. Stormfiends = élite. Gnawhole = téléportation"
+                }
+            },
+
+            // 16. Michael - Kharadron Overlords
+            {
+                id: 16,
+                name: "Michael Lout",
+                nickname: "Glacius",
+                faction: "Kharadron Overlords",
+                formation: "The Magnate's Crew (Army of Renown)",
+                formationDescription: "ARMÉE DE RENOM : Équipage du magnat. Bonus aux skyfarers.",
+                points: 1970,
+                drops: 2,
+                battleTactics: ["Intercept and Recover", "Scouting Force"],
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Brokk Grungsson", points: 260, reinforced: false, role: "General", threat: "critical", notes: "Lord-Magnate of Barak-Nar" },
+                            { name: "Arkanaut Frigate", points: 300, reinforced: false, role: "War Machine", threat: "critical" },
+                            { name: "Skywardens", points: 260, reinforced: true, role: "Fast Attack", threat: "high" },
+                            { name: "Skywardens", points: 260, reinforced: true, role: "Fast Attack", threat: "high" },
+                            { name: "Vongrim Salvagers", points: 120, reinforced: false, role: "Support", threat: "low" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Null-Khemist", points: 130, reinforced: false, role: "Hero", threat: "medium", notes: "Aerodynamism, Flanking Fire" },
+                            { name: "Skywardens", points: 260, reinforced: true, role: "Fast Attack", threat: "high" },
+                            { name: "Skywardens", points: 260, reinforced: true, role: "Fast Attack", threat: "high" },
+                            { name: "Vongrim Salvagers", points: 120, reinforced: false, role: "Support", threat: "low" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Trait", name: "Aerodynamism", unit: "Null-Khemist", impact: "important", effect: "Mobilité" },
+                    { type: "Trait", name: "Flanking Fire", unit: "Null-Khemist", impact: "important", effect: "Tir amélioré" }
+                ],
+                analysis: {
+                    strengths: "4x Skywardens reinforced, Brokk Grungsson, Frigate, mobilité aérienne max",
+                    weaknesses: "Peu de drops (2), vulnérable mêlée",
+                    keyThreats: ["Brokk Grungsson", "4x Skywardens", "Arkanaut Frigate"],
+                    tacticalNotes: "⚠️ SKYWARDENS MASS. Tir mobile aérien. Brokk = héros puissant. Frigate = plateforme"
+                }
+            },
+
+            // 17. Heloim - Blades of Khorne
+            {
+                id: 17,
+                name: "Heloim Le Quang",
+                nickname: "Aznahar",
+                faction: "Blades of Khorne",
+                formation: "Murderhost",
+                formationDescription: "Hôte meurtrier. Bonus au combat et Blood Tithe.",
+                points: 2000,
+                drops: 4,
+                battleTactics: ["Master the Paths", "Intercept and Recover"],
+                prayerLore: "Blood Blessings of Khorne",
+                prayerLoreDescription: [
+                    "✅ Bronze Flesh (BV 4): 5+ Ward pour 1 unité Khorne dans 16\"",
+                    "✅ Blood Sacrifice (BV 5): Inflige D3 MW sur propre unité dans 16\" puis elle +1 Attack jusqu'à prochain hero phase",
+                    "✅ Brazen Fury (BV 4): +1 Charge pour 1 unité Khorne dans 16\""
+                ],
+                manifestationLore: "Judgements of Khorne",
+                manifestationLoreDescription: [
+                    "Hexgorger Skulls: Anti-magic skulls",
+                    "Bleeding Icon: Icon sanglant",
+                    "Wrath-Axe: Hache de colère"
+                ],
+                terrain: "Skull Altar",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Skarbrand", points: 430, reinforced: false, role: "General", threat: "critical", notes: "LÉGENDE" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Wrath of Khorne Bloodthirster", points: 400, reinforced: false, role: "Monster", threat: "critical" },
+                            { name: "Bloodthirster of Insensate Rage", points: 410, reinforced: false, role: "Monster", threat: "critical", notes: "Ar'gath, Skull Collector" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Slaughterpriest", points: 130, reinforced: false, role: "Priest", threat: "medium" },
+                            { name: "Bloodreavers", points: 80, reinforced: false, role: "Battleline", threat: "low", notes: "Champion, Musician, Standard" },
+                            { name: "Bloodreavers", points: 80, reinforced: false, role: "Battleline", threat: "low", notes: "Champion, Musician, Standard" },
+                            { name: "Skullreapers", points: 180, reinforced: false, role: "Elite", threat: "high", notes: "Champion, Standard" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 3",
+                        units: [
+                            { name: "Bloodmaster", points: 120, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "Bloodletters", points: 170, reinforced: false, role: "Infantry", threat: "medium", notes: "Champion, Musician, Standard" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Weapon", name: "Ar'gath, King of Blades", unit: "Bloodthirster Insensate", impact: "critical", effect: "Arme légendaire" },
+                    { type: "Trait", name: "Skull Collector", unit: "Bloodthirster Insensate", impact: "important", effect: "Buff combat" }
+                ],
+                analysis: {
+                    strengths: "3 Bloodthirsters (Skarbrand + 2 autres), infanterie support",
+                    weaknesses: "Concentration points sur Bloodthirsters",
+                    keyThreats: ["Skarbrand", "Wrath BT", "Bloodthirster Insensate"],
+                    tacticalNotes: "3 Bloodthirsters mais avec support. Plus équilibré que Le-Coronel. Infanterie = objectifs"
+                }
+            },
+
+            // 18. Eudes - Seraphon (À COMPLÉTER)
+            {
+                id: 18,
+                name: "Eudes Delrieu",
+                nickname: "Linso",
+                faction: "Seraphon",
+                formation: "Sunclaw Starhost",
+                formationDescription: "Hôte de la griffe solaire. Bonus aux sauriens et cavalerie.",
+                points: 2000,
+                drops: 2,
+                battleTactics: ["Master the Paths", "Wrathful Cycles"],
+                spellLore: "Lore of Celestial Manipulation",
+                spellLoreDescription: [
+                    "✨ Mystical Unforging (CV 6, Unlimited) : -1 Rend aux armes d'une unité ennemie",
+                    "☄️ Comet's Call (CV 7) : Lance d6 par figurine, 5+ = 1 dégât mortel",
+                    "🦎 Speed of Huanchi (CV 6) : Une unité peut tirer et charger après avoir couru",
+                    "🌍 The Earth Trembles (CV 8) : Ligne de 18\", d3 dégâts mortels (2+) aux unités touchées",
+                    "⚔️ Empowered Celestite (CV 7) : +1 Rend aux armes de mêlée d'une unité Saurus"
+                ],
+                manifestationLore: "Morbid Conjuration",
+                manifestationLoreDescription: [
+                    "Manifestations diverses"
+                ],
+                terrain: "Realmshaper Engine",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Slann Starmaster", points: 260, reinforced: false, role: "General", threat: "critical", notes: "Mage légendaire" },
+                            { name: "6x Kroxigor Warspawned", points: 420, reinforced: true, role: "Elite", threat: "critical", notes: "2x Starfang Warpick" },
+                            { name: "5x Saurus Guard", points: 120, reinforced: false, role: "Bodyguard", threat: "medium" },
+                            { name: "Skink Starpriest", points: 90, reinforced: false, role: "Priest", threat: "low" },
+                            { name: "5x Saurus Guard", points: 120, reinforced: false, role: "Bodyguard", threat: "medium" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Saurus Oldblood on Carnosaur (SoG)", points: 320, reinforced: false, role: "Monster", threat: "critical", notes: "Being of Stars, Incandescent Rectrices, Ancient Defender" },
+                            { name: "6x Aggradon Lancers", points: 420, reinforced: true, role: "Fast Attack", threat: "critical" },
+                            { name: "5x Hunters of Huanchi (Bolas)", points: 100, reinforced: false, role: "Skirmisher", threat: "medium", notes: "1x Javelin" },
+                            { name: "5x Hunters of Huanchi (Bolas)", points: 100, reinforced: false, role: "Skirmisher", threat: "medium", notes: "1x Javelin" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Trait", name: "Being of the Stars", unit: "Oldblood on Carnosaur", impact: "important", effect: "Buff magique" },
+                    { type: "Artefact", name: "Incandescent Rectrices", unit: "Oldblood on Carnosaur", impact: "important", effect: "Artefact" },
+                    { type: "Trait", name: "Ancient Defender", unit: "Oldblood on Carnosaur", impact: "moderate", effect: "Défense" }
+                ],
+                analysis: {
+                    strengths: "Slann = magie puissante, Kroxigor + Aggradon Lancers reinforced, Carnosaur",
+                    weaknesses: "Peu de drops (2), dépendant du Slann",
+                    keyThreats: ["Slann Starmaster", "Kroxigor Warspawned", "Aggradon Lancers", "Carnosaur"],
+                    tacticalNotes: "Slann = maître sorcier. Kroxigor = choc. Aggradon = cavalerie lourde. Carnosaur = monstre"
+                }
+            },
+
+            // 19. Noa - Hedonites of Slaanesh (À COMPLÉTER)
+            {
+                id: 19,
+                name: "Noa Distriquin",
+                nickname: "Indi-Demolition",
+                faction: "Hedonites of Slaanesh",
+                formation: "Seeker Cavalcade",
+                formationDescription: "Cavalcade de chercheurs. Bonus à la cavalerie rapide.",
+                points: 1970,
+                drops: 2,
+                battleTactics: ["Intercept and Recover", "Wrathful Cycles"],
+                spellLore: "Lore of Extravagance",
+                spellLoreDescription: [
+                    "😈 Sadistic Spite (CV 6, Unlimited) : Unité Euphorique inflige +1 dégât mortel en mêlée",
+                    "💜 Progressing Battle Rapture (CV 7) : +1 attaque aux armes de mêlée d'une unité",
+                    "🎭 Lash of Despair (CV 5) : -1 aux jets de sauvegarde d'une unité ennemie",
+                    "🪞 Summon Mesmerising Mirror (CV 6) : Invoque un miroir ensorcelant",
+                    "⚙️ Summon Wheels of Excruciation (CV 7) : Invoque des roues de torture",
+                    "👁️ Summon Dreadful Visage (CV 6) : Invoque un visage terrifiant"
+                ],
+                manifestationLore: "Manifestations of Depravity",
+                manifestationLoreDescription: [
+                    "Manifestations de Slaanesh"
+                ],
+                terrain: "Fane of Slaanesh",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Shalaxi Helbane", points: 450, reinforced: false, role: "General", threat: "critical", notes: "Tueur de héros" },
+                            { name: "Blissbarb Archers", points: 300, reinforced: true, role: "Elite", threat: "high" },
+                            { name: "Slickblade Seekers", points: 360, reinforced: true, role: "Fast Attack", threat: "critical" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Keeper of Secrets", points: 440, reinforced: false, role: "Monster", threat: "critical", notes: "Celebrity Warlord, Pendant of Slaanesh (20pts)" },
+                            { name: "Fiends", points: 140, reinforced: false, role: "Beast", threat: "medium" },
+                            { name: "Seekers", points: 140, reinforced: false, role: "Fast Attack", threat: "medium" },
+                            { name: "Seekers", points: 140, reinforced: false, role: "Fast Attack", threat: "medium" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Artefact", name: "Pendant of Slaanesh", unit: "Keeper of Secrets", impact: "important", effect: "Protection" },
+                    { type: "Trait", name: "Celebrity Warlord", unit: "Keeper of Secrets", impact: "important", effect: "Buff général" }
+                ],
+                analysis: {
+                    strengths: "Shalaxi (anti-héros), Keeper of Secrets, Slickblade Seekers reinforced, vitesse",
+                    weaknesses: "Peu de drops (2), fragile",
+                    keyThreats: ["Shalaxi Helbane", "Keeper of Secrets", "Slickblade Seekers"],
+                    tacticalNotes: "⚠️ Shalaxi = TUEUR DE HÉROS. Protéger vos généraux! Cavalerie rapide = alpha strike"
+                }
+            },
+
+            // 20. Vivien - Soulblight Gravelords (À COMPLÉTER)
+            {
+                id: 20,
+                name: "Vivien Noirault",
+                nickname: "RustyLeClown",
+                faction: "Soulblight Gravelords",
+                formation: "Barrow Legion",
+                formationDescription: "Légion des tumulus. Armée de morts-vivants anciens.",
+                points: 1950,
+                drops: 3,
+                battleTactics: ["Master the Paths", "Intercept and Recover"],
+                spellLore: "Lore of the Deathmages",
+                spellLoreDescription: [
+                    "💀 Soul Steal (CV 7, Unlimited) : Vole d3 PV à une unité, soigne le lanceur",
+                    "🔮 Amaranthine Orb (CV 7) : Boule d'énergie mortelle traversant le champ de bataille",
+                    "⛓️ Prison of Grief (CV 7) : Une unité ennemie gagne Strike-Last"
+                ],
+                terrain: "Cursed Sepulchre",
+                regiments: [
+                    {
+                        name: "General's Regiment",
+                        units: [
+                            { name: "Wight King on Skeletal Steed", points: 200, reinforced: false, role: "General", threat: "high", notes: "Restless Tyrant" },
+                            { name: "10x Barrow Knights", points: 420, reinforced: true, role: "Elite", threat: "critical" },
+                            { name: "Wight King", points: 90, reinforced: false, role: "Hero", threat: "medium", notes: "Crown of Cold Command" },
+                            { name: "20x Barrow Guard", points: 300, reinforced: true, role: "Infantry", threat: "high" },
+                            { name: "10x Deathrattle Skeletons", points: 90, reinforced: false, role: "Battleline", threat: "low" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 1",
+                        units: [
+                            { name: "Wight Lord on Skeletal Steed", points: 130, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "5x Barrow Knights", points: 210, reinforced: false, role: "Elite", threat: "high" },
+                            { name: "10x Barrow Guard", points: 150, reinforced: false, role: "Infantry", threat: "medium" },
+                            { name: "10x Deathrattle Skeletons", points: 90, reinforced: false, role: "Battleline", threat: "low" }
+                        ]
+                    },
+                    {
+                        name: "Regiment 2",
+                        units: [
+                            { name: "Wight King", points: 90, reinforced: false, role: "Hero", threat: "medium" },
+                            { name: "10x Deathrattle Skeletons", points: 90, reinforced: false, role: "Battleline", threat: "low" },
+                            { name: "10x Deathrattle Skeletons", points: 90, reinforced: false, role: "Battleline", threat: "low" }
+                        ]
+                    }
+                ],
+                abilities: [
+                    { type: "Trait", name: "Restless Tyrant", unit: "Wight King (General)", impact: "important", effect: "Buff général" },
+                    { type: "Artefact", name: "Crown of Cold Command", unit: "Wight King", impact: "important", effect: "Commandement" }
+                ],
+                analysis: {
+                    strengths: "Barrow Knights reinforced, Barrow Guard reinforced, récursion squelettes",
+                    weaknesses: "Lent, dépendant des Wight Kings",
+                    keyThreats: ["Barrow Knights (reinforced)", "Barrow Guard (reinforced)", "Wight King on Steed"],
+                    tacticalNotes: "Armée de cavalerie morte-vivante. Barrow Knights = élite. Récursion = régénération"
+                }
+            }
+        ];
+
+        function FactionBadge({ faction }) {
+            const colors = {
+                'Sylvaneth': 'bg-green-100 text-green-800',
+                'Kharadron Overlords': 'bg-blue-100 text-blue-800',
+                'Daughters of Khaine': 'bg-purple-100 text-purple-800',
+                'Blades of Khorne': 'bg-red-100 text-red-800',
+                'Stormcast Eternals': 'bg-yellow-100 text-yellow-800',
+                'Disciples of Tzeentch': 'bg-pink-100 text-pink-800',
+                'Skaven': 'bg-gray-100 text-gray-800',
+                'Ogor Mawtribes': 'bg-orange-100 text-orange-800',
+                'Nighthaunt': 'bg-indigo-100 text-indigo-800',
+                'Seraphon': 'bg-teal-100 text-teal-800',
+                'Hedonites of Slaanesh': 'bg-fuchsia-100 text-fuchsia-800',
+                'Soulblight Gravelords': 'bg-slate-100 text-slate-800'
+            };
+            return <span className={`faction-badge ${colors[faction] || 'bg-gray-100 text-gray-800'}`}>{faction}</span>;
+        }
+
+        function PlayerList({ players, onSelectPlayer, selectedPlayer }) {
+            const [search, setSearch] = useState('');
+            const [filterFaction, setFilterFaction] = useState('all');
+
+            const filteredPlayers = players.filter(p => {
+                const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || 
+                                   p.nickname.toLowerCase().includes(search.toLowerCase());
+                const matchFaction = filterFaction === 'all' || p.faction === filterFaction;
+                return matchSearch && matchFaction;
+            });
+
+            const factions = [...new Set(players.map(p => p.faction))].sort();
+
+            return (
+                <div className="space-y-4">
+                    <div className="flex gap-2 flex-wrap">
+                        <input 
+                            type="text" 
+                            placeholder="🔍 Rechercher joueur..."
+                            className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                        <select 
+                            className="px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500"
+                            value={filterFaction}
+                            onChange={(e) => setFilterFaction(e.target.value)}
+                        >
+                            <option value="all">Toutes factions ({players.length})</option>
+                            {factions.map(f => <option key={f} value={f}>{f}</option>)}
+                        </select>
+                    </div>
+
+                    <div className="text-sm text-gray-600 bg-white p-3 rounded-lg">
+                        📊 {filteredPlayers.length} joueur(s) affiché(s)
+                    </div>
+
+                    <div className="grid gap-3">
+                        {filteredPlayers.map(player => (
+                            <div 
+                                key={player.id}
+                                onClick={() => onSelectPlayer(player)}
+                                className={`glass-effect rounded-xl p-4 cursor-pointer transition-all hover:shadow-lg ${
+                                    selectedPlayer?.id === player.id ? 'ring-2 ring-purple-500' : ''
+                                }`}
+                            >
+                                <div className="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h3 className="font-bold text-lg text-gray-800">{player.name}</h3>
+                                        <p className="text-sm text-gray-600">"{player.nickname}"</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-sm font-semibold text-purple-600">{player.points} pts</div>
+                                        <div className="text-xs text-gray-500">{player.drops} drops</div>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2 flex-wrap">
+                                    <FactionBadge faction={player.faction} />
+                                    <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">{player.formation}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        function PlayerDetails({ player, onBack, onEdit }) {
+            const [activeTab, setActiveTab] = useState('general');
+
+            const tabs = [
+                { id: 'general', label: '📋 Général' },
+                { id: 'regiments', label: '⚔️ Régiments' },
+                { id: 'abilities', label: '✨ Capacités' },
+                { id: 'tactics', label: '🎲 Tactiques' }
+            ];
+
+            return (
+                <div className="space-y-4">
+                    <div className="glass-effect rounded-xl p-6">
+                        <button 
+                            onClick={onBack}
+                            className="mb-4 text-purple-600 hover:text-purple-800 font-medium"
+                        >
+                            ← Retour à la liste
+                        </button>
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-800 mb-1">{player.name}</h2>
+                                <p className="text-gray-600 mb-3">"{player.nickname}"</p>
+                                <FactionBadge faction={player.faction} />
+                            </div>
+                            <div className="text-right">
+                                <div className="text-3xl font-bold text-purple-600">{player.points}</div>
+                                <div className="text-sm text-gray-500">points</div>
+                                <div className="text-sm text-gray-500 mt-1">{player.drops} drops</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="glass-effect rounded-xl overflow-hidden">
+                        <div className="flex border-b border-gray-200 overflow-x-auto">
+                            {tabs.map(tab => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`px-6 py-3 font-medium transition-colors flex-1 whitespace-nowrap ${
+                                        activeTab === tab.id 
+                                            ? 'bg-purple-600 text-white' 
+                                            : 'text-gray-600 hover:bg-gray-100'
+                                    }`}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="p-6">
+                            {activeTab === 'general' && <GeneralTab player={player} onEdit={onEdit} />}
+                            {activeTab === 'regiments' && <RegimentsTab player={player} />}
+                            {activeTab === 'abilities' && <AbilitiesTab player={player} />}
+                            {activeTab === 'tactics' && <TacticsTab player={player} onEdit={onEdit} />}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function EditModal({ isOpen, onClose, title, value, onSave, isArray = false }) {
+            const [editValue, setEditValue] = useState(value);
+
+            useEffect(() => {
+                setEditValue(value);
+            }, [value, isOpen]);
+
+            if (!isOpen) return null;
+
+            const handleSave = () => {
+                onSave(editValue);
+                onClose();
+            };
+
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={onClose}>
+                    <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        <div className="p-4 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white">
+                            <h3 className="font-bold text-lg">✏️ {title}</h3>
+                            <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+                        </div>
+                        <div className="p-4">
+                            {isArray ? (
+                                <div className="space-y-2">
+                                    {editValue.map((item, i) => (
+                                        <div key={i} className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                value={item}
+                                                onChange={(e) => {
+                                                    const newValue = [...editValue];
+                                                    newValue[i] = e.target.value;
+                                                    setEditValue(newValue);
+                                                }}
+                                                className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500"
+                                            />
+                                            <button
+                                                onClick={() => setEditValue(editValue.filter((_, idx) => idx !== i))}
+                                                className="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                                            >
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <button
+                                        onClick={() => setEditValue([...editValue, ""])}
+                                        className="w-full px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                                    >
+                                        + Ajouter
+                                    </button>
+                                </div>
+                            ) : (
+                                <textarea
+                                    value={editValue}
+                                    onChange={(e) => setEditValue(e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500"
+                                    rows="6"
+                                />
+                            )}
+                        </div>
+                        <div className="p-4 border-t border-gray-200 flex gap-2 justify-end sticky bottom-0 bg-white">
+                            <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                                Annuler
+                            </button>
+                            <button onClick={handleSave} className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
+                                💾 Sauvegarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function GeneralTab({ player, onEdit }) {
+            const [editModal, setEditModal] = useState({ isOpen: false, field: null, title: '', value: '', isArray: false });
+
+            const openEdit = (field, title, value, isArray = false) => {
+                setEditModal({ isOpen: true, field, title, value, isArray });
+            };
+
+            const handleSave = (value) => {
+                onEdit(editModal.field, value);
+            };
+
+            return (
+                <>
+                    <EditModal
+                        isOpen={editModal.isOpen}
+                        onClose={() => setEditModal({ ...editModal, isOpen: false })}
+                        title={editModal.title}
+                        value={editModal.value}
+                        onSave={handleSave}
+                        isArray={editModal.isArray}
+                    />
+
+                    <div className="space-y-4">
+                        <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-5 rounded-lg border-l-4 border-purple-500">
+                            <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-semibold text-purple-900 text-sm uppercase tracking-wide">Formation de bataille</h4>
+                                <button
+                                    onClick={() => openEdit('formationDescription', 'Description de la formation', player.formationDescription || '')}
+                                    className="text-purple-600 hover:text-purple-800 text-sm"
+                                >
+                                    ✏️
+                                </button>
+                            </div>
+                            <p className="text-purple-800 font-bold text-lg mb-2">{player.formation}</p>
+                            {player.formationDescription && (
+                                <p className="text-gray-700 text-sm italic leading-relaxed">
+                                    💡 {player.formationDescription}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                                <h4 className="font-semibold text-blue-900 mb-2">🏰 Terrain de faction</h4>
+                                <p className="text-gray-700">{player.terrain || 'Aucun'}</p>
+                            </div>
+                            <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                                <h4 className="font-semibold text-green-900 mb-2">🎯 Battle Tactic Cards</h4>
+                                <div className="space-y-1">
+                                    {player.battleTactics.map((tactic, i) => (
+                                        <div key={i} className="text-sm text-gray-700 font-medium">• {tactic}</div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {player.spellLore && (
+                            <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-5 rounded-lg border-l-4 border-indigo-500">
+                                <div className="flex justify-between items-start mb-3">
+                                    <h4 className="font-bold text-indigo-900 flex items-center gap-2">
+                                        <span className="text-xl">🔮</span>
+                                        <span>{player.spellLore}</span>
+                                    </h4>
+                                    <button
+                                        onClick={() => openEdit('spellLoreDescription', `Sorts - ${player.spellLore}`, player.spellLoreDescription || [], Array.isArray(player.spellLoreDescription))}
+                                        className="text-indigo-600 hover:text-indigo-800 text-sm"
+                                    >
+                                        ✏️
+                                    </button>
+                                </div>
+                                {player.spellLoreDescription ? (
+                                    <div className="space-y-1">
+                                        {Array.isArray(player.spellLoreDescription) ? (
+                                            player.spellLoreDescription.map((spell, i) => (
+                                                <div key={i} className={`text-sm ${spell.includes('✅') ? 'updated' : spell.includes('🔄') ? 'text-orange-700 font-semibold' : 'text-gray-700'}`}>
+                                                    {spell}
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className={`text-sm italic ${player.spellLoreDescription.includes('✅') ? 'updated' : player.spellLoreDescription.includes('🔄') ? 'text-orange-700 font-semibold' : 'text-gray-700'}`}>
+                                                {player.spellLoreDescription}
+                                            </p>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-700 text-sm italic">Lore de sorts spécifique à cette faction</p>
+                                )}
+                            </div>
+                        )}
+
+                        {player.prayerLore && (
+                            <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-5 rounded-lg border-l-4 border-amber-500">
+                                <div className="flex justify-between items-start mb-3">
+                                    <h4 className="font-bold text-amber-900 flex items-center gap-2">
+                                        <span className="text-xl">🙏</span>
+                                        <span>{player.prayerLore}</span>
+                                    </h4>
+                                    <button
+                                        onClick={() => openEdit('prayerLoreDescription', `Prières - ${player.prayerLore}`, player.prayerLoreDescription || [], Array.isArray(player.prayerLoreDescription))}
+                                        className="text-amber-600 hover:text-amber-800 text-sm"
+                                    >
+                                        ✏️
+                                    </button>
+                                </div>
+                                {player.prayerLoreDescription ? (
+                                    <div className="space-y-1">
+                                        {Array.isArray(player.prayerLoreDescription) ? (
+                                            player.prayerLoreDescription.map((prayer, i) => (
+                                                <div key={i} className={`text-sm ${prayer.includes('✅') ? 'updated' : prayer.includes('🔄') ? 'text-orange-700 font-semibold' : 'text-gray-700'}`}>
+                                                    {prayer}
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className={`text-sm italic ${player.prayerLoreDescription.includes('✅') ? 'updated' : player.prayerLoreDescription.includes('🔄') ? 'text-orange-700 font-semibold' : 'text-gray-700'}`}>
+                                                {player.prayerLoreDescription}
+                                            </p>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-700 text-sm italic">Lore de prières spécifique</p>
+                                )}
+                            </div>
+                        )}
+
+                        {player.manifestationLore && (
+                            <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-5 rounded-lg border-l-4 border-pink-500">
+                                <div className="flex justify-between items-start mb-3">
+                                    <h4 className="font-bold text-pink-900 flex items-center gap-2">
+                                        <span className="text-xl">✨</span>
+                                        <span>{player.manifestationLore}</span>
+                                    </h4>
+                                    <button
+                                        onClick={() => openEdit('manifestationLoreDescription', `Manifestations - ${player.manifestationLore}`, player.manifestationLoreDescription || [], Array.isArray(player.manifestationLoreDescription))}
+                                        className="text-pink-600 hover:text-pink-800 text-sm"
+                                    >
+                                        ✏️
+                                    </button>
+                                </div>
+                                {player.manifestationLoreDescription ? (
+                                    <div className="space-y-1">
+                                        {Array.isArray(player.manifestationLoreDescription) ? (
+                                            player.manifestationLoreDescription.map((manifestation, i) => (
+                                                <div key={i} className="text-sm text-gray-700">
+                                                    • {manifestation}
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className="text-sm italic text-gray-700">
+                                                {player.manifestationLoreDescription}
+                                            </p>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-700 text-sm italic">Manifestations spécifiques</p>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </>
+            );
+        }
+
+
+        // Fonction pour générer le lien Wahapedia
+        function getWarscrollUrl(unitName, faction) {
+            const factionSlugs = {
+                'Sylvaneth': 'sylvaneth',
+                'Kharadron Overlords': 'kharadron-overlords',
+                'Daughters of Khaine': 'daughters-of-khaine',
+                'Disciples of Tzeentch': 'disciples-of-tzeentch',
+                'Skaven': 'skaven',
+                'Ogor Mawtribes': 'ogor-mawtribes',
+                'Stormcast Eternals': 'stormcast-eternals',
+                'Ossiarch Bonereapers': 'ossiarch-bonereapers',
+                'Lumineth Realm-lords': 'lumineth-realm-lords',
+                'Idoneth Deepkin': 'idoneth-deepkin',
+                'Flesh-eater Courts': 'flesh-eater-courts',
+                'Gloomspite Gitz': 'gloomspite-gitz',
+                'Nighthaunt': 'nighthaunt',
+                'Fyreslayers': 'fyreslayers',
+                'Cities of Sigmar': 'cities-of-sigmar',
+                'Seraphon': 'seraphon',
+                'Hedonites of Slaanesh': 'hedonites-of-slaanesh',
+                'Soulblight Gravelords': 'soulblight-gravelords'
+            };
+            
+            const factionSlug = factionSlugs[faction] || faction.toLowerCase().replace(/\s+/g, '-');
+            
+            // Nettoyer le nom de l'unité
+            let cleanName = unitName
+                .replace(/^\d+x?\s+/i, '') // Retirer "10x", "3x", etc.
+                .replace(/\s*\([^)]*\)/g, '') // Retirer les parenthèses et leur contenu (SoG, etc.)
+                .replace(/\s+with\s+/gi, '-') // "with Scythes" -> "-Scythes"
+                .trim();
+            
+            // Cas spéciaux connus pour correspondre aux URLs Wahapedia
+            const specialCases = {
+                // Sylvaneth
+                'Warsong Revenant': 'Warsong-Revenant',
+                'Drycha Hamadreth': 'Drycha-Hamadreth',
+                'Spirit of Durthu': 'Spirit-of-Durthu',
+                'Branchwych': 'Branchwych',
+                'Tree-Revenants': 'Tree-Revenants',
+                'Spite-Revenants': 'Spite-Revenants',
+                'Revenant Seekers': 'Revenant-Seekers',
+                'Kurnoth Hunters-Scythes': 'Kurnoth-Hunters',
+                'Kurnoth Hunters-Greatbows': 'Kurnoth-Hunters',
+                'Kurnoth Hunters-Greatswords': 'Kurnoth-Hunters',
+                'Belthanos, First Thorn': 'Belthanos-First-Thorn',
+                // Kharadron Overlords
+                'Brokk Grungsson': 'Brokk-Grungsson',
+                'Arkanaut Company': 'Arkanaut-Company',
+                'Grundstok Thunderers': 'Grundstok-Thunderers',
+                'Arkanaut Frigate': 'Arkanaut-Frigate',
+                'Grundstok Gunhauler': 'Grundstok-Gunhauler',
+                'Aether-Khemist': 'Aether-Khemist',
+                'Skywardens': 'Skywardens',
+                // Daughters of Khaine
+                'Morathi-Khaine': 'Morathi-Khaine',
+                'Avatar of Khaine': 'Avatar-of-Khaine',
+                'Blood Sisters': 'Blood-Sisters',
+                'Blood Stalkers': 'Blood-Stalkers',
+                'Khainite Shadowstalkers': 'Khainite-Shadowstalkers',
+                'Hag Queen': 'Hag-Queen',
+                'Doomfire Warlocks': 'Doomfire-Warlocks',
+                // Disciples of Tzeentch
+                'Lord of Change': 'Lord-of-Change',
+                'Kairos Fateweaver': 'Kairos-Fateweaver',
+                'Changecaster': 'Changecaster',
+                'Pink Horrors': 'Pink-Horrors',
+                'Blue & Brimstone Horrors': 'Blue-and-Brimstone-Horrors',
+                'Flamers': 'Flamers',
+                'Burning Chariot': 'Burning-Chariot',
+                // Skaven
+                'Grey Seer': 'Grey-Seer',
+                'Grey Seer on Screaming Bell': 'Grey-Seer-on-Screaming-Bell',
+                'Clawlord on Gnaw-beast': 'Clawlord-on-Gnaw-beast',
+                'Master Moulder': 'Master-Moulder',
+                'Clanrats': 'Clanrats',
+                'Rat Ogors': 'Rat-Ogors',
+                'Doomwheel': 'Doomwheel',
+                'Ratling Warpblaster': 'Ratling-Warpblaster',
+                // Ogor Mawtribes
+                'Frostlord on Stonehorn': 'Frostlord-on-Stonehorn',
+                'Huskard on Stonehorn': 'Huskard-on-Stonehorn',
+                'Butcher': 'Butcher',
+                'Ogor Gluttons': 'Ogor-Gluttons',
+                'Ironguts': 'Ironguts',
+                'Ironblaster': 'Ironblaster',
+                // Stormcast Eternals
+                'Lord-Terminos': 'Lord-Terminos',
+                'Knight-Arcanum': 'Knight-Arcanum',
+                'Knight-Judicator + Gryph-hounds': 'Knight-Judicator-with-Gryph-Hounds',
+                'Liberators': 'Liberators',
+                'Reclusians': 'Reclusians',
+                // Ossiarch Bonereapers
+                'Scriptor Mortis': 'Mortisan-Soulmason',
+                'Null-Khemist': 'Mortisan-Soulreaper',
+                'Krulghast Cruciator': 'Krulghast-Cruciator',
+                // Nighthaunt
+                'Lady Olynder': 'Lady-Olynder',
+                'Reikenor the Grimhailer': 'Reikenor-the-Grimhailer',
+                'Guardian of Souls': 'Guardian-of-Souls',
+                'Knight of Shrouds': 'Knight-of-Shrouds',
+                'Spirit Torment': 'Spirit-Torment',
+                'Black Coach': 'Black-Coach',
+                'Spirit Hosts': 'Spirit-Hosts',
+                'Myrmourn Banshees': 'Myrmourn-Banshees',
+                'Craventhrone Guard': 'Craventhrone-Guard',
+                'Pyregheists': 'Pyregheists',
+                // Flesh-eater Courts
+                'Brood Terror': 'Brood-Terror',
+                'Ionus Cryptborn': 'Ushoran-Mortarch-of-Delusion',
+                // Khorne
+                'Bloodthirster of Insensate Rage': 'Bloodthirster-of-Insensate-Rage',
+                'Bloodthirster of Unfettered Fury': 'Bloodthirster-of-Unfettered-Fury',
+                'Skarbrand': 'Skarbrand',
+                'Bloodmaster': 'Bloodmaster',
+                'Slaughterpriest': 'Slaughterpriest',
+                'Bloodletters': 'Bloodletters',
+                'Bloodreavers': 'Bloodreavers',
+                'Skullreapers': 'Skullreapers',
+                // Seraphon
+                'Slann Starmaster': 'Slann-Starmaster',
+                'Lord Kroak': 'Lord-Kroak',
+                'Saurus Oldblood on Carnosaur': 'Saurus-Oldblood-on-Carnosaur',
+                'Skink Starpriest': 'Skink-Starpriest',
+                'Saurus Guard': 'Saurus-Guard',
+                'Kroxigor Warspawned': 'Kroxigor-Warspawned',
+                'Aggradon Lancers': 'Aggradon-Lancers',
+                'Hunters of Huanchi': 'Hunters-of-Huanchi-with-Bolas-and-Dartpipes',
+                // Hedonites of Slaanesh
+                'Keeper of Secrets': 'Keeper-of-Secrets',
+                'Shalaxi Helbane': 'Shalaxi-Helbane',
+                'Fiends': 'Fiends',
+                'Seekers': 'Seekers',
+                'Slickblade Seekers': 'Slickblade-Seekers',
+                'Blissbarb Archers': 'Blissbarb-Archers',
+                // Soulblight Gravelords
+                'Wight King on Skeletal Steed': 'Wight-King-on-Skeletal-Steed',
+                'Wight King': 'Wight-King',
+                'Wight Lord on Skeletal Steed': 'Wight-King-on-Skeletal-Steed',
+                'Barrow Knights': 'Barrow-Knights',
+                'Barrow Guard': 'Barrow-Guard',
+                'Deathrattle Skeletons': 'Deathrattle-Skeletons',
+                // Autres
+                'Chaos Spawn': 'Chaos-Spawn',
+                'Lord Vitriolic': 'Lord-Vitriolic',
+                'Codewright': 'Codewright',
+                'Drekki Flynt': 'Drekki-Flynt-s-Aetheric-Expedition'
+            };
+            
+            if (specialCases[cleanName]) {
+                return `https://wahapedia.ru/aos4/factions/${factionSlug}/${specialCases[cleanName]}`;
+            }
+            
+            let unitSlug = cleanName
+                .replace(/\s+/g, '-')
+                .replace(/[,'"]/g, '')
+                .replace(/--+/g, '-')
+                .replace(/-$/g, ''); // Retirer tiret final
+            
+            return `https://wahapedia.ru/aos4/factions/${factionSlug}/${unitSlug}`;
+        }
+
+        function RegimentsTab({ player }) {
+            const getThreatColor = (threat) => {
+                const colors = {
+                    critical: 'threat-critical',
+                    high: 'threat-high',
+                    medium: 'threat-medium',
+                    low: 'threat-low'
+                };
+                return colors[threat] || 'bg-gray-50';
+            };
+
+            return (
+                <div className="space-y-6">
+                    {player.regiments.map((regiment, idx) => (
+                        <div key={idx} className="border border-gray-200 rounded-lg overflow-hidden">
+                            <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2 font-semibold">
+                                {regiment.name}
+                            </div>
+                            <div className="divide-y divide-gray-200">
+                                {regiment.units.map((unit, unitIdx) => (
+                                    <div key={unitIdx} className={`p-4 ${getThreatColor(unit.threat)}`}>
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <h5 className="font-semibold text-gray-800">{unit.name}</h5>
+                                                    <a 
+                                                        href={getWarscrollUrl(unit.name, player.faction)}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-xs bg-purple-600 text-white px-2 py-1 rounded hover:bg-purple-700 transition-colors inline-flex items-center gap-1"
+                                                        title="Voir le warscroll sur Wahapedia"
+                                                    >
+                                                        📖 Warscroll
+                                                    </a>
+                                                </div>
+                                                <div className="flex gap-2 mt-1 flex-wrap">
+                                                    <span className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">{unit.role}</span>
+                                                    {unit.reinforced && (
+                                                        <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded font-semibold">
+                                                            ✕2 REINFORCED
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-xl font-bold text-purple-600">{unit.points}</div>
+                                                <div className="text-xs text-gray-500">pts</div>
+                                            </div>
+                                        </div>
+                                        {unit.notes && (
+                                            <p className="text-sm text-gray-600 italic mt-2">
+                                                💡 {unit.notes}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        function AbilitiesTab({ player }) {
+            const getImpactClass = (impact) => {
+                const classes = {
+                    critical: 'impact-critical bg-red-50',
+                    important: 'impact-important bg-amber-50',
+                    moderate: 'impact-moderate bg-green-50'
+                };
+                return classes[impact] || 'bg-gray-50';
+            };
+
+            const getImpactLabel = (impact) => {
+                const labels = {
+                    critical: '🔴 CRITIQUE',
+                    important: '🟡 IMPORTANT',
+                    moderate: '🟢 MODÉRÉ'
+                };
+                return labels[impact] || impact;
+            };
+
+            return (
+                <div className="space-y-4">
+                    {player.abilities && player.abilities.length > 0 ? (
+                        player.abilities.map((ability, idx) => (
+                            <div key={idx} className={`p-4 rounded-lg ${getImpactClass(ability.impact)}`}>
+                                <div className="flex justify-between items-start mb-2">
+                                    <div>
+                                        <span className="text-xs font-semibold text-gray-500 uppercase">{ability.type}</span>
+                                        <h5 className="font-bold text-gray-800 text-lg">{ability.name}</h5>
+                                        <p className="text-sm text-gray-600 mt-1">Sur: {ability.unit}</p>
+                                    </div>
+                                    <span className="text-xs font-bold">
+                                        {getImpactLabel(ability.impact)}
+                                    </span>
+                                </div>
+                                <p className="text-gray-700 mt-2">{ability.effect}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="text-center text-gray-500 py-8">
+                            Aucune capacité spéciale répertoriée
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function TacticsTab({ player, onEdit }) {
+            const [editModal, setEditModal] = useState({ isOpen: false, field: null, title: '', value: '' });
+
+            const openEdit = (field, title, value) => {
+                setEditModal({ isOpen: true, field, title, value, isArray: false });
+            };
+
+            const handleSave = (value) => {
+                onEdit(editModal.field, value);
+            };
+
+            return (
+                <>
+                    <EditModal
+                        isOpen={editModal.isOpen}
+                        onClose={() => setEditModal({ ...editModal, isOpen: false })}
+                        title={editModal.title}
+                        value={editModal.value}
+                        onSave={handleSave}
+                        isArray={false}
+                    />
+
+                    <div className="space-y-6">
+                        {player.analysis && (
+                            <>
+                                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h4 className="font-bold text-green-900">✅ Forces</h4>
+                                        <button
+                                            onClick={() => openEdit('analysis.strengths', 'Forces', player.analysis.strengths)}
+                                            className="text-green-600 hover:text-green-800 text-sm"
+                                        >
+                                            ✏️
+                                        </button>
+                                    </div>
+                                    <p className="text-gray-700">{player.analysis.strengths}</p>
+                                </div>
+
+                                <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h4 className="font-bold text-red-900">⚠️ Faiblesses</h4>
+                                        <button
+                                            onClick={() => openEdit('analysis.weaknesses', 'Faiblesses', player.analysis.weaknesses)}
+                                            className="text-red-600 hover:text-red-800 text-sm"
+                                        >
+                                            ✏️
+                                        </button>
+                                    </div>
+                                    <p className="text-gray-700">{player.analysis.weaknesses}</p>
+                                </div>
+
+                                <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded">
+                                    <h4 className="font-bold text-orange-900 mb-2">🎯 Menaces clés</h4>
+                                    <ul className="list-disc list-inside space-y-1">
+                                        {player.analysis.keyThreats.map((threat, i) => (
+                                            <li key={i} className="text-gray-700">{threat}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h4 className="font-bold text-blue-900">📝 Notes tactiques</h4>
+                                        <button
+                                            onClick={() => openEdit('analysis.tacticalNotes', 'Notes tactiques', player.analysis.tacticalNotes)}
+                                            className="text-blue-600 hover:text-blue-800 text-sm"
+                                        >
+                                            ✏️
+                                        </button>
+                                    </div>
+                                    <p className="text-gray-700">{player.analysis.tacticalNotes}</p>
+                                </div>
+
+                                <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h4 className="font-bold text-yellow-900">✏️ Mes notes personnelles</h4>
+                                        <button
+                                            onClick={() => openEdit('personalNotes', 'Mes notes personnelles', player.personalNotes || '')}
+                                            className="text-yellow-600 hover:text-yellow-800 text-sm"
+                                        >
+                                            ✏️
+                                        </button>
+                                    </div>
+                                    <p className="text-gray-700 whitespace-pre-wrap">{player.personalNotes || 'Clique sur ✏️ pour ajouter tes notes...'}</p>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </>
+            );
+        }
+
+        function App() {
+            const [selectedPlayer, setSelectedPlayer] = useState(null);
+            const [edits, setEdits] = useState(loadEdits());
+
+            const mergePlayerWithEdits = (player) => {
+                const playerEdits = edits[player.id] || {};
+                const mergedPlayer = { ...player };
+
+                Object.keys(playerEdits).forEach(key => {
+                    if (key.startsWith('analysis.')) {
+                        const analysisKey = key.split('.')[1];
+                        mergedPlayer.analysis = {
+                            ...mergedPlayer.analysis,
+                            [analysisKey]: playerEdits[key]
+                        };
+                    } else {
+                        mergedPlayer[key] = playerEdits[key];
+                    }
+                });
+
+                return mergedPlayer;
+            };
+
+            const playersData = playersDataOriginal.map(mergePlayerWithEdits);
+
+            const handleEdit = (playerId, field, value) => {
+                const newEdits = {
+                    ...edits,
+                    [playerId]: {
+                        ...(edits[playerId] || {}),
+                        [field]: value
+                    }
+                };
+                
+                setEdits(newEdits);
+                saveEdits(newEdits);
+
+                if (selectedPlayer && selectedPlayer.id === playerId) {
+                    const originalPlayer = playersDataOriginal.find(p => p.id === playerId);
+                    if (originalPlayer) {
+                        const playerEdits = newEdits[playerId] || {};
+                        const mergedPlayer = { ...originalPlayer };
+
+                        Object.keys(playerEdits).forEach(key => {
+                            if (key.startsWith('analysis.')) {
+                                const analysisKey = key.split('.')[1];
+                                mergedPlayer.analysis = {
+                                    ...mergedPlayer.analysis,
+                                    [analysisKey]: playerEdits[key]
+                                };
+                            } else {
+                                mergedPlayer[key] = playerEdits[key];
+                            }
+                        });
+
+                        setSelectedPlayer(mergedPlayer);
+                    }
+                }
+            };
+
+            const currentPlayer = selectedPlayer ? playersData.find(p => p.id === selectedPlayer.id) : null;
+
+            return (
+                <div className="max-w-6xl mx-auto">
+                    <div className="glass-effect rounded-2xl p-6 mb-6">
+                        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                            ⚔️ La Bataille de la Porte de Poitiers
+                        </h1>
+                        <p className="text-gray-600">
+                            {selectedPlayer ? 'Analyse de l\'adversaire' : `${playersData.length} joueurs • 5 rounds • 1990-2000 points`}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-2">
+                            💾 Tes modifications sont sauvegardées automatiquement • ✅ = Mis à jour V4 • 🔄 = À compléter
+                        </p>
+                    </div>
+
+                    {currentPlayer ? (
+                        <PlayerDetails 
+                            player={currentPlayer} 
+                            onBack={() => setSelectedPlayer(null)}
+                            onEdit={(field, value) => handleEdit(currentPlayer.id, field, value)}
+                        />
+                    ) : (
+                        <div className="glass-effect rounded-2xl p-6">
+                            <h2 className="text-xl font-bold text-gray-800 mb-4">Liste des adversaires</h2>
+                            <PlayerList 
+                                players={playersData} 
+                                onSelectPlayer={setSelectedPlayer}
+                                selectedPlayer={selectedPlayer}
+                            />
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
