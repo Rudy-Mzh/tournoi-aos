@@ -4035,6 +4035,749 @@
             ]
         };
 
+        // ═══════════════════════════════════════════════════════════════
+        // ⚡ STORMCAST ETERNALS - BASE DE DONNÉES COMPLÈTE
+        // ═══════════════════════════════════════════════════════════════
+        const STORMCAST_ETERNALS_COMPLETE = {
+            battleTraits: [
+                {
+                    name: "Scions of the Storm",
+                    effect: "Les unités STORMCAST ETERNALS peuvent être placées en réserve céleste (deep strike). Au début de n'importe quel mouvement, vous pouvez déployer ces unités à plus de 9\" des ennemis."
+                },
+                {
+                    name: "Shock and Awe",
+                    effect: "Quand une unité STORMCAST ETERNALS arrive de la réserve céleste, les unités ennemies à 12\" subissent -1 à leurs tests de moral jusqu'à la fin du tour."
+                },
+                {
+                    name: "Thunderstrike Armour",
+                    effect: "Les unités avec ce trait ignorent le premier point de Rend des attaques ennemies."
+                },
+                {
+                    name: "Mortal Auxiliaries",
+                    effect: "Vous pouvez inclure jusqu'à 1/4 de votre armée en unités CITIES OF SIGMAR."
+                }
+            ],
+            heroicTraits: [
+                {
+                    name: "Master of the Celestial Tempest",
+                    effect: "Ce HERO peut utiliser 2 command abilities dans le même tour au lieu d'une seule."
+                },
+                {
+                    name: "Envoy of the Heavens",
+                    effect: "Une fois par bataille, vous pouvez redéployer ce HERO et jusqu'à 2 unités à 9\" de lui avant le premier tour."
+                },
+                {
+                    name: "Champion of the Realms",
+                    effect: "Ajoutez 1 aux jets de touche pour les attaques de mêlée de ce HERO."
+                },
+                {
+                    name: "Staunch Defender",
+                    effect: "Les unités STORMCAST ETERNALS à 12\" de ce HERO peuvent re-roll les sauvegardes de 1."
+                },
+                {
+                    name: "First to the Fray",
+                    effect: "Ce HERO peut courir et charger dans le même tour."
+                },
+                {
+                    name: "Heroic Stature",
+                    effect: "Ajoutez 2 à la caractéristique Health de ce HERO."
+                }
+            ],
+            artefacts: [
+                {
+                    name: "Hammers of Sigmar - Sword of Might",
+                    effect: "Choisissez une arme de mêlée du porteur. Ajoutez 1 aux jets de blessure et au Rend pour cette arme."
+                },
+                {
+                    name: "Mirrorshield",
+                    effect: "Le porteur a une Ward de 5+."
+                },
+                {
+                    name: "Amulet of Destiny",
+                    effect: "Le porteur a une Ward de 6+. De plus, une fois par bataille, annulez automatiquement une blessure mortelle."
+                },
+                {
+                    name: "Obsidian Blade",
+                    effect: "Choisissez une arme du porteur. Les jets de blessure non modifiés de 6 avec cette arme infligent 1 blessure mortelle supplémentaire."
+                },
+                {
+                    name: "Thermalrider Cloak",
+                    effect: "Le porteur peut FLY et ajoute 3\" à son mouvement."
+                },
+                {
+                    name: "Quicksilver Draught",
+                    effect: "Une fois par bataille, au début de votre hero phase, ajoutez 1 aux jets de touche, de blessure et de sauvegarde du porteur jusqu'à la fin du tour."
+                }
+            ],
+            warscrolls: [
+                // ═══ HEROES ═══
+                {
+                    name: "Lord-Imperatant",
+                    points: 170,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 5,
+                    health: 7,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Stormcast Eternals", "Thunderstrike", "Lord-Imperatant"],
+                    weapons: [
+                        {
+                            name: "Tempest Blade and Arcane Shockblast",
+                            type: "melee",
+                            range: 1,
+                            attacks: 5,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Guided by Lightning",
+                            type: "Passive",
+                            effect: "Les unités THUNDERSTRIKE à 12\" de ce modèle peuvent re-roll les jets de charge ratés."
+                        },
+                        {
+                            name: "Arcane Bolt",
+                            type: "Your Shooting Phase",
+                            effect: "Choisissez une unité ennemie visible à 18\". Lancez un dé. Sur 2+, infligez D3 blessures mortelles."
+                        },
+                        {
+                            name: "Spirit of the Tempest",
+                            type: "Once Per Battle, Your Hero Phase",
+                            effect: "Jusqu'à la fin du tour, toutes les unités STORMCAST ETERNALS à 12\" ajoutent 1 à leurs jets de touche."
+                        }
+                    ]
+                },
+                {
+                    name: "Knight-Arcanum",
+                    points: 130,
+                    role: "Hero, Wizard",
+                    category: "Heroes",
+                    move: 5,
+                    health: 6,
+                    save: 3,
+                    control: 1,
+                    keywords: ["Hero", "Infantry", "Wizard", "Stormcast Eternals", "Thunderstrike", "Knight-Arcanum"],
+                    weapons: [
+                        {
+                            name: "Aetherstave",
+                            type: "melee",
+                            range: 2,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: "D3",
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Soulbound",
+                            type: "Passive",
+                            effect: "Ce modèle peut lancer 1 sort par tour. Ajoutez 1 aux jets de casting."
+                        },
+                        {
+                            name: "Arcane Detonation",
+                            type: "Once Per Battle, Your Shooting Phase",
+                            effect: "Choisissez une unité ennemie visible à 12\". Infligez D6 blessures mortelles à cette unité."
+                        },
+                        {
+                            name: "Mystic Shield",
+                            type: "Spell (5+), Your Hero Phase",
+                            effect: "Si réussi, choisissez une unité amie à 18\". Jusqu'à la fin du tour, ajoutez 1 aux sauvegardes de cette unité."
+                        }
+                    ]
+                },
+                {
+                    name: "Lord-Commander Bastian Carthalos",
+                    points: 290,
+                    role: "Hero, Unique",
+                    category: "Heroes",
+                    move: 5,
+                    health: 10,
+                    save: 2,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Unique", "Stormcast Eternals", "Thunderstrike", "Bastian Carthalos"],
+                    weapons: [
+                        {
+                            name: "Mantle of the First Storm",
+                            type: "ranged",
+                            range: 18,
+                            attacks: 6,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Sword Excelsior",
+                            type: "melee",
+                            range: 1,
+                            attacks: 6,
+                            hit: 2,
+                            wound: 3,
+                            rend: 2,
+                            damage: 3,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "First of the Thunderstrike",
+                            type: "Passive",
+                            effect: "Les unités THUNDERSTRIKE à 18\" de ce modèle peuvent re-roll les jets de touche de 1."
+                        },
+                        {
+                            name: "Mantle of the First Storm",
+                            type: "Passive",
+                            effect: "Une fois par tour, ce modèle peut annuler une blessure ou blessure mortelle allouée."
+                        },
+                        {
+                            name: "Lord-Commander",
+                            type: "Passive",
+                            effect: "Ce modèle peut utiliser 2 command abilities dans le même tour."
+                        },
+                        {
+                            name: "Thunderous Charge",
+                            type: "Passive",
+                            effect: "Si ce modèle a chargé ce tour, ajoutez 1 au Damage de Sword Excelsior pour le reste du tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Lord-Celestant",
+                    points: 160,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 5,
+                    health: 8,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Stormcast Eternals", "Lord-Celestant"],
+                    weapons: [
+                        {
+                            name: "Runeblade",
+                            type: "melee",
+                            range: 1,
+                            attacks: 5,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Inescapable Vengeance",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de touche pour les attaques de ce modèle qui ciblent des HEROES ou MONSTERS."
+                        },
+                        {
+                            name: "Lord of the Host",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité REDEEMER à 12\". Jusqu'à la fin du tour, cette unité gagne +1 aux jets de blessure."
+                        },
+                        {
+                            name: "Sigmarite Thunderbolt",
+                            type: "Once Per Battle, Enemy Shooting Phase",
+                            effect: "Après qu'une unité ennemie a terminé ses attaques, infligez D3 blessures mortelles à cette unité."
+                        }
+                    ]
+                },
+                {
+                    name: "Knight-Judicator with Gryph-Hounds",
+                    points: 200,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 12,
+                    health: 8,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Beast", "Stormcast Eternals", "Knight-Judicator"],
+                    weapons: [
+                        {
+                            name: "Shockbolt Bow",
+                            type: "ranged",
+                            range: 24,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Gryph-hound Beaks and Claws",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Tireless Hunters",
+                            type: "Passive",
+                            effect: "Ce modèle peut courir et tirer dans le même tour."
+                        },
+                        {
+                            name: "Warning Cry",
+                            type: "Passive",
+                            effect: "Les unités STORMCAST ETERNALS à 12\" de ce modèle ne peuvent pas être surprises et peuvent tirer pendant la phase de charge ennemie."
+                        },
+                        {
+                            name: "Pack Hunters",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de touche de ce modèle si ce modèle est à 3\" d'au moins 2 autres modèles de cette unité."
+                        }
+                    ]
+                },
+
+                // ═══ BATTLELINE ═══
+                {
+                    name: "Liberators",
+                    points: 110,
+                    role: "Battleline, Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 10,
+                    save: 3,
+                    control: 1,
+                    keywords: ["Infantry", "Battleline", "Stormcast Eternals", "Redeemer", "Liberators"],
+                    weapons: [
+                        {
+                            name: "Warhammer",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 3,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Lay Low the Tyrants",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de touche pour les attaques de cette unité qui ciblent des HEROES ou MONSTERS."
+                        },
+                        {
+                            name: "Sigmarite Shields",
+                            type: "Passive",
+                            effect: "Cette unité a une Ward de 6+."
+                        },
+                        {
+                            name: "Stormforged",
+                            type: "Passive",
+                            effect: "Ignorez les modificateurs négatifs aux sauvegardes (sauf Rend)."
+                        }
+                    ]
+                },
+                {
+                    name: "Vindictors",
+                    points: 130,
+                    role: "Battleline, Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 10,
+                    save: 3,
+                    control: 1,
+                    keywords: ["Infantry", "Battleline", "Stormcast Eternals", "Thunderstrike", "Vindictors"],
+                    weapons: [
+                        {
+                            name: "Stormspear",
+                            type: "melee",
+                            range: 2,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Champion's Charge",
+                            type: "Passive",
+                            effect: "Si cette unité a chargé ce tour, ajoutez 1 au Damage de leurs armes pour le reste du tour."
+                        },
+                        {
+                            name: "Stormforged",
+                            type: "Passive",
+                            effect: "Ignorez le premier point de Rend des attaques ennemies."
+                        },
+                        {
+                            name: "Shields to the Fore",
+                            type: "Passive",
+                            effect: "Si cette unité compte 10+ modèles, elle a une Ward de 6+."
+                        }
+                    ]
+                },
+                {
+                    name: "Vanquishers",
+                    points: 120,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 10,
+                    save: 3,
+                    control: 1,
+                    keywords: ["Infantry", "Stormcast Eternals", "Thunderstrike", "Vanquishers"],
+                    weapons: [
+                        {
+                            name: "Celestial Greatsword",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Daemon Slayers",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de blessure pour les attaques de cette unité qui ciblent des unités DAEMON ou NIGHTHAUNT."
+                        },
+                        {
+                            name: "Cleaving Strike",
+                            type: "Passive",
+                            effect: "Les jets de touche non modifiés de 6 avec cette unité comptent comme 2 touches au lieu d'1."
+                        },
+                        {
+                            name: "Stormforged",
+                            type: "Passive",
+                            effect: "Ignorez le premier point de Rend des attaques ennemies."
+                        }
+                    ]
+                },
+
+                // ═══ RANGED / SUPPORT ═══
+                {
+                    name: "Judicators",
+                    points: 180,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 10,
+                    save: 3,
+                    control: 1,
+                    keywords: ["Infantry", "Stormcast Eternals", "Redeemer", "Judicators"],
+                    weapons: [
+                        {
+                            name: "Skybolt Bow",
+                            type: "ranged",
+                            range: 24,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Storm Gladius",
+                            type: "melee",
+                            range: 1,
+                            attacks: 1,
+                            hit: 4,
+                            wound: 3,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Rapid Fire",
+                            type: "Passive",
+                            effect: "Si cette unité n'a pas bougé ce tour, ajoutez 1 au nombre d'attaques de leurs armes à distance."
+                        },
+                        {
+                            name: "Chained Lightning",
+                            type: "Your Shooting Phase",
+                            effect: "Si un jet de touche non modifié de 6 est fait pour cette unité, vous pouvez faire une attaque supplémentaire gratuite contre la même cible."
+                        },
+                        {
+                            name: "Eternal Judgement",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de touche pour les attaques de cette unité qui ciblent des unités CHAOS."
+                        }
+                    ]
+                },
+                {
+                    name: "Annihilators",
+                    points: 200,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 15,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Infantry", "Stormcast Eternals", "Thunderstrike", "Annihilators"],
+                    weapons: [
+                        {
+                            name: "Meteoric Grandhammer",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: 3,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Blazing Impact",
+                            type: "Passive",
+                            effect: "Si cette unité a chargé ce tour, les jets de blessure non modifiés de 6 infligent 1 blessure mortelle supplémentaire."
+                        },
+                        {
+                            name: "Shield Bash",
+                            type: "Once Per Turn, Combat Phase",
+                            effect: "Choisissez une unité ennemie en contact. Lancez un dé. Sur 2+, cette unité subit -1 aux jets de touche jusqu'à la fin de la phase."
+                        },
+                        {
+                            name: "Stormforged",
+                            type: "Passive",
+                            effect: "Ignorez le premier point de Rend des attaques ennemies."
+                        }
+                    ]
+                },
+                {
+                    name: "Praetors",
+                    points: 170,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 15,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Infantry", "Stormcast Eternals", "Thunderstrike", "Praetors"],
+                    weapons: [
+                        {
+                            name: "Soulguard's Halberd",
+                            type: "melee",
+                            range: 2,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Soulguard",
+                            type: "Passive",
+                            effect: "Si cette unité est à 3\" d'un HERO STORMCAST ETERNALS ami, les attaques ennemies qui ciblent ce HERO sont redirigées vers cette unité."
+                        },
+                        {
+                            name: "Vanguard Shields",
+                            type: "Passive",
+                            effect: "Cette unité a une Ward de 5+."
+                        },
+                        {
+                            name: "Defiant Avengers",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de touche de cette unité si un HERO ami a été tué ce tour."
+                        }
+                    ]
+                },
+
+                // ═══ CAVALRY ═══
+                {
+                    name: "Vigilors with Gryph-Stalkers",
+                    points: 160,
+                    role: "Cavalry",
+                    category: "Cavalry",
+                    move: 12,
+                    health: 15,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Cavalry", "Beast", "Stormcast Eternals", "Thunderstrike", "Vigilors"],
+                    weapons: [
+                        {
+                            name: "Headsman's Axe",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Gryph-stalker's Razor Beak and Claws",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Lightning-fast Strikes",
+                            type: "Passive",
+                            effect: "Cette unité attaque en premier dans la combat phase, avant toutes les autres unités."
+                        },
+                        {
+                            name: "Sentry's Gaze",
+                            type: "Passive",
+                            effect: "Les unités ennemies ne peuvent pas être placées en réserve à moins de 18\" de cette unité."
+                        },
+                        {
+                            name: "Fearsome Pounce",
+                            type: "Passive",
+                            effect: "Si cette unité a chargé ce tour, ajoutez 1 aux jets de blessure pour le reste du tour."
+                        }
+                    ]
+                },
+
+                // ═══ MONSTERS ═══
+                {
+                    name: "Stormdrake Guard",
+                    points: 360,
+                    role: "Monster, Cavalry",
+                    category: "Monsters",
+                    move: 10,
+                    health: 30,
+                    save: 3,
+                    control: 10,
+                    keywords: ["Monster", "Cavalry", "Fly", "Stormcast Eternals", "Thunderstrike", "Stormdrake Guard"],
+                    weapons: [
+                        {
+                            name: "Drakemount's Claws and Fangs",
+                            type: "melee",
+                            range: 2,
+                            attacks: 6,
+                            hit: 3,
+                            wound: 3,
+                            rend: 2,
+                            damage: 3,
+                            abilities: []
+                        },
+                        {
+                            name: "Drakerider's Lance",
+                            type: "melee",
+                            range: 2,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Draconic Breath",
+                            type: "ranged",
+                            range: 12,
+                            attacks: "D6",
+                            hit: 2,
+                            wound: 3,
+                            rend: 2,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Draconic Onslaught",
+                            type: "Passive",
+                            effect: "Si cette unité a chargé ce tour, ajoutez 1 au Damage de toutes les armes pour le reste du tour."
+                        },
+                        {
+                            name: "Mortal Defenders",
+                            type: "Passive",
+                            effect: "Cette unité compte comme 10 modèles pour les objectifs."
+                        },
+                        {
+                            name: "Fearsome Beasts",
+                            type: "Passive",
+                            effect: "Les unités ennemies à 3\" de cette unité subissent -1 au Bravery."
+                        }
+                    ]
+                },
+                {
+                    name: "Dracothian Guard Fulminators",
+                    points: 220,
+                    role: "Cavalry",
+                    category: "Cavalry",
+                    move: 10,
+                    health: 20,
+                    save: 3,
+                    control: 5,
+                    keywords: ["Cavalry", "Stormcast Eternals", "Extremis", "Dracothian Guard"],
+                    weapons: [
+                        {
+                            name: "Stormstrike Glaive",
+                            type: "melee",
+                            range: 2,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Dracoth's Claws and Fangs",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Impaling Strike",
+                            type: "Passive",
+                            effect: "Si cette unité a chargé ce tour, les jets de blessure non modifiés de 6 avec Stormstrike Glaive infligent 1 blessure mortelle supplémentaire."
+                        },
+                        {
+                            name: "Intolerable Damage",
+                            type: "Passive",
+                            effect: "Chaque fois que cette unité subit des blessures, lancez un dé. Sur 5+, infligez 1 blessure mortelle à l'unité attaquante."
+                        },
+                        {
+                            name: "Storm Blast",
+                            type: "Your Shooting Phase",
+                            effect: "Choisissez une unité ennemie à 6\". Infligez D3 blessures mortelles."
+                        }
+                    ]
+                }
+            ]
+        };
+
         // BASE DE DONNÉES SIMPLIFIÉE POUR TOUTES LES ARMÉES
         const ARMIES_DB = {
             alliances: {
@@ -4045,7 +4788,7 @@
             },
             factions: [
                 // ORDER
-                { id: "stormcast", name: "Stormcast Eternals", alliance: "order" },
+                { id: "stormcast", name: "Stormcast Eternals", alliance: "order", complete: true },
                 { id: "sylvaneth", name: "Sylvaneth", alliance: "order" },
                 { id: "daughters", name: "Daughters of Khaine", alliance: "order" },
                 { id: "idoneth", name: "Idoneth Deepkin", alliance: "order" },
@@ -4229,6 +4972,9 @@
                 { name: "Squig Hoppers", faction: "gloomspite", points: 90, role: "Fast Attack" },
                 { name: "Mangler Squigs", faction: "gloomspite", points: 240, role: "Monster" },
                 { name: "Loonboss on Giant Cave Squig", faction: "gloomspite", points: 110, role: "Hero" },
+
+                // STORMCAST ETERNALS - Référence aux données complètes
+                ...STORMCAST_ETERNALS_COMPLETE.warscrolls.map(w => ({ ...w, faction: "stormcast" })),
 
                 // KHARADRON OVERLORDS - Référence aux données complètes
                 ...KHARADRON_OVERLORDS_COMPLETE.warscrolls.map(w => ({ ...w, faction: "kharadron" })),
@@ -4486,7 +5232,8 @@
             'behemat': { data: SONS_OF_BEHEMAT_COMPLETE, name: '💥 Sons of Behemat', color: '#FF8C00' },
             'fec': { data: FLESH_EATER_COURTS_COMPLETE, name: '🧛 Flesh-eater Courts', color: '#9370DB' },
             'fyreslayers': { data: FYRESLAYERS_COMPLETE, name: '🔥 Fyreslayers', color: '#FF4500' },
-            'kharadron': { data: KHARADRON_OVERLORDS_COMPLETE, name: '⚙️ Kharadron Overlords', color: '#4169E1' }
+            'kharadron': { data: KHARADRON_OVERLORDS_COMPLETE, name: '⚙️ Kharadron Overlords', color: '#4169E1' },
+            'stormcast': { data: STORMCAST_ETERNALS_COMPLETE, name: '⚡ Stormcast Eternals', color: '#0066CC' }
         };
 
         function FactionDetailView({ factionId, onBack }) {
