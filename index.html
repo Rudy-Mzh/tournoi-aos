@@ -4774,6 +4774,887 @@
                             effect: "Choisissez une unité ennemie à 6\". Infligez D3 blessures mortelles."
                         }
                     ]
+                },
+
+                // ═══ HEROES SUPPLÉMENTAIRES ═══
+                {
+                    name: "Lord-Celestant on Dracoth",
+                    points: 220,
+                    role: "Hero, Cavalry",
+                    category: "Heroes",
+                    move: 10,
+                    health: 12,
+                    save: 3,
+                    control: 3,
+                    keywords: ["Hero", "Cavalry", "Stormcast Eternals", "Extremis", "Lord-Celestant"],
+                    weapons: [
+                        {
+                            name: "Tempestos Hammer",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: 3,
+                            abilities: []
+                        },
+                        {
+                            name: "Dracoth's Claws and Fangs",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Lord of the Host",
+                            type: "Passive",
+                            effect: "Les unités EXTREMIS à 12\" de ce modèle peuvent re-roll les jets de charge ratés."
+                        },
+                        {
+                            name: "Intolerable Damage",
+                            type: "Passive",
+                            effect: "Chaque fois que ce modèle subit des blessures, lancez un dé. Sur 5+, infligez 1 blessure mortelle à l'unité attaquante."
+                        },
+                        {
+                            name: "Storm Breath",
+                            type: "Your Shooting Phase",
+                            effect: "Choisissez une unité ennemie à 6\". Lancez un dé. Sur 2+, infligez D3 blessures mortelles."
+                        }
+                    ]
+                },
+                {
+                    name: "Lord-Relictor",
+                    points: 140,
+                    role: "Hero, Priest",
+                    category: "Heroes",
+                    move: 5,
+                    health: 6,
+                    save: 3,
+                    control: 1,
+                    keywords: ["Hero", "Infantry", "Priest", "Stormcast Eternals", "Redeemer", "Lord-Relictor"],
+                    weapons: [
+                        {
+                            name: "Relic Hammer",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Lightning Storm",
+                            type: "Prayer (3+), Your Hero Phase",
+                            effect: "Si réussi, choisissez une unité ennemie visible à 18\". Infligez D3 blessures mortelles. Sur un jet de prière de 6+, infligez D6 blessures mortelles à la place."
+                        },
+                        {
+                            name: "Healing Storm",
+                            type: "Prayer (3+), Your Hero Phase",
+                            effect: "Si réussi, choisissez une unité amie STORMCAST ETERNALS à 12\". Soignez D3 blessures réparties comme vous le souhaitez parmi les modèles de cette unité."
+                        },
+                        {
+                            name: "Spiritual Weapons",
+                            type: "Passive",
+                            effect: "Les attaques de ce modèle ont +1 aux jets de touche contre les unités DAEMON et NIGHTHAUNT."
+                        }
+                    ]
+                },
+                {
+                    name: "Knight-Vexillor",
+                    points: 130,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 5,
+                    health: 6,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Totem", "Stormcast Eternals", "Redeemer", "Knight-Vexillor"],
+                    weapons: [
+                        {
+                            name: "Warhammer",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Icon of War",
+                            type: "Passive",
+                            effect: "Les unités STORMCAST ETERNALS à 12\" de ce modèle peuvent re-roll les jets de charge ratés."
+                        },
+                        {
+                            name: "Meteoric Standard",
+                            type: "Once Per Battle, Deployment Phase",
+                            effect: "Plantez une bannière. Les unités STORMCAST ETERNALS qui arrivent de réserve peuvent être déployées à 6\" de la bannière au lieu de 9\" des ennemis."
+                        },
+                        {
+                            name: "Pennant of the Stormbringer",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de touche pour les unités STORMCAST ETERNALS à 12\" de ce modèle pour les attaques à distance."
+                        }
+                    ]
+                },
+                {
+                    name: "Knight-Heraldor",
+                    points: 110,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 5,
+                    health: 6,
+                    save: 3,
+                    control: 1,
+                    keywords: ["Hero", "Infantry", "Stormcast Eternals", "Redeemer", "Knight-Heraldor"],
+                    weapons: [
+                        {
+                            name: "Sigmarite Broadsword",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Thunderblast",
+                            type: "Your Shooting Phase",
+                            effect: "Choisissez un terrain à 18\". Toutes les unités à 6\" de ce terrain subissent D3 blessures mortelles."
+                        },
+                        {
+                            name: "Onward to Glory",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité STORMCAST ETERNALS à 12\". Cette unité peut courir et tirer dans le même tour jusqu'à la fin du tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Knight-Azyros",
+                    points: 160,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 12,
+                    health: 7,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Fly", "Stormcast Eternals", "Redeemer", "Knight-Azyros"],
+                    weapons: [
+                        {
+                            name: "Starblade",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "The Light of Sigmar",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité ennemie à 10\". Jusqu'à la fin du tour, cette unité ne peut pas être placée en réserve et subit -1 aux sauvegardes."
+                        },
+                        {
+                            name: "Illuminator",
+                            type: "Passive",
+                            effect: "Les unités STORMCAST ETERNALS à 12\" de ce modèle ignorent les modificateurs négatifs aux jets de touche."
+                        },
+                        {
+                            name: "Celestial Beacon",
+                            type: "Passive",
+                            effect: "Les unités STORMCAST ETERNALS qui arrivent de réserve peuvent être déployées à 5\" de ce modèle au lieu de 9\" des ennemis."
+                        }
+                    ]
+                },
+                {
+                    name: "Knight-Venator",
+                    points: 120,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 12,
+                    health: 6,
+                    save: 4,
+                    control: 1,
+                    keywords: ["Hero", "Infantry", "Fly", "Stormcast Eternals", "Redeemer", "Knight-Venator"],
+                    weapons: [
+                        {
+                            name: "Realmhunter's Bow",
+                            type: "ranged",
+                            range: 30,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Heavens-wrought Blade",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Star-eagle",
+                            type: "Once Per Battle, Your Shooting Phase",
+                            effect: "Choisissez une unité ennemie visible. Infligez 3 blessures mortelles à cette unité."
+                        },
+                        {
+                            name: "Star-fated Arrow",
+                            type: "Once Per Battle, Your Shooting Phase",
+                            effect: "Une attaque avec le Realmhunter's Bow inflige 3D6 blessures mortelles au lieu de son Damage normal."
+                        },
+                        {
+                            name: "Winged Hunter",
+                            type: "Passive",
+                            effect: "Ce modèle peut courir et tirer dans le même tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Lord-Veritant",
+                    points: 150,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 12,
+                    health: 7,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Beast", "Stormcast Eternals", "Redeemer", "Lord-Veritant"],
+                    weapons: [
+                        {
+                            name: "Judgment Blade",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Gryph-crow's Beak",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Sanction",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité ennemie WIZARD, PRIEST ou DAEMON à 6\". Lancez un dé. Sur 2+, cette unité ne peut pas utiliser de capacités magiques ou de prières jusqu'à votre prochain hero phase."
+                        },
+                        {
+                            name: "Lantern of Abjuration",
+                            type: "Passive",
+                            effect: "Les unités DAEMON à 12\" de ce modèle subissent -1 aux jets de touche et de blessure."
+                        }
+                    ]
+                },
+
+                // ═══ BATTLELINE SUPPLÉMENTAIRES ═══
+                {
+                    name: "Sequitors",
+                    points: 130,
+                    role: "Battleline, Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 10,
+                    save: 3,
+                    control: 1,
+                    keywords: ["Infantry", "Battleline", "Stormcast Eternals", "Sacrosanct", "Sequitors"],
+                    weapons: [
+                        {
+                            name: "Stormsmite Maul",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 3,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Aetheric Channelling",
+                            type: "Passive",
+                            effect: "Au début de chaque battle round, choisissez : cette unité gagne soit +1 aux sauvegardes, soit +1 aux jets de blessure jusqu'au prochain hero phase."
+                        },
+                        {
+                            name: "Stormkeep",
+                            type: "Passive",
+                            effect: "Si cette unité compte 10+ modèles, elle a une Ward de 6+."
+                        },
+                        {
+                            name: "Redemption Cache",
+                            type: "Passive",
+                            effect: "Une fois par bataille, cette unité peut ignorer toutes les blessures et blessures mortelles allouées pendant une phase."
+                        }
+                    ]
+                },
+                {
+                    name: "Prosecutors with Stormcall Javelins",
+                    points: 90,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 12,
+                    health: 6,
+                    save: 4,
+                    control: 1,
+                    keywords: ["Infantry", "Fly", "Stormcast Eternals", "Redeemer", "Prosecutors"],
+                    weapons: [
+                        {
+                            name: "Stormcall Javelin",
+                            type: "ranged",
+                            range: 18,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Sigmarite Weapons",
+                            type: "melee",
+                            range: 1,
+                            attacks: 1,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Heralds of Righteousness",
+                            type: "Passive",
+                            effect: "Cette unité peut courir et tirer dans le même tour."
+                        },
+                        {
+                            name: "Stormcall Strike",
+                            type: "Your Shooting Phase",
+                            effect: "Les jets de touche non modifiés de 6 avec Stormcall Javelin infligent 1 blessure mortelle supplémentaire."
+                        }
+                    ]
+                },
+
+                // ═══ ÉLITES SUPPLÉMENTAIRES ═══
+                {
+                    name: "Retributors",
+                    points: 180,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 15,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Infantry", "Stormcast Eternals", "Redeemer", "Paladins", "Retributors"],
+                    weapons: [
+                        {
+                            name: "Lightning Hammer",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 2,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Blast to Ashes",
+                            type: "Passive",
+                            effect: "Si un jet de touche non modifié de 6 est fait pour cette unité, cette attaque inflige 2 blessures mortelles au lieu de son Damage normal."
+                        },
+                        {
+                            name: "Starsoul Mace",
+                            type: "Passive",
+                            effect: "Si cette unité inclut un modèle avec Starsoul Mace, une fois par battle round, cette unité peut infliger D3 blessures mortelles à une unité ennemie à 6\"."
+                        }
+                    ]
+                },
+                {
+                    name: "Decimators",
+                    points: 180,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 15,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Infantry", "Stormcast Eternals", "Redeemer", "Paladins", "Decimators"],
+                    weapons: [
+                        {
+                            name: "Thunderaxe",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Cleaving Blow",
+                            type: "Passive",
+                            effect: "Ajoutez 1 au Damage des attaques de cette unité qui ciblent des unités avec 5+ modèles."
+                        },
+                        {
+                            name: "Stormforged",
+                            type: "Passive",
+                            effect: "Ignorez le premier point de Rend des attaques ennemies."
+                        }
+                    ]
+                },
+                {
+                    name: "Protectors",
+                    points: 170,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 15,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Infantry", "Stormcast Eternals", "Redeemer", "Paladins", "Protectors"],
+                    weapons: [
+                        {
+                            name: "Stormstrike Glaive",
+                            type: "melee",
+                            range: 2,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Storm-forged Guardians",
+                            type: "Reaction: You declared a charge",
+                            effect: "Choisissez une unité ennemie qui a déclaré une charge contre cette unité. Infligez D3 blessures mortelles à cette unité."
+                        },
+                        {
+                            name: "Stormstrike Glaive",
+                            type: "Passive",
+                            effect: "Les jets de blessure non modifiés de 6 avec cette arme infligent 1 blessure mortelle supplémentaire."
+                        }
+                    ]
+                },
+                {
+                    name: "Evocators",
+                    points: 220,
+                    role: "Infantry, Wizard",
+                    category: "Infantry",
+                    move: 5,
+                    health: 15,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Infantry", "Wizard", "Stormcast Eternals", "Sacrosanct", "Evocators"],
+                    weapons: [
+                        {
+                            name: "Tempest Blade and Stormstave",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Empower",
+                            type: "Spell (5+), Your Hero Phase",
+                            effect: "Si réussi, jusqu'à la fin du tour, ajoutez 1 aux jets de blessure pour les attaques de cette unité."
+                        },
+                        {
+                            name: "Celestial Lightning Arc",
+                            type: "Combat Phase",
+                            effect: "Après que cette unité a combattu, lancez un dé pour chaque unité ennemie à 3\". Sur 4+, infligez D3 blessures mortelles à cette unité."
+                        },
+                        {
+                            name: "Arcane Heritage",
+                            type: "Passive",
+                            effect: "Cette unité peut lancer 1 sort par tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Castigators",
+                    points: 90,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 6,
+                    save: 4,
+                    control: 1,
+                    keywords: ["Infantry", "Stormcast Eternals", "Sacrosanct", "Castigators"],
+                    weapons: [
+                        {
+                            name: "Thunderhead Greatbow",
+                            type: "ranged",
+                            range: 18,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Storm Gladius",
+                            type: "melee",
+                            range: 1,
+                            attacks: 1,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Burst of Celestial Energy",
+                            type: "Passive",
+                            effect: "Les jets de blessure non modifiés de 6 avec Thunderhead Greatbow infligent 2 blessures mortelles au lieu de son Damage normal."
+                        },
+                        {
+                            name: "Aetheric Channelling",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez : cette unité gagne soit +1 aux sauvegardes, soit +1 aux jets de touche jusqu'à votre prochain hero phase."
+                        }
+                    ]
+                },
+                {
+                    name: "Desolators",
+                    points: 180,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 15,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Infantry", "Stormcast Eternals", "Thunderstrike", "Desolators"],
+                    weapons: [
+                        {
+                            name: "Thunderaxe",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 2,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Ruination",
+                            type: "Passive",
+                            effect: "Les jets de touche non modifiés de 6 avec cette unité comptent comme 2 touches au lieu d'1."
+                        },
+                        {
+                            name: "Stormforged",
+                            type: "Passive",
+                            effect: "Ignorez le premier point de Rend des attaques ennemies."
+                        }
+                    ]
+                },
+
+                // ═══ VANGUARD ═══
+                {
+                    name: "Vanguard-Hunters",
+                    points: 120,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 6,
+                    health: 10,
+                    save: 4,
+                    control: 1,
+                    keywords: ["Infantry", "Stormcast Eternals", "Vanguard", "Vanguard-Hunters"],
+                    weapons: [
+                        {
+                            name: "Boltstorm Pistol",
+                            type: "ranged",
+                            range: 9,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Storm Sabre",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Astral Compass",
+                            type: "Deployment",
+                            effect: "Au lieu de déployer normalement, cette unité peut être placée en réserve et arriver au début de n'importe quel mouvement à 7\" d'un bord de table et à plus de 9\" des ennemis."
+                        },
+                        {
+                            name: "Tireless Trackers",
+                            type: "Passive",
+                            effect: "Cette unité peut courir et tirer dans le même tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Vanguard-Raptors with Longstrike Crossbows",
+                    points: 140,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 5,
+                    health: 10,
+                    save: 4,
+                    control: 1,
+                    keywords: ["Infantry", "Stormcast Eternals", "Vanguard", "Vanguard-Raptors"],
+                    weapons: [
+                        {
+                            name: "Longstrike Crossbow",
+                            type: "ranged",
+                            range: 30,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Heavy Stock",
+                            type: "melee",
+                            range: 1,
+                            attacks: 1,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Headshot",
+                            type: "Passive",
+                            effect: "Les jets de touche non modifiés de 6 avec Longstrike Crossbow infligent 2 blessures mortelles au lieu de son Damage normal."
+                        },
+                        {
+                            name: "Suppressing Fire",
+                            type: "Your Shooting Phase",
+                            effect: "Choisissez une unité ennemie touchée par cette unité ce tour. Cette unité ennemie subit -1 aux jets de touche jusqu'à la fin du tour."
+                        }
+                    ]
+                },
+
+                // ═══ NOMMÉS / UNIQUE ═══
+                {
+                    name: "Celestant-Prime",
+                    points: 340,
+                    role: "Hero, Unique",
+                    category: "Heroes",
+                    move: 12,
+                    health: 12,
+                    save: 3,
+                    control: 3,
+                    keywords: ["Hero", "Fly", "Unique", "Stormcast Eternals", "Celestant-Prime"],
+                    weapons: [
+                        {
+                            name: "Ghal Maraz",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 2,
+                            wound: 2,
+                            rend: 3,
+                            damage: 3,
+                            abilities: []
+                        },
+                        {
+                            name: "Cometstrike Sceptre",
+                            type: "ranged",
+                            range: 18,
+                            attacks: 1,
+                            hit: 0,
+                            wound: 0,
+                            rend: 0,
+                            damage: 0,
+                            abilities: ["Voir ability"]
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Cometstrike Sceptre",
+                            type: "Your Shooting Phase",
+                            effect: "Choisissez une unité ennemie visible à 18\". Infligez D3 blessures mortelles. Si vous choisissez un HERO ou MONSTER, infligez D6 blessures mortelles à la place."
+                        },
+                        {
+                            name: "Retribution from On High",
+                            type: "Deployment",
+                            effect: "Ce modèle DOIT être placé en réserve. Il peut arriver au début de n'importe quel tour après le premier, n'importe où sur le champ de bataille à plus de 9\" des ennemis."
+                        },
+                        {
+                            name: "Orrery of Celestial Fates",
+                            type: "Once Per Battle, Start of Any Phase",
+                            effect: "Lancez un dé. Jusqu'à la fin de la phase, modifiez tous les jets de dés de ce résultat (sauf les jets de sauvegarde Ward)."
+                        }
+                    ]
+                },
+                {
+                    name: "Yndrasta, the Celestial Spear",
+                    points: 310,
+                    role: "Hero, Unique",
+                    category: "Heroes",
+                    move: 12,
+                    health: 10,
+                    save: 3,
+                    control: 3,
+                    keywords: ["Hero", "Fly", "Unique", "Stormcast Eternals", "Thunderstrike", "Yndrasta"],
+                    weapons: [
+                        {
+                            name: "Thengavor",
+                            type: "melee",
+                            range: 2,
+                            attacks: 4,
+                            hit: 2,
+                            wound: 2,
+                            rend: 2,
+                            damage: 3,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "The Prime Huntress",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de touche et de blessure pour les attaques de ce modèle qui ciblent des MONSTERS."
+                        },
+                        {
+                            name: "Thengavor",
+                            type: "Passive",
+                            effect: "Si un MONSTER est tué par ce modèle, soignez D3 blessures allouées à ce modèle."
+                        },
+                        {
+                            name: "Champion of Sigmar",
+                            type: "Passive",
+                            effect: "Une fois par tour, ce modèle peut annuler une blessure ou blessure mortelle allouée."
+                        },
+                        {
+                            name: "Dazzling Light",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité ennemie à 12\". Jusqu'à la fin du tour, cette unité subit -1 aux jets de touche."
+                        }
+                    ]
+                },
+
+                // ═══ WAR MACHINES ═══
+                {
+                    name: "Celestar Ballista",
+                    points: 140,
+                    role: "War Machine",
+                    category: "War Machines",
+                    move: 4,
+                    health: 7,
+                    save: 4,
+                    control: 1,
+                    keywords: ["War Machine", "Stormcast Eternals", "Redeemer", "Celestar Ballista"],
+                    weapons: [
+                        {
+                            name: "Celestar Bolts",
+                            type: "ranged",
+                            range: 30,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 2,
+                            damage: "D3",
+                            abilities: []
+                        },
+                        {
+                            name: "Sigmarite Weapons",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Chained Lightning",
+                            type: "Your Shooting Phase",
+                            effect: "Si ce modèle touche une unité avec Celestar Bolts, vous pouvez choisir une autre unité ennemie à 6\" de la première. Infligez D3 blessures mortelles à la seconde unité."
+                        },
+                        {
+                            name: "Versatile Weapon",
+                            type: "Passive",
+                            effect: "Si ce modèle ne bouge pas ce tour, ajoutez 1 aux jets de touche et au Damage de Celestar Bolts."
+                        }
+                    ]
                 }
             ]
         };
