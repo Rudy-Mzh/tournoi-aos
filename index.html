@@ -4480,16 +4480,279 @@
             );
         }
 
+        // Mapper les données complètes par faction
+        const FACTION_DATA_MAP = {
+            'seraphon': { data: SERAPHON_COMPLETE, name: '🦎 Seraphon', color: '#00CED1' },
+            'behemat': { data: SONS_OF_BEHEMAT_COMPLETE, name: '💥 Sons of Behemat', color: '#FF8C00' },
+            'fec': { data: FLESH_EATER_COURTS_COMPLETE, name: '🧛 Flesh-eater Courts', color: '#9370DB' },
+            'fyreslayers': { data: FYRESLAYERS_COMPLETE, name: '🔥 Fyreslayers', color: '#FF4500' },
+            'kharadron': { data: KHARADRON_OVERLORDS_COMPLETE, name: '⚙️ Kharadron Overlords', color: '#4169E1' }
+        };
+
+        function FactionDetailView({ factionId, onBack }) {
+            const [detailTab, setDetailTab] = useState('traits');
+            const [selectedUnit, setSelectedUnit] = useState(null);
+
+            const factionInfo = FACTION_DATA_MAP[factionId];
+            if (!factionInfo) return null;
+
+            const { data, name, color } = factionInfo;
+
+            return React.createElement('div', { style: { maxWidth: '1400px', margin: '0 auto', padding: '10px' } },
+                // Header
+                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px', marginBottom: '10px' } },
+                    React.createElement('button', {
+                        onClick: onBack,
+                        style: {
+                            padding: '8px 16px',
+                            background: '#667eea',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            marginBottom: '10px',
+                            fontWeight: '600'
+                        }
+                    }, '← Retour aux armées'),
+                    React.createElement('h1', { style: { fontSize: '26px', fontWeight: 'bold', margin: '0', color } }, name),
+                    React.createElement('p', { style: { margin: '5px 0 0 0', color: '#666' } },
+                        `${data.warscrolls.length} Warscrolls • ${data.battleTraits.length} Battle Traits • ${data.heroicTraits.length} Heroic Traits • ${data.artefacts.length} Artefacts`
+                    ),
+                    React.createElement('div', { style: { marginTop: '8px', padding: '6px 12px', background: '#e8f5e9', color: '#2e7d32', borderRadius: '6px', fontSize: '11px', fontWeight: '600', display: 'inline-block' } },
+                        '✓ 100% COMPLET'
+                    )
+                ),
+
+                // Tabs
+                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '10px', marginBottom: '10px' } },
+                    React.createElement('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } },
+                        ['traits', 'warscrolls'].map(tab =>
+                            React.createElement('button', {
+                                key: tab,
+                                onClick: () => { setDetailTab(tab); setSelectedUnit(null); },
+                                style: {
+                                    padding: '10px 20px',
+                                    background: detailTab === tab ? color : '#f5f5f5',
+                                    color: detailTab === tab ? '#fff' : '#333',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    fontSize: '14px'
+                                }
+                            }, tab === 'traits' ? '🎯 Traits & Règles' : '⚔️ Warscrolls')
+                        )
+                    )
+                ),
+
+                // Content
+                detailTab === 'traits'
+                    ? React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+                        // Battle Traits
+                        React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                            React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color } }, '⚡ Battle Traits'),
+                            data.battleTraits.map((trait, i) =>
+                                React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                    React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, trait.name),
+                                    React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, trait.effect || trait.description)
+                                )
+                            )
+                        ),
+
+                        // Asterisms (Seraphon uniquement)
+                        data.asterisms && React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                            React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color } }, '✨ Asterisms'),
+                            data.asterisms.map((ast, i) =>
+                                React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                    React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, ast.name),
+                                    React.createElement('div', { style: { fontSize: '11px', color: '#888', marginBottom: '4px', fontStyle: 'italic' } }, `Débloqué: ${ast.unlock}`),
+                                    React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, ast.effect)
+                                )
+                            )
+                        ),
+
+                        // Tribes (Sons of Behemat uniquement)
+                        data.tribes && React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                            React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color } }, '🏔️ Tribes'),
+                            data.tribes.map((tribe, i) =>
+                                React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                    React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, tribe.name),
+                                    React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, tribe.effect)
+                                )
+                            )
+                        ),
+
+                        // Heroic Traits
+                        React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                            React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color } }, '🦁 Heroic Traits'),
+                            data.heroicTraits.map((trait, i) =>
+                                React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                    React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, trait.name),
+                                    trait.type && React.createElement('div', { style: { fontSize: '11px', color: '#888', marginBottom: '4px', fontStyle: 'italic' } }, trait.type),
+                                    React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, trait.effect)
+                                )
+                            )
+                        ),
+
+                        // Artefacts
+                        React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                            React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color } }, '💎 Artefacts of Power'),
+                            data.artefacts.map((art, i) =>
+                                React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                    React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, art.name),
+                                    art.type && React.createElement('div', { style: { fontSize: '11px', color: '#888', marginBottom: '4px', fontStyle: 'italic' } }, art.type),
+                                    React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, art.effect)
+                                )
+                            )
+                        ),
+
+                        // Spell Lores (si présent)
+                        data.spellLores && React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                            React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color } }, '🔮 Spell Lores'),
+                            Object.entries(data.spellLores).map(([loreName, spells], i) =>
+                                React.createElement('div', { key: i, style: { marginBottom: '15px' } },
+                                    React.createElement('h3', { style: { fontSize: '16px', fontWeight: 'bold', marginBottom: '8px', textTransform: 'capitalize' } },
+                                        loreName.replace(/([A-Z])/g, ' $1').trim()
+                                    ),
+                                    spells.map((spell, j) =>
+                                        React.createElement('div', { key: j, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                            React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, spell.name),
+                                            React.createElement('div', { style: { fontSize: '11px', color: '#888', marginBottom: '4px' } },
+                                                `Casting Value: ${spell.castingValue} • Range: ${spell.range}`
+                                            ),
+                                            React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, spell.effect)
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                    : selectedUnit
+                        ? React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                            React.createElement('button', {
+                                onClick: () => setSelectedUnit(null),
+                                style: {
+                                    padding: '6px 12px',
+                                    background: '#f5f5f5',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    marginBottom: '10px',
+                                    fontWeight: '600'
+                                }
+                            }, '← Retour aux warscrolls'),
+                            React.createElement('h2', { style: { fontSize: '22px', fontWeight: 'bold', marginBottom: '10px', color } }, selectedUnit.name),
+
+                            // Stats
+                            React.createElement('div', { style: { marginBottom: '15px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '8px' } }, '📊 Caractéristiques'),
+                                React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '8px', fontSize: '13px' } },
+                                    React.createElement('div', null, React.createElement('strong', null, 'Move:'), ` ${selectedUnit.move}"`),
+                                    React.createElement('div', null, React.createElement('strong', null, 'Health:'), ` ${selectedUnit.health}`),
+                                    React.createElement('div', null, React.createElement('strong', null, 'Save:'), ` ${selectedUnit.save}+`),
+                                    React.createElement('div', null, React.createElement('strong', null, 'Control:'), ` ${selectedUnit.control}`),
+                                    React.createElement('div', null, React.createElement('strong', null, 'Points:'), ` ${selectedUnit.points}`)
+                                )
+                            ),
+
+                            // Weapons
+                            React.createElement('div', { style: { marginBottom: '15px' } },
+                                React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '8px', fontSize: '16px' } }, '⚔️ Armes'),
+                                selectedUnit.weapons.map((weapon, i) =>
+                                    React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                        React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } },
+                                            `${weapon.name} ${weapon.type === 'ranged' ? '🏹' : '⚔️'}`
+                                        ),
+                                        React.createElement('div', { style: { fontSize: '12px', color: '#555', marginBottom: '4px' } },
+                                            `Range: ${weapon.range}" • Attacks: ${weapon.attacks} • Hit: ${weapon.hit}+ • Wound: ${weapon.wound}+ • Rend: ${weapon.rend} • Damage: ${weapon.damage}`
+                                        ),
+                                        weapon.abilities.length > 0 && React.createElement('div', { style: { fontSize: '11px', color: '#888', fontStyle: 'italic' } },
+                                            `Abilities: ${weapon.abilities.join(', ')}`
+                                        )
+                                    )
+                                )
+                            ),
+
+                            // Abilities
+                            React.createElement('div', { style: { marginBottom: '15px' } },
+                                React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '8px', fontSize: '16px' } }, '✨ Capacités'),
+                                selectedUnit.abilities.map((ability, i) =>
+                                    React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                        React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, ability.name),
+                                        React.createElement('div', { style: { fontSize: '11px', color: '#888', marginBottom: '4px', fontStyle: 'italic' } }, ability.type),
+                                        React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, ability.effect)
+                                    )
+                                )
+                            ),
+
+                            // Keywords
+                            React.createElement('div', { style: { marginBottom: '15px' } },
+                                React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '8px', fontSize: '16px' } }, '🏷️ Keywords'),
+                                React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '6px' } },
+                                    selectedUnit.keywords.map((kw, i) =>
+                                        React.createElement('span', {
+                                            key: i,
+                                            style: {
+                                                padding: '4px 8px',
+                                                background: color,
+                                                color: '#fff',
+                                                borderRadius: '4px',
+                                                fontSize: '11px',
+                                                fontWeight: '600'
+                                            }
+                                        }, kw)
+                                    )
+                                )
+                            )
+                        )
+                        : React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                            React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' } },
+                                `⚔️ Warscrolls (${data.warscrolls.length})`
+                            ),
+                            React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px' } },
+                                data.warscrolls.map((unit, i) =>
+                                    React.createElement('div', {
+                                        key: i,
+                                        onClick: () => setSelectedUnit(unit),
+                                        style: {
+                                            padding: '12px',
+                                            background: '#fff',
+                                            border: '2px solid #e5e5e5',
+                                            borderRadius: '8px',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s',
+                                            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                                        }
+                                    },
+                                        React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '6px' } },
+                                            React.createElement('div', { style: { fontWeight: 'bold', fontSize: '14px' } }, unit.name),
+                                            React.createElement('div', { style: { color, fontWeight: 'bold', fontSize: '14px' } }, unit.points + ' pts')
+                                        ),
+                                        React.createElement('div', { style: { fontSize: '11px', color: '#666', marginBottom: '6px' } }, unit.role),
+                                        React.createElement('div', { style: { fontSize: '11px', color: '#999', display: 'flex', gap: '6px' } },
+                                            React.createElement('span', null, `M: ${unit.move}"`),
+                                            React.createElement('span', null, `HP: ${unit.health}`),
+                                            React.createElement('span', null, `Sv: ${unit.save}+`)
+                                        )
+                                    )
+                                )
+                            )
+                        )
+            );
+        }
+
         function App() {
             const [selectedAlliance, setSelectedAlliance] = useState(null);
             const [selectedFaction, setSelectedFaction] = useState(null);
             const [search, setSearch] = useState('');
-            const [viewMode, setViewMode] = useState('main'); // 'main' ou 'seraphon-detail'
+            const [viewMode, setViewMode] = useState('main');
+            const [detailFactionId, setDetailFactionId] = useState(null);
 
-            // Vue détaillée Seraphon
-            if (viewMode === 'seraphon-detail') {
-                return React.createElement(SeraphonDetailView, {
-                    onBack: () => { setViewMode('main'); setSelectedFaction(null); }
+            // Vue détaillée pour faction complète
+            if (viewMode === 'faction-detail' && detailFactionId) {
+                return React.createElement(FactionDetailView, {
+                    factionId: detailFactionId,
+                    onBack: () => { setViewMode('main'); setDetailFactionId(null); setSelectedFaction(null); }
                 });
             }
 
@@ -4577,8 +4840,9 @@
                         return React.createElement('div', {
                             key: f.id,
                             onClick: () => {
-                                if (f.id === 'seraphon') {
-                                    setViewMode('seraphon-detail');
+                                if (f.complete) {
+                                    setDetailFactionId(f.id);
+                                    setViewMode('faction-detail');
                                 } else {
                                     setSelectedFaction(selectedFaction === f.id ? null : f.id);
                                 }
