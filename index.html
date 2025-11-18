@@ -3217,6 +3217,824 @@
             ]
         };
 
+        // ═══════════════════════════════════════════════════════════════
+        // ⚙️ KHARADRON OVERLORDS - BASE DE DONNÉES COMPLÈTE
+        // ═══════════════════════════════════════════════════════════════
+        const KHARADRON_OVERLORDS_COMPLETE = {
+            battleTraits: [
+                {
+                    name: "Skyfarers",
+                    effect: "Toutes les unités KHARADRON OVERLORDS avec le mot-clé FLY peuvent ignorer les terrains et modèles lors de leurs mouvements."
+                },
+                {
+                    name: "Khemists and Aether-Gold",
+                    effect: "Les unités proches d'un AETHER-KHEMIST gagnent des bonus basés sur l'aether-gold : +1 aux jets de touche, de blessure, ou de sauvegarde."
+                },
+                {
+                    name: "Footnotes",
+                    effect: "Choisissez 3 footnotes du Code Kharadron qui donnent des bonus tactiques différents (par exemple : Settle the Grudges, Trust to Your Guns, etc.)."
+                },
+                {
+                    name: "Barak-Nar Supremacy",
+                    effect: "Les HEROES peuvent prendre un artefact supplémentaire. De plus, ajoutez 1 au nombre de sorts lancés par vos WIZARDS."
+                }
+            ],
+            heroicTraits: [
+                {
+                    name: "Master Commander",
+                    effect: "Ce HERO peut utiliser 2 command abilities dans le même tour au lieu d'une seule."
+                },
+                {
+                    name: "Wealthy",
+                    effect: "Ce HERO peut utiliser les shares of aether-gold deux fois par bataille au lieu d'une seule."
+                },
+                {
+                    name: "Grudgebearer",
+                    effect: "Choisissez une unité ennemie au début de la bataille. Ce HERO gagne +1 aux jets de touche et de blessure contre cette unité."
+                },
+                {
+                    name: "Cunning Strategist",
+                    effect: "Une fois par bataille, vous pouvez redéployer ce HERO et jusqu'à 2 unités à 9\" de lui avant le premier tour."
+                },
+                {
+                    name: "War Wound",
+                    effect: "Soustrayez 1 des jets de touche pour les attaques qui ciblent ce HERO."
+                },
+                {
+                    name: "Seasoned Commander",
+                    effect: "Les unités KHARADRON OVERLORDS à 18\" de ce HERO ajoutent 1 à leurs jets de charge."
+                }
+            ],
+            artefacts: [
+                {
+                    name: "Aethermatic Compass",
+                    effect: "Une fois par bataille, le porteur peut se redéployer n'importe où sur le champ de bataille à plus de 9\" des ennemis."
+                },
+                {
+                    name: "Grudgehammer",
+                    effect: "Choisissez une arme de mêlée du porteur. Cette arme gagne +1 au Damage et Rend."
+                },
+                {
+                    name: "Cogmechanic's Tools",
+                    effect: "Au début de votre hero phase, vous pouvez soigner D3 blessures sur un SKYVESSEL à 3\" du porteur."
+                },
+                {
+                    name: "Svaregg-Stein Illuminator Flarepistol",
+                    effect: "Une fois par bataille, au début de votre shooting phase, choisissez une unité ennemie visible à 18\". Cette unité subit -1 aux jets de touche jusqu'à la fin du tour."
+                },
+                {
+                    name: "Proclamator Mask-hailer",
+                    effect: "Ajoutez 6\" à la portée des command abilities du porteur."
+                },
+                {
+                    name: "Gattlebuster",
+                    effect: "Le porteur gagne une arme supplémentaire : Gattlebuster (Range 24\", Attacks 6, Hit 4+, Wound 3+, Rend 1, Damage 1)."
+                }
+            ],
+            warscrolls: [
+                // ═══ HEROES ═══
+                {
+                    name: "Brokk Grungsson",
+                    points: 280,
+                    role: "Hero, Unique",
+                    category: "Heroes",
+                    move: 12,
+                    health: 10,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Hero", "Fly", "Duardin", "Kharadron Overlords", "Unique", "Brokk Grungsson"],
+                    weapons: [
+                        {
+                            name: "Aethermatic Saw",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Magnate's Charter (Mustahkrakk's personal Aetherblaster)",
+                            type: "ranged",
+                            range: 18,
+                            attacks: 6,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "First Admiral of the Fleet",
+                            type: "Passive",
+                            effect: "Les unités KHARADRON OVERLORDS à 12\" de ce modèle peuvent re-roll les jets de charge ratés."
+                        },
+                        {
+                            name: "Endrinharness",
+                            type: "Passive",
+                            effect: "Ce modèle peut FLY. De plus, il a une Ward de 5+."
+                        },
+                        {
+                            name: "Atmospheric Isolation",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité KHARADRON OVERLORDS à 12\". Jusqu'à la fin du tour, cette unité ignore les sorts et abilities ennemies qui ne causent pas de blessures."
+                        },
+                        {
+                            name: "Champion of Progress",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de blessure pour les attaques à distance de ce modèle."
+                        }
+                    ]
+                },
+                {
+                    name: "Arkanaut Admiral",
+                    points: 130,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 4,
+                    health: 7,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Duardin", "Kharadron Overlords", "Admiral"],
+                    weapons: [
+                        {
+                            name: "Volley Pistol",
+                            type: "ranged",
+                            range: 9,
+                            attacks: 6,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Aethermatic Saw",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Master of the Skies",
+                            type: "Passive",
+                            effect: "Ce modèle peut embarquer sur un SKYVESSEL. Tant qu'il est embarqué, les attaques à distance du skyvessel gagnent +1 aux jets de touche."
+                        },
+                        {
+                            name: "If You Want a Job Done...",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité ARKANAUT COMPANY ou GRUNDSTOK THUNDERERS à 12\". Jusqu'à la fin du tour, ajoutez 1 aux jets de blessure pour les attaques de cette unité."
+                        },
+                        {
+                            name: "Supremely Stubborn",
+                            type: "Passive",
+                            effect: "Les unités KHARADRON OVERLORDS à 12\" de ce modèle peuvent re-roll les tests de moral ratés."
+                        }
+                    ]
+                },
+                {
+                    name: "Aetheric Navigator",
+                    points: 100,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 4,
+                    health: 6,
+                    save: 4,
+                    control: 1,
+                    keywords: ["Hero", "Infantry", "Duardin", "Kharadron Overlords", "Navigator"],
+                    weapons: [
+                        {
+                            name: "Ranging Pistol",
+                            type: "ranged",
+                            range: 18,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 4,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Zephyrscope",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Read the Winds",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez un SKYVESSEL à 12\". Ajoutez D6\" au mouvement de ce skyvessel jusqu'à la fin du tour."
+                        },
+                        {
+                            name: "Aethersight",
+                            type: "Passive",
+                            effect: "Ce modèle et les unités à 12\" peuvent voir à travers les terrains qui bloquent la ligne de vue."
+                        },
+                        {
+                            name: "Aetherstorm",
+                            type: "Once Per Battle, Your Shooting Phase",
+                            effect: "Choisissez une unité ennemie visible à 18\". Lancez 6 dés. Pour chaque 4+, infligez 1 blessure mortelle."
+                        }
+                    ]
+                },
+                {
+                    name: "Aether-Khemist",
+                    points: 110,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 4,
+                    health: 6,
+                    save: 4,
+                    control: 1,
+                    keywords: ["Hero", "Infantry", "Duardin", "Kharadron Overlords", "Aether-Khemist"],
+                    weapons: [
+                        {
+                            name: "Atmospheric Anatomiser",
+                            type: "ranged",
+                            range: 10,
+                            attacks: "D6",
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Heavy Instruments",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Aether-gold Infusion",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité KHARADRON OVERLORDS INFANTRY à 12\". Jusqu'à la fin du tour, choisissez un bonus : +1 aux jets de touche, +1 aux jets de blessure, ou +1 aux sauvegardes."
+                        },
+                        {
+                            name: "Atmospheric Isolation",
+                            type: "Passive",
+                            effect: "Les attaques à distance de ce modèle ignorent les modificateurs positifs aux sauvegardes (sauf Ward)."
+                        },
+                        {
+                            name: "Genius of the Aether-Khemists",
+                            type: "Passive",
+                            effect: "Une fois par tour, vous pouvez re-roll un jet d'Aether-gold Infusion."
+                        }
+                    ]
+                },
+                {
+                    name: "Endrinmaster with Dirigible Suit",
+                    points: 180,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 12,
+                    health: 9,
+                    save: 3,
+                    control: 2,
+                    keywords: ["Hero", "Fly", "Duardin", "Kharadron Overlords", "Endrinmaster"],
+                    weapons: [
+                        {
+                            name: "Aethermatic Volley Gun",
+                            type: "ranged",
+                            range: 18,
+                            attacks: 12,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Aethermatic Saw",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 2,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Gaze of Grungni (Head gun)",
+                            type: "ranged",
+                            range: 10,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: "D3",
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Endrincraft",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez un SKYVESSEL à 1\". Soignez D3 blessures allouées à ce skyvessel."
+                        },
+                        {
+                            name: "Dirigible Suit",
+                            type: "Passive",
+                            effect: "Ce modèle peut FLY et ignorer les terrains."
+                        },
+                        {
+                            name: "Hitcher",
+                            type: "Passive",
+                            effect: "Si ce modèle est à 3\" d'un SKYVESSEL ami en début de mouvement, il peut se déplacer avec le skyvessel au lieu de se déplacer normalement."
+                        }
+                    ]
+                },
+                {
+                    name: "Endrinmaster with Endrinharness",
+                    points: 120,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 4,
+                    health: 7,
+                    save: 3,
+                    control: 1,
+                    keywords: ["Hero", "Infantry", "Duardin", "Kharadron Overlords", "Endrinmaster"],
+                    weapons: [
+                        {
+                            name: "Aethermatic Saw",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 2,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Gaze of Grungni (Head gun)",
+                            type: "ranged",
+                            range: 10,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: "D3",
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Endrincraft",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez un SKYVESSEL à 1\". Soignez D3 blessures allouées à ce skyvessel."
+                        },
+                        {
+                            name: "Endrinharness",
+                            type: "Passive",
+                            effect: "Au lieu de bouger normalement, ce modèle peut embarquer sur un SKYVESSEL à 3\" au début du mouvement."
+                        },
+                        {
+                            name: "Dirigible Suit Repairs",
+                            type: "Passive",
+                            effect: "Si ce modèle est embarqué sur un SKYVESSEL, ce skyvessel gagne la Ward de 6+."
+                        }
+                    ]
+                },
+
+                // ═══ INFANTRY / SKYFARERS ═══
+                {
+                    name: "Arkanaut Company",
+                    points: 110,
+                    role: "Battleline, Infantry",
+                    category: "Infantry",
+                    move: 4,
+                    health: 10,
+                    save: 4,
+                    control: 1,
+                    keywords: ["Infantry", "Battleline", "Duardin", "Kharadron Overlords", "Arkanaut"],
+                    weapons: [
+                        {
+                            name: "Privateer Pistol",
+                            type: "ranged",
+                            range: 12,
+                            attacks: 2,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Arkanaut Cutter",
+                            type: "melee",
+                            range: 1,
+                            attacks: 1,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Light Skyhook (optional)",
+                            type: "ranged",
+                            range: 24,
+                            attacks: 1,
+                            hit: 4,
+                            wound: 3,
+                            rend: 2,
+                            damage: "D3",
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Skypikes and Vulcaniser Pistols",
+                            type: "Passive",
+                            effect: "Si cette unité compte 10+ modèles, ajoutez 1 au nombre d'attaques de leurs armes."
+                        },
+                        {
+                            name: "Guardians of the Sky-fleet",
+                            type: "Passive",
+                            effect: "Si cette unité est à 3\" d'un SKYVESSEL ami, elle compte comme 2 modèles pour les objectifs."
+                        },
+                        {
+                            name: "Glory-seekers",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de charge de cette unité."
+                        }
+                    ]
+                },
+                {
+                    name: "Grundstok Thunderers",
+                    points: 140,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 4,
+                    health: 10,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Infantry", "Duardin", "Kharadron Overlords", "Grundstok"],
+                    weapons: [
+                        {
+                            name: "Aethershot Rifle",
+                            type: "ranged",
+                            range: 18,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 4,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Aetheric Fumigator (optional)",
+                            type: "ranged",
+                            range: 6,
+                            attacks: "D6",
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Gun Butts",
+                            type: "melee",
+                            range: 1,
+                            attacks: 1,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Drilled to Perfection",
+                            type: "Passive",
+                            effect: "Si cette unité n'a pas bougé ce tour, ajoutez 1 aux jets de touche de leurs attaques à distance."
+                        },
+                        {
+                            name: "Choking Fug",
+                            type: "Passive",
+                            effect: "Les attaques avec Aetheric Fumigator ignorent les bonus de couvert."
+                        },
+                        {
+                            name: "Pin Them Down",
+                            type: "Your Shooting Phase",
+                            effect: "Si cette unité tue un modèle ennemi avec des attaques à distance, l'unité ennemie subit -2\" au mouvement jusqu'à la fin du tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Skywardens",
+                    points: 120,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 12,
+                    health: 10,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Infantry", "Fly", "Duardin", "Kharadron Overlords", "Skywardens"],
+                    weapons: [
+                        {
+                            name: "Aethermatic Volley Gun or Skyhook",
+                            type: "ranged",
+                            range: 18,
+                            attacks: 6,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Skypike",
+                            type: "melee",
+                            range: 2,
+                            attacks: 2,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Skymines",
+                            type: "Once Per Turn, Enemy Movement Phase",
+                            effect: "Après qu'une unité ennemie termine un mouvement normal à 1\" de cette unité, lancez un dé. Sur 2+, infligez D3 blessures mortelles à cette unité."
+                        },
+                        {
+                            name: "Timed Charges",
+                            type: "Passive",
+                            effect: "Ajoutez 1 au Damage des attaques de cette unité si elle a chargé ce tour."
+                        },
+                        {
+                            name: "Custodians",
+                            type: "Passive",
+                            effect: "Cette unité peut FLY et ignorer les terrains."
+                        }
+                    ]
+                },
+                {
+                    name: "Endrinriggers",
+                    points: 140,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 12,
+                    health: 10,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Infantry", "Fly", "Duardin", "Kharadron Overlords", "Endrinriggers"],
+                    weapons: [
+                        {
+                            name: "Rivet Gun",
+                            type: "ranged",
+                            range: 12,
+                            attacks: 3,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Aethermatic Saw or Drill Cannon",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Endrincraft",
+                            type: "Your Hero Phase",
+                            effect: "Si cette unité est à 3\" d'un SKYVESSEL ami, soignez D3 blessures sur ce skyvessel."
+                        },
+                        {
+                            name: "Hitchers",
+                            type: "Passive",
+                            effect: "Si cette unité commence son mouvement à 3\" d'un SKYVESSEL ami, elle peut se déplacer avec le skyvessel."
+                        },
+                        {
+                            name: "Supercharged Endrinharness",
+                            type: "Once Per Battle, Your Movement Phase",
+                            effect: "Cette unité peut se déplacer de 24\" au lieu de 12\" ce tour."
+                        }
+                    ]
+                },
+
+                // ═══ SKYVESSELS ═══
+                {
+                    name: "Arkanaut Frigate",
+                    points: 240,
+                    role: "War Machine",
+                    category: "Skyvessels",
+                    move: 12,
+                    health: 18,
+                    save: 4,
+                    control: 5,
+                    keywords: ["War Machine", "Fly", "Skyvessel", "Duardin", "Kharadron Overlords", "Frigate"],
+                    weapons: [
+                        {
+                            name: "Heavy Sky Cannon",
+                            type: "ranged",
+                            range: 24,
+                            attacks: 4,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: "D3",
+                            abilities: []
+                        },
+                        {
+                            name: "Aethershot Carbines (Crew)",
+                            type: "ranged",
+                            range: 12,
+                            attacks: 8,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Transport",
+                            type: "Passive",
+                            effect: "Ce modèle peut transporter jusqu'à 15 modèles KHARADRON OVERLORDS INFANTRY."
+                        },
+                        {
+                            name: "Bomb Racks",
+                            type: "Your Movement Phase",
+                            effect: "Après que ce modèle a bougé, choisissez une unité ennemie survolée et lancez un dé. Sur 3+, infligez D3 blessures mortelles."
+                        },
+                        {
+                            name: "Aetheric Navigator",
+                            type: "Passive",
+                            effect: "Ce modèle peut se déplacer et tirer dans le même tour sans pénalité."
+                        },
+                        {
+                            name: "Magnificent Skyvessel",
+                            type: "Passive",
+                            effect: "Ce modèle compte comme 10 modèles pour les objectifs."
+                        }
+                    ]
+                },
+                {
+                    name: "Arkanaut Ironclad",
+                    points: 420,
+                    role: "War Machine, Behemoth",
+                    category: "Skyvessels",
+                    move: 10,
+                    health: 24,
+                    save: 3,
+                    control: 10,
+                    keywords: ["War Machine", "Fly", "Skyvessel", "Behemoth", "Duardin", "Kharadron Overlords", "Ironclad"],
+                    weapons: [
+                        {
+                            name: "Great Sky Cannon",
+                            type: "ranged",
+                            range: 30,
+                            attacks: 6,
+                            hit: 4,
+                            wound: 2,
+                            rend: 2,
+                            damage: "D6",
+                            abilities: []
+                        },
+                        {
+                            name: "Aethershot Carbines (Crew)",
+                            type: "ranged",
+                            range: 12,
+                            attacks: 12,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Grudgesettler Bombs",
+                            type: "ranged",
+                            range: 6,
+                            attacks: "D6",
+                            hit: 0,
+                            wound: 0,
+                            rend: 0,
+                            damage: 0,
+                            abilities: ["Voir Grudgesettler Bombs ability"]
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Transport",
+                            type: "Passive",
+                            effect: "Ce modèle peut transporter jusqu'à 25 modèles KHARADRON OVERLORDS INFANTRY."
+                        },
+                        {
+                            name: "Grudgesettler Bombs",
+                            type: "Your Shooting Phase",
+                            effect: "Choisissez une unité ennemie à 6\" et lancez D6 dés. Pour chaque 4+, infligez 1 blessure mortelle."
+                        },
+                        {
+                            name: "Supreme Skyvessel",
+                            type: "Passive",
+                            effect: "Les unités KHARADRON OVERLORDS à 12\" de ce modèle peuvent utiliser sa Bravery pour les tests de moral."
+                        },
+                        {
+                            name: "Great Endrinworks",
+                            type: "Your Hero Phase",
+                            effect: "Soignez D3 blessures allouées à ce modèle."
+                        }
+                    ]
+                },
+                {
+                    name: "Grundstok Gunhauler",
+                    points: 160,
+                    role: "War Machine",
+                    category: "Skyvessels",
+                    move: 12,
+                    health: 12,
+                    save: 4,
+                    control: 3,
+                    keywords: ["War Machine", "Fly", "Skyvessel", "Duardin", "Kharadron Overlords", "Gunhauler"],
+                    weapons: [
+                        {
+                            name: "Sky Cannon",
+                            type: "ranged",
+                            range: 18,
+                            attacks: 3,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Aethershot Carbines (Crew)",
+                            type: "ranged",
+                            range: 12,
+                            attacks: 4,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Ahead Full",
+                            type: "Your Movement Phase",
+                            effect: "Ce modèle peut courir et tirer dans le même tour."
+                        },
+                        {
+                            name: "Light Bomb Racks",
+                            type: "Your Movement Phase",
+                            effect: "Après que ce modèle a bougé, choisissez une unité ennemie survolée. Lancez un dé. Sur 4+, infligez D3 blessures mortelles."
+                        },
+                        {
+                            name: "Escort Fighters",
+                            type: "Passive",
+                            effect: "Si ce modèle est à 3\" d'un autre SKYVESSEL ami, il gagne +1 aux jets de touche."
+                        }
+                    ]
+                }
+            ]
+        };
+
         // BASE DE DONNÉES SIMPLIFIÉE POUR TOUTES LES ARMÉES
         const ARMIES_DB = {
             alliances: {
@@ -3232,7 +4050,7 @@
                 { id: "daughters", name: "Daughters of Khaine", alliance: "order" },
                 { id: "idoneth", name: "Idoneth Deepkin", alliance: "order" },
                 { id: "lumineth", name: "Lumineth Realm-lords", alliance: "order" },
-                { id: "kharadron", name: "Kharadron Overlords", alliance: "order" },
+                { id: "kharadron", name: "Kharadron Overlords", alliance: "order", complete: true },
                 { id: "fyreslayers", name: "Fyreslayers", alliance: "order", complete: true },
                 { id: "seraphon", name: "Seraphon", alliance: "order", complete: true },
                 { id: "cities", name: "Cities of Sigmar", alliance: "order" },
@@ -3411,6 +4229,9 @@
                 { name: "Squig Hoppers", faction: "gloomspite", points: 90, role: "Fast Attack" },
                 { name: "Mangler Squigs", faction: "gloomspite", points: 240, role: "Monster" },
                 { name: "Loonboss on Giant Cave Squig", faction: "gloomspite", points: 110, role: "Hero" },
+
+                // KHARADRON OVERLORDS - Référence aux données complètes
+                ...KHARADRON_OVERLORDS_COMPLETE.warscrolls.map(w => ({ ...w, faction: "kharadron" })),
 
                 // FYRESLAYERS - Référence aux données complètes
                 ...FYRESLAYERS_COMPLETE.warscrolls.map(w => ({ ...w, faction: "fyreslayers" })),
