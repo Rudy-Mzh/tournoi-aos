@@ -2024,10 +2024,8 @@
                 { name: "Mangler Squigs", faction: "gloomspite", points: 240, role: "Monster" },
                 { name: "Loonboss on Giant Cave Squig", faction: "gloomspite", points: 110, role: "Hero" },
 
-                // SONS OF BEHEMAT
-                { name: "Mancrusher Gargant", faction: "behemat", points: 170, role: "Monster/Battleline" },
-                { name: "Mega-Gargant", faction: "behemat", points: 490, role: "Monster" },
-                { name: "King Brodd", faction: "behemat", points: 530, role: "Monster/Hero" }
+                // SONS OF BEHEMAT - Référence aux données complètes
+                ...SONS_OF_BEHEMAT_COMPLETE.warscrolls.map(w => ({ ...w, faction: "behemat" }))
             ]
         };
 
