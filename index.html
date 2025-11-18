@@ -2593,6 +2593,630 @@
             ]
         };
 
+        // ═══════════════════════════════════════════════════════════════
+        // 🔥 FYRESLAYERS - BASE DE DONNÉES COMPLÈTE
+        // ═══════════════════════════════════════════════════════════════
+        const FYRESLAYERS_COMPLETE = {
+            battleTraits: [
+                {
+                    name: "Oaths and Runes",
+                    effect: "Les unités FYRESLAYERS gagnent des bonus basés sur les runes qu'elles portent. Chaque début de bataille, choisissez une rune active qui affecte toute votre armée."
+                },
+                {
+                    name: "Fyrd and Hearthguard",
+                    effect: "Les unités HEARTHGUARD (Hearthguard Berzerkers, Auric Hearthguard) comptent comme 2 modèles pour les objectifs."
+                },
+                {
+                    name: "Magmadroth Packs",
+                    effect: "Si vous avez 2+ MAGMADROTH dans votre armée, ils gagnent +1 au jet de touche quand ils sont à 12\" l'un de l'autre."
+                },
+                {
+                    name: "Ur-Gold Runes",
+                    effect: "Une fois par bataille, au début de n'importe quelle phase, vous pouvez activer la rune d'Ur-Gold. Jusqu'à la fin du tour, les unités FYRESLAYERS ajoutent 1 au Rend de leurs armes de mêlée."
+                }
+            ],
+            heroicTraits: [
+                {
+                    name: "Warrior Indominate",
+                    effect: "Ajoutez 1 aux jets de touche pour les attaques de mêlée de ce HERO."
+                },
+                {
+                    name: "Ash-beard",
+                    effect: "Ce HERO peut utiliser 2 command abilities différentes dans le même tour au lieu d'une seule."
+                },
+                {
+                    name: "Spirit of Grimnir",
+                    effect: "Ajoutez 2 à la caractéristique Health de ce HERO."
+                },
+                {
+                    name: "Fyremantle",
+                    effect: "Soustrayez 1 des jets de touche pour les attaques de mêlée qui ciblent ce HERO."
+                },
+                {
+                    name: "Tyrant Slayer",
+                    effect: "Ajoutez 1 au Damage des attaques de mêlée de ce HERO qui ciblent des MONSTERS ou HEROES ennemis."
+                },
+                {
+                    name: "Honour Our Ancestral Oaths",
+                    effect: "Les unités FYRESLAYERS à 12\" de ce HERO peuvent re-roll les jets de charge ratés."
+                }
+            ],
+            artefacts: [
+                {
+                    name: "Axe of Grimnir",
+                    effect: "Choisissez une arme de mêlée du porteur. Ajoutez 1 aux jets de blessure et au Rend pour cette arme."
+                },
+                {
+                    name: "Smouldering Helm",
+                    effect: "Une fois par bataille, au début de la combat phase, les unités ennemies à 3\" du porteur subissent D3 blessures mortelles."
+                },
+                {
+                    name: "Draught of Magmalt Ale",
+                    effect: "Une fois par bataille, au début de votre hero phase, soignez D6 blessures allouées au porteur."
+                },
+                {
+                    name: "Volatile Brazier",
+                    effect: "Ajoutez 3\" à la portée de charge des unités FYRESLAYERS à 12\" du porteur."
+                },
+                {
+                    name: "Ash-cloud Rune",
+                    effect: "Le porteur ne peut pas être ciblé par des attaques à distance à plus de 9\"."
+                },
+                {
+                    name: "Magnetised Runes",
+                    effect: "Soustrayez 1 des sauvegardes des unités ennemies à 3\" du porteur."
+                }
+            ],
+            warscrolls: [
+                // ═══ HEROES ═══
+                {
+                    name: "Auric Runefather on Magmadroth",
+                    points: 340,
+                    role: "Hero, Monster",
+                    category: "Heroes",
+                    move: 12,
+                    health: 16,
+                    save: 3,
+                    control: 5,
+                    keywords: ["Hero", "Monster", "Magmadroth", "Duardin", "Fyreslayers", "Runefather"],
+                    weapons: [
+                        {
+                            name: "Latchkey Grandaxe",
+                            type: "melee",
+                            range: 2,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: 3,
+                            abilities: []
+                        },
+                        {
+                            name: "Magmadroth's Claws and Horns",
+                            type: "melee",
+                            range: 2,
+                            attacks: 6,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Roaring Fyrestream",
+                            type: "ranged",
+                            range: 12,
+                            attacks: 1,
+                            hit: 0,
+                            wound: 0,
+                            rend: 0,
+                            damage: 0,
+                            abilities: ["Voir Roaring Fyrestream ability"]
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Roaring Fyrestream",
+                            type: "Your Shooting Phase",
+                            effect: "Choisissez une unité ennemie visible à 12\" et lancez un dé. Sur 2+, infligez D6 blessures mortelles."
+                        },
+                        {
+                            name: "Lashing Tail",
+                            type: "Passive",
+                            effect: "À la fin de chaque combat phase, lancez un dé pour chaque unité ennemie à 3\" de ce modèle. Sur 4+, infligez D3 blessures mortelles à cette unité."
+                        },
+                        {
+                            name: "Molten Skin",
+                            type: "Passive",
+                            effect: "Quand cette unité subit des blessures au combat, lancez un dé. Sur 4+, infligez 1 blessure mortelle à l'unité attaquante."
+                        },
+                        {
+                            name: "Lodge Leader",
+                            type: "Passive",
+                            effect: "Les unités FYRESLAYERS à 12\" de ce modèle peuvent re-roll les tests de moral ratés."
+                        }
+                    ]
+                },
+                {
+                    name: "Auric Runesmiter on Magmadroth",
+                    points: 320,
+                    role: "Hero, Monster, Priest",
+                    category: "Heroes",
+                    move: 12,
+                    health: 16,
+                    save: 3,
+                    control: 5,
+                    keywords: ["Hero", "Monster", "Priest", "Magmadroth", "Duardin", "Fyreslayers", "Runesmiter"],
+                    weapons: [
+                        {
+                            name: "Runic Iron",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Magmadroth's Claws and Horns",
+                            type: "melee",
+                            range: 2,
+                            attacks: 6,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Roaring Fyrestream",
+                            type: "ranged",
+                            range: 12,
+                            attacks: 1,
+                            hit: 0,
+                            wound: 0,
+                            rend: 0,
+                            damage: 0,
+                            abilities: ["Voir Roaring Fyrestream ability"]
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Roaring Fyrestream",
+                            type: "Your Shooting Phase",
+                            effect: "Choisissez une unité ennemie visible à 12\" et lancez un dé. Sur 2+, infligez D6 blessures mortelles."
+                        },
+                        {
+                            name: "Lashing Tail",
+                            type: "Passive",
+                            effect: "À la fin de chaque combat phase, lancez un dé pour chaque unité ennemie à 3\" de ce modèle. Sur 4+, infligez D3 blessures mortelles à cette unité."
+                        },
+                        {
+                            name: "Molten Skin",
+                            type: "Passive",
+                            effect: "Quand cette unité subit des blessures au combat, lancez un dé. Sur 4+, infligez 1 blessure mortelle à l'unité attaquante."
+                        },
+                        {
+                            name: "Runic Empowerment",
+                            type: "Prayer (3+), Your Hero Phase",
+                            effect: "Si réussi, choisissez une unité FYRESLAYERS à 18\". Jusqu'à la fin du tour, ajoutez 1 aux jets de blessure pour les attaques de cette unité."
+                        },
+                        {
+                            name: "Molten Tunnelling",
+                            type: "Once Per Battle, Your Movement Phase",
+                            effect: "Retirez ce modèle et jusqu'à 1 unité FYRESLAYERS à 3\" du champ de bataille. Replacez-les n'importe où sur le champ à plus de 9\" des ennemis."
+                        }
+                    ]
+                },
+                {
+                    name: "Auric Runefather",
+                    points: 130,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 4,
+                    health: 7,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Duardin", "Fyreslayers", "Runefather"],
+                    weapons: [
+                        {
+                            name: "Latchkey Grandaxe",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Exemplar of the Fyreslayers",
+                            type: "Passive",
+                            effect: "Les unités FYRESLAYERS à 12\" de ce modèle ajoutent 1 à leurs jets de charge."
+                        },
+                        {
+                            name: "Lodge Leader",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité FYRESLAYERS à 12\". Jusqu'à la fin du tour, cette unité peut re-roll les jets de touche de 1."
+                        },
+                        {
+                            name: "Fearsome Surge",
+                            type: "Once Per Battle, Your Charge Phase",
+                            effect: "Ce modèle et toutes les unités FYRESLAYERS à 12\" peuvent courir et charger dans le même tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Auric Runesmiter",
+                    points: 120,
+                    role: "Hero, Priest",
+                    category: "Heroes",
+                    move: 4,
+                    health: 6,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Priest", "Duardin", "Fyreslayers", "Runesmiter"],
+                    weapons: [
+                        {
+                            name: "Runic Iron",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Runic Empowerment",
+                            type: "Prayer (3+), Your Hero Phase",
+                            effect: "Si réussi, choisissez une unité FYRESLAYERS à 18\". Jusqu'à la fin du tour, ajoutez 1 aux jets de blessure pour les attaques de cette unité."
+                        },
+                        {
+                            name: "Molten Tunnelling",
+                            type: "Once Per Battle, Your Movement Phase",
+                            effect: "Retirez ce modèle et jusqu'à 1 unité FYRESLAYERS INFANTRY à 3\" du champ de bataille. Replacez-les n'importe où sur le champ à plus de 9\" des ennemis."
+                        },
+                        {
+                            name: "Ritual of Awakening",
+                            type: "Prayer (4+), Your Hero Phase",
+                            effect: "Si réussi, toutes les unités FYRESLAYERS à 12\" gagnent +1\" au mouvement jusqu'à la fin du tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Auric Runeson",
+                    points: 100,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 4,
+                    health: 6,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Duardin", "Fyreslayers", "Runeson"],
+                    weapons: [
+                        {
+                            name: "Ancestral War-axe",
+                            type: "melee",
+                            range: 1,
+                            attacks: 5,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Vying for Glory",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de blessure pour les attaques de ce modèle qui ciblent des HEROES ou MONSTERS ennemis."
+                        },
+                        {
+                            name: "Dauntless Assault",
+                            type: "Once Per Turn, Any Charge Phase",
+                            effect: "Ce modèle peut charger même s'il a couru ce tour. De plus, ajoutez 3\" à sa charge."
+                        },
+                        {
+                            name: "Wyrmslayer Jarl",
+                            type: "Passive",
+                            effect: "Si ce modèle détruit un MONSTER ennemi, soignez toutes les blessures allouées aux unités FYRESLAYERS à 12\"."
+                        }
+                    ]
+                },
+                {
+                    name: "Battlesmith",
+                    points: 110,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 4,
+                    health: 6,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Duardin", "Fyreslayers", "Battlesmith"],
+                    weapons: [
+                        {
+                            name: "Ancestral Battle-axe",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Icon of Grimnir",
+                            type: "Passive",
+                            effect: "Les unités FYRESLAYERS à 12\" de ce modèle peuvent re-roll les jets de sauvegarde de 1."
+                        },
+                        {
+                            name: "None Shall Defile the Icon",
+                            type: "Passive",
+                            effect: "Ce modèle a une Ward de 5+."
+                        },
+                        {
+                            name: "Rune-empowered Paeans",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité FYRESLAYERS à 12\". Jusqu'à la fin du tour, cette unité ignore les modificateurs négatifs aux tests de moral."
+                        }
+                    ]
+                },
+                {
+                    name: "Grimwrath Berzerker",
+                    points: 100,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 5,
+                    health: 7,
+                    save: 5,
+                    control: 2,
+                    keywords: ["Hero", "Infantry", "Duardin", "Fyreslayers", "Grimwrath"],
+                    weapons: [
+                        {
+                            name: "Fyrestorm Greataxe",
+                            type: "melee",
+                            range: 1,
+                            attacks: 6,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Battle-fury",
+                            type: "Passive",
+                            effect: "Si ce modèle détruit un modèle ennemi au combat, il peut immédiatement faire un deuxième combat."
+                        },
+                        {
+                            name: "Dead but not Defeated",
+                            type: "Passive",
+                            effect: "Quand ce modèle est tué, il peut combattre avant d'être retiré du champ de bataille."
+                        },
+                        {
+                            name: "Unstoppable Fury",
+                            type: "Passive",
+                            effect: "Ce modèle peut courir et charger dans le même tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Doomseeker",
+                    points: 80,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 5,
+                    health: 5,
+                    save: 5,
+                    control: 1,
+                    keywords: ["Hero", "Infantry", "Duardin", "Fyreslayers", "Doomseeker"],
+                    weapons: [
+                        {
+                            name: "Runic Axes",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Oathbound",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de touche et de blessure pour les attaques de ce modèle qui ciblent des MONSTERS."
+                        },
+                        {
+                            name: "Runic Power",
+                            type: "Once Per Battle, Your Hero Phase",
+                            effect: "Jusqu'à la fin du tour, ajoutez D3 au Damage des attaques de ce modèle."
+                        },
+                        {
+                            name: "Impetuous Nature",
+                            type: "Passive",
+                            effect: "Ce modèle doit toujours charger s'il le peut."
+                        }
+                    ]
+                },
+
+                // ═══ INFANTRY / BATTLELINE ═══
+                {
+                    name: "Vulkite Berzerkers",
+                    points: 120,
+                    role: "Battleline, Infantry",
+                    category: "Infantry",
+                    move: 4,
+                    health: 10,
+                    save: 5,
+                    control: 1,
+                    keywords: ["Infantry", "Battleline", "Duardin", "Fyreslayers", "Vulkite Berzerkers"],
+                    weapons: [
+                        {
+                            name: "Fyresteel Handaxes",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 3,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Fyresteel War-picks (alternative)",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Berserk Fury",
+                            type: "Passive",
+                            effect: "Si cette unité a chargé ce tour, ajoutez 1 aux jets de touche pour les attaques de cette unité pour le reste du tour."
+                        },
+                        {
+                            name: "Fyresteel Shields",
+                            type: "Passive",
+                            effect: "Si équipés de boucliers (Handaxes option), cette unité a une sauvegarde de 4+ au lieu de 5+."
+                        },
+                        {
+                            name: "Whirlwind of Destruction",
+                            type: "Passive",
+                            effect: "Ajoutez 1 au nombre d'attaques des armes de cette unité si l'unité compte 10+ modèles."
+                        }
+                    ]
+                },
+                {
+                    name: "Hearthguard Berzerkers",
+                    points: 160,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 4,
+                    health: 10,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Infantry", "Duardin", "Fyreslayers", "Hearthguard"],
+                    weapons: [
+                        {
+                            name: "Flamestrike Poleaxes",
+                            type: "melee",
+                            range: 2,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Berzerker Broadaxes (alternative)",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Duty Unto Death",
+                            type: "Passive",
+                            effect: "Cette unité compte comme 2 modèles pour les objectifs."
+                        },
+                        {
+                            name: "Smouldering Braziers",
+                            type: "Passive",
+                            effect: "Les unités ennemies à 3\" de cette unité subissent -1 au Bravery."
+                        },
+                        {
+                            name: "Fierce Counter-attack",
+                            type: "Reaction: This unit was picked as target of a charge",
+                            effect: "Infligez D3 blessures mortelles à l'unité qui charge."
+                        }
+                    ]
+                },
+                {
+                    name: "Auric Hearthguard",
+                    points: 140,
+                    role: "Infantry",
+                    category: "Infantry",
+                    move: 4,
+                    health: 10,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Infantry", "Duardin", "Fyreslayers", "Hearthguard"],
+                    weapons: [
+                        {
+                            name: "Magmapike",
+                            type: "ranged",
+                            range: 15,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Forge Weapons",
+                            type: "melee",
+                            range: 1,
+                            attacks: 1,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Molten Rockbolts",
+                            type: "Passive",
+                            effect: "Si un jet de touche non modifié de 6 est fait pour une attaque de Magmapike, cette attaque inflige 2 blessures mortelles au lieu de son Damage normal."
+                        },
+                        {
+                            name: "Sworn Protectors",
+                            type: "Passive",
+                            effect: "Cette unité compte comme 2 modèles pour les objectifs."
+                        },
+                        {
+                            name: "Molten Salvo",
+                            type: "Your Shooting Phase",
+                            effect: "Si cette unité n'a pas bougé ce tour, ajoutez 6\" à la portée de leurs Magmapikes."
+                        }
+                    ]
+                }
+            ]
+        };
+
         // BASE DE DONNÉES SIMPLIFIÉE POUR TOUTES LES ARMÉES
         const ARMIES_DB = {
             alliances: {
@@ -2609,7 +3233,7 @@
                 { id: "idoneth", name: "Idoneth Deepkin", alliance: "order" },
                 { id: "lumineth", name: "Lumineth Realm-lords", alliance: "order" },
                 { id: "kharadron", name: "Kharadron Overlords", alliance: "order" },
-                { id: "fyreslayers", name: "Fyreslayers", alliance: "order" },
+                { id: "fyreslayers", name: "Fyreslayers", alliance: "order", complete: true },
                 { id: "seraphon", name: "Seraphon", alliance: "order", complete: true },
                 { id: "cities", name: "Cities of Sigmar", alliance: "order" },
 
@@ -2787,6 +3411,9 @@
                 { name: "Squig Hoppers", faction: "gloomspite", points: 90, role: "Fast Attack" },
                 { name: "Mangler Squigs", faction: "gloomspite", points: 240, role: "Monster" },
                 { name: "Loonboss on Giant Cave Squig", faction: "gloomspite", points: 110, role: "Hero" },
+
+                // FYRESLAYERS - Référence aux données complètes
+                ...FYRESLAYERS_COMPLETE.warscrolls.map(w => ({ ...w, faction: "fyreslayers" })),
 
                 // FLESH-EATER COURTS - Référence aux données complètes
                 ...FLESH_EATER_COURTS_COMPLETE.warscrolls.map(w => ({ ...w, faction: "fec" })),
