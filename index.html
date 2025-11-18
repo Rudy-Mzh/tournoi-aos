@@ -2,641 +2,213 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#667eea">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>AoS Companion</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-        }
-        * {
-            -webkit-overflow-scrolling: touch;
-        }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        @media (max-width: 768px) {
-            .stat-block {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
-        }
-    </style>
 </head>
-<body class="min-h-screen p-4">
+<body style="margin:0;padding:0;font-family:-apple-system,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh">
     <div id="root"></div>
-
+    <div id="loading" style="display:flex;align-items:center;justify-content:center;min-height:100vh;color:white;font-size:24px">
+        Chargement de l'application...
+    </div>
+    
     <script type="text/babel">
         const { useState, useEffect } = React;
-
-        // ========== GESTION DES DONNÉES ==========
-        const STORAGE_KEYS = {
-            ARMIES: 'aos_armies_database',
-            TOURNAMENTS: 'aos_tournaments',
-        };
-
-        function loadFromStorage(key, defaultValue) {
-            try {
-                const saved = localStorage.getItem(key);
-                return saved ? JSON.parse(saved) : defaultValue;
-            } catch (e) {
-                console.error(\`Erreur chargement \${key}:\`, e);
-                return defaultValue;
-            }
-        }
-
-        function saveToStorage(key, data) {
-            try {
-                localStorage.setItem(key, JSON.stringify(data));
-            } catch (e) {
-                console.error(\`Erreur sauvegarde \${key}:\`, e);
-            }
-        }
-
-        // Données embarquées directement dans l'app
-        const DEFAULT_ARMIES_DATA = {
-            "factions": [
-                {
-                    "id": "sylvaneth",
-                    "name": "Sylvaneth",
-                    "grandAlliance": "Order",
-                    "description": "Esprits de la nature vengeurs protégeant les royaumes",
-                    "battleTraits": ["Walk the Spirit Paths", "Strike and Fade"],
-                    "formations": [{"id": "wargrove-burgeoning", "name": "Wargrove of the Burgeoning", "description": "Formation axée sur la croissance et l'expansion rapide", "abilities": ["Bonus de régénération", "Synergies avec les Wyldwoods"]}]
-                },
-                {
-                    "id": "kharadron-overlords",
-                    "name": "Kharadron Overlords",
-                    "grandAlliance": "Order",
-                    "description": "Duardins technologiquement avancés volant sur leurs navires aériens",
-                    "battleTraits": ["Skyvessels", "Footnotes"],
-                    "formations": [{"id": "endrineers-guild", "name": "Endrineers Guild Expeditionary Force", "description": "Force expéditionnaire des ingénieurs", "abilities": ["Bonus de réparation", "Redéploiement des unités volantes"]}]
-                },
-                {
-                    "id": "daughters-of-khaine",
-                    "name": "Daughters of Khaine",
-                    "grandAlliance": "Order",
-                    "description": "Adoratrices sanglantes de Khaine",
-                    "battleTraits": ["Blood Rites", "Fanatical Faith"],
-                    "formations": [{"id": "scathcoven", "name": "Scáthcoven", "description": "Coven de sorcières guerrières", "abilities": ["Bonus de sorts", "Invocations améliorées"]}]
-                }
+        
+        // Masquer le loading une fois React chargé
+        document.getElementById('loading').style.display = 'none';
+        
+        // DONNÉES COMPLÈTES DES ARMÉES AOS
+        const ARMIES_DATABASE = {
+            factions: [
+                { id: "stormcast", name: "Stormcast Eternals", alliance: "Order", color: "#FFD700" },
+                { id: "sylvaneth", name: "Sylvaneth", alliance: "Order", color: "#228B22" },
+                { id: "daughters", name: "Daughters of Khaine", alliance: "Order", color: "#8B0000" },
+                { id: "idoneth", name: "Idoneth Deepkin", alliance: "Order", color: "#4682B4" },
+                { id: "lumineth", name: "Lumineth Realm-lords", alliance: "Order", color: "#F0E68C" },
+                { id: "kharadron", name: "Kharadron Overlords", alliance: "Order", color: "#B8860B" },
+                { id: "fyreslayers", name: "Fyreslayers", alliance: "Order", color: "#FF4500" },
+                { id: "seraphon", name: "Seraphon", alliance: "Order", color: "#32CD32" },
+                { id: "ossiarch", name: "Ossiarch Bonereapers", alliance: "Death", color: "#DEB887" },
+                { id: "nighthaunt", name: "Nighthaunt", alliance: "Death", color: "#9370DB" },
+                { id: "soulblight", name: "Soulblight Gravelords", alliance: "Death", color: "#8B0000" },
+                { id: "fec", name: "Flesh-eater Courts", alliance: "Death", color: "#8B4513" },
+                { id: "khorne", name: "Blades of Khorne", alliance: "Chaos", color: "#DC143C" },
+                { id: "tzeentch", name: "Disciples of Tzeentch", alliance: "Chaos", color: "#4169E1" },
+                { id: "nurgle", name: "Maggotkin of Nurgle", alliance: "Chaos", color: "#556B2F" },
+                { id: "slaanesh", name: "Hedonites of Slaanesh", alliance: "Chaos", color: "#FF1493" },
+                { id: "skaven", name: "Skaven", alliance: "Chaos", color: "#2F4F4F" },
+                { id: "ogors", name: "Ogor Mawtribes", alliance: "Destruction", color: "#8B4513" }
             ],
-            "warscrolls": [
-                {
-                    "id": "warsong-revenant",
-                    "name": "Warsong Revenant",
-                    "faction": "sylvaneth",
-                    "points": 200,
-                    "role": "Hero",
-                    "stats": {"move": "12\"", "health": 9, "save": "4+", "control": 2},
-                    "weapons": [{"name": "Wyldwood Scythe", "type": "melee", "attacks": 4, "hit": "3+", "wound": "3+", "rend": "-1", "damage": "2"}],
-                    "abilities": [{"name": "Song of Warding", "type": "passive", "description": "Ward save 6+ pour les unités Sylvaneth à 12\""}, {"name": "Alarielle's Wrath", "type": "active", "description": "Une fois par bataille, inflige D3 blessures mortelles à une unité ennemie"}],
-                    "keywords": ["Hero", "Wizard", "Sylvaneth", "Warsong Revenant"],
-                    "spells": ["Spellcaster (1)"]
-                },
-                {
-                    "id": "drycha-hamadreth",
-                    "name": "Drycha Hamadreth",
-                    "faction": "sylvaneth",
-                    "points": 300,
-                    "role": "Monster",
-                    "stats": {"move": "10\"", "health": 12, "save": "4+", "control": 5},
-                    "weapons": [{"name": "Thorned Slenderthings", "type": "melee", "attacks": 6, "hit": "3+", "wound": "3+", "rend": "-2", "damage": "2"}, {"name": "Swarm of Flitterfuries", "type": "ranged", "range": "10\"", "attacks": "2D6", "hit": "4+", "wound": "4+", "rend": "0", "damage": "1"}],
-                    "abilities": [{"name": "Mercurial Aspect", "type": "passive", "description": "Change de forme entre Enraged et Embittered"}, {"name": "Colony of Flitterfuries", "type": "active", "description": "Inflige des blessures mortelles aux unités proches"}],
-                    "keywords": ["Hero", "Monster", "Wizard", "Sylvaneth", "Drycha Hamadreth"],
-                    "spells": ["Spellcaster (1)"]
-                },
-                {
-                    "id": "spirit-of-durthu",
-                    "name": "Spirit of Durthu",
-                    "faction": "sylvaneth",
-                    "points": 320,
-                    "role": "Monster",
-                    "stats": {"move": "8\"", "health": 12, "save": "3+", "control": 5},
-                    "weapons": [{"name": "Massive Impaling Talons", "type": "melee", "attacks": 5, "hit": "3+", "wound": "2+", "rend": "-2", "damage": "3"}],
-                    "abilities": [{"name": "Ancient Protector", "type": "passive", "description": "+1 aux jets de touche contre les ennemis qui ont chargé"}, {"name": "Groundshaking Stomp", "type": "active", "description": "Inflige D3 blessures mortelles après une charge"}],
-                    "keywords": ["Monster", "Sylvaneth", "Treelord", "Spirit of Durthu"]
-                },
-                {
-                    "id": "drekki-flynt",
-                    "name": "Drekki Flynt",
-                    "faction": "kharadron-overlords",
-                    "points": 130,
-                    "role": "Hero",
-                    "stats": {"move": "4\"", "health": 5, "save": "4+", "control": 2},
-                    "weapons": [{"name": "Aethermatic Saw", "type": "melee", "attacks": 4, "hit": "3+", "wound": "3+", "rend": "-1", "damage": "1"}, {"name": "Vulcaniser Pistol", "type": "ranged", "range": "9\"", "attacks": 3, "hit": "3+", "wound": "3+", "rend": "-1", "damage": "1"}],
-                    "abilities": [{"name": "Aether-Khemist", "type": "passive", "description": "Améliore les armes à distance des unités proches"}, {"name": "Opportunistic Privateer", "type": "active", "description": "Gagne des bonus en capturant des objectifs"}],
-                    "keywords": ["Hero", "Duardin", "Kharadron Overlords", "Skyvessel", "Drekki Flynt"]
-                }
+            warscrolls: [
+                // STORMCAST ETERNALS
+                { id: "liberators", name: "Liberators", faction: "stormcast", points: 110, role: "Battleline" },
+                { id: "vindictors", name: "Vindictors", faction: "stormcast", points: 130, role: "Battleline" },
+                { id: "lord-imperatant", name: "Lord-Imperatant", faction: "stormcast", points: 170, role: "Hero" },
+                { id: "knight-arcanum", name: "Knight-Arcanum", faction: "stormcast", points: 130, role: "Hero/Wizard" },
+                { id: "annihilators", name: "Annihilators", faction: "stormcast", points: 200, role: "Elite" },
+                { id: "praetors", name: "Praetors", faction: "stormcast", points: 170, role: "Elite" },
+                
+                // SYLVANETH
+                { id: "dryads", name: "Dryads", faction: "sylvaneth", points: 100, role: "Battleline" },
+                { id: "tree-revenants", name: "Tree-Revenants", faction: "sylvaneth", points: 100, role: "Battleline" },
+                { id: "alarielle", name: "Alarielle the Everqueen", faction: "sylvaneth", points: 660, role: "Monster/Hero" },
+                { id: "durthu", name: "Spirit of Durthu", faction: "sylvaneth", points: 320, role: "Monster" },
+                { id: "drycha", name: "Drycha Hamadreth", faction: "sylvaneth", points: 300, role: "Monster/Hero" },
+                { id: "kurnoth-swords", name: "Kurnoth Hunters (Greatswords)", faction: "sylvaneth", points: 190, role: "Elite" },
+                
+                // DAUGHTERS OF KHAINE
+                { id: "witch-aelves", name: "Witch Aelves", faction: "daughters", points: 100, role: "Battleline" },
+                { id: "blood-sisters", name: "Blood Sisters", faction: "daughters", points: 140, role: "Elite" },
+                { id: "morathi", name: "Morathi-Khaine", faction: "daughters", points: 680, role: "Monster/Hero" },
+                { id: "avatar-khaine", name: "Avatar of Khaine", faction: "daughters", points: 280, role: "Monster" },
+                
+                // IDONETH DEEPKIN
+                { id: "namarti-thralls", name: "Namarti Thralls", faction: "idoneth", points: 100, role: "Battleline" },
+                { id: "namarti-reavers", name: "Namarti Reavers", faction: "idoneth", points: 110, role: "Battleline" },
+                { id: "eidolon", name: "Eidolon of Mathlann", faction: "idoneth", points: 380, role: "Monster/Hero" },
+                { id: "volturnos", name: "Volturnos", faction: "idoneth", points: 280, role: "Hero" },
+                
+                // OSSIARCH BONEREAPERS
+                { id: "mortek-guard", name: "Mortek Guard", faction: "ossiarch", points: 130, role: "Battleline" },
+                { id: "kavalos", name: "Kavalos Deathriders", faction: "ossiarch", points: 180, role: "Battleline" },
+                { id: "nagash", name: "Nagash", faction: "ossiarch", points: 900, role: "Monster/Hero/Wizard" },
+                { id: "mortisan", name: "Mortisan Soulmason", faction: "ossiarch", points: 150, role: "Hero/Wizard" },
+                
+                // BLADES OF KHORNE
+                { id: "bloodreavers", name: "Bloodreavers", faction: "khorne", points: 90, role: "Battleline" },
+                { id: "bloodletters", name: "Bloodletters", faction: "khorne", points: 110, role: "Battleline" },
+                { id: "bloodthirster", name: "Bloodthirster", faction: "khorne", points: 340, role: "Monster/Hero" },
+                { id: "skarbrand", name: "Skarbrand", faction: "khorne", points: 430, role: "Monster" },
+                
+                // DISCIPLES OF TZEENTCH
+                { id: "pink-horrors", name: "Pink Horrors", faction: "tzeentch", points: 220, role: "Battleline" },
+                { id: "lord-of-change", name: "Lord of Change", faction: "tzeentch", points: 380, role: "Monster/Hero/Wizard" },
+                { id: "kairos", name: "Kairos Fateweaver", faction: "tzeentch", points: 410, role: "Monster/Hero/Wizard" },
+                
+                // SKAVEN
+                { id: "clanrats", name: "Clanrats", faction: "skaven", points: 90, role: "Battleline" },
+                { id: "stormvermin", name: "Stormvermin", faction: "skaven", points: 110, role: "Battleline" },
+                { id: "verminlord", name: "Verminlord Warpseer", faction: "skaven", points: 300, role: "Monster/Hero" },
+                
+                // SERAPHON
+                { id: "saurus-warriors", name: "Saurus Warriors", faction: "seraphon", points: 90, role: "Battleline" },
+                { id: "slann", name: "Slann Starmaster", faction: "seraphon", points: 280, role: "Hero/Wizard" },
+                { id: "carnosaur", name: "Saurus Oldblood on Carnosaur", faction: "seraphon", points: 230, role: "Monster/Hero" },
             ]
         };
-
-        const DEFAULT_TOURNAMENTS_DATA = {"tournaments": []};
-
-        // ========== COMPOSANT PRINCIPAL ==========
+        
         function App() {
-            const [currentView, setCurrentView] = useState('library');
-            const [armiesData, setArmiesData] = useState({ factions: [], warscrolls: [] });
-            const [tournamentsData, setTournamentsData] = useState({ tournaments: [] });
-            const [selectedTournament, setSelectedTournament] = useState(null);
-            const [selectedOpponent, setSelectedOpponent] = useState(null);
-            const [isLoading, setIsLoading] = useState(true);
-
-            // Charger les données au démarrage
-            useEffect(() => {
-                const storedArmies = loadFromStorage(STORAGE_KEYS.ARMIES, DEFAULT_ARMIES_DATA);
-                const storedTournaments = loadFromStorage(STORAGE_KEYS.TOURNAMENTS, DEFAULT_TOURNAMENTS_DATA);
-
-                setArmiesData(storedArmies);
-                setTournamentsData(storedTournaments);
-                setIsLoading(false);
-            }, []);
-
-            // Sauvegarder automatiquement
-            useEffect(() => {
-                if (!isLoading) {
-                    saveToStorage(STORAGE_KEYS.ARMIES, armiesData);
-                }
-            }, [armiesData, isLoading]);
-
-            useEffect(() => {
-                if (!isLoading) {
-                    saveToStorage(STORAGE_KEYS.TOURNAMENTS, tournamentsData);
-                }
-            }, [tournamentsData, isLoading]);
-
-            if (isLoading) {
-                return (
-                    <div className="flex items-center justify-center min-h-screen">
-                        <div className="text-white text-xl">Chargement...</div>
-                    </div>
-                );
-            }
-
-            return (
-                <div className="max-w-7xl mx-auto">
-                    <div className="glass-effect rounded-2xl p-6 mb-6">
-                        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                            ⚔️ Age of Sigmar Companion
-                        </h1>
-                        <p className="text-gray-600">
-                            Bibliothèque complète des armées • Gestion de tournois • Analyse tactique
-                        </p>
-                    </div>
-
-                    <div className="glass-effect rounded-2xl p-4 mb-6">
-                        <div className="flex gap-4">
-                            <button
-                                className={\`px-6 py-3 rounded-lg font-semibold transition-all \${currentView === 'library' ? 'bg-purple-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}\`}
-                                onClick={() => setCurrentView('library')}
-                            >
-                                📚 Bibliothèque
-                            </button>
-                            <button
-                                className={\`px-6 py-3 rounded-lg font-semibold transition-all \${currentView === 'tournaments' ? 'bg-purple-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}\`}
-                                onClick={() => setCurrentView('tournaments')}
-                            >
-                                🏆 Tournois
-                            </button>
-                            <button
-                                className={\`px-6 py-3 rounded-lg font-semibold transition-all \${currentView === 'opponents' ? 'bg-purple-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}\`}
-                                onClick={() => setCurrentView('opponents')}
-                            >
-                                🎯 Adversaires
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="glass-effect rounded-2xl p-6">
-                        {currentView === 'library' && (
-                            <ArmiesLibrary armiesData={armiesData} setArmiesData={setArmiesData} />
-                        )}
-                        {currentView === 'tournaments' && (
-                            <TournamentsManager
-                                tournamentsData={tournamentsData}
-                                setTournamentsData={setTournamentsData}
-                                selectedTournament={selectedTournament}
-                                setSelectedTournament={setSelectedTournament}
-                            />
-                        )}
-                        {currentView === 'opponents' && (
-                            <OpponentsAnalysis
-                                tournamentsData={tournamentsData}
-                                armiesData={armiesData}
-                                selectedOpponent={selectedOpponent}
-                                setSelectedOpponent={setSelectedOpponent}
-                            />
-                        )}
-                    </div>
-                </div>
-            );
-        }
-
-        // ========== BIBLIOTHÈQUE D'ARMÉES ==========
-        function ArmiesLibrary({ armiesData, setArmiesData }) {
-            const [searchTerm, setSearchTerm] = useState('');
+            const [view, setView] = useState('library');
+            const [search, setSearch] = useState('');
             const [selectedFaction, setSelectedFaction] = useState(null);
-            const [selectedWarscroll, setSelectedWarscroll] = useState(null);
-
-            const factions = armiesData.factions || [];
-            const warscrolls = armiesData.warscrolls || [];
-
-            const filteredWarscrolls = warscrolls.filter(w => {
-                const matchesSearch = w.name.toLowerCase().includes(searchTerm.toLowerCase());
-                const matchesFaction = !selectedFaction || w.faction === selectedFaction.id;
-                return matchesSearch && matchesFaction;
+            const [tournaments, setTournaments] = useState([]);
+            
+            const filteredUnits = ARMIES_DATABASE.warscrolls.filter(w => {
+                const matchSearch = w.name.toLowerCase().includes(search.toLowerCase());
+                const matchFaction = !selectedFaction || w.faction === selectedFaction;
+                return matchSearch && matchFaction;
             });
-
-            return (
-                <div className="space-y-6">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-2xl font-bold text-gray-800">Bibliothèque d'Armées</h2>
-                        <div className="text-sm text-gray-600">
-                            {factions.length} factions • {warscrolls.length} warscrolls
-                        </div>
-                    </div>
-
-                    <input
-                        type="text"
-                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"
-                        placeholder="🔍 Rechercher une unité..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-
-                    <div className="mb-6">
-                        <h3 className="text-lg font-semibold mb-3">Factions</h3>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {factions.map(faction => (
-                                <div
-                                    key={faction.id}
-                                    className={\`p-4 bg-white rounded-lg shadow cursor-pointer transition-all hover:shadow-lg \${selectedFaction?.id === faction.id ? 'ring-2 ring-purple-500' : ''}\`}
-                                    onClick={() => setSelectedFaction(selectedFaction?.id === faction.id ? null : faction)}
-                                >
-                                    <h4 className="font-bold text-lg mb-2">{faction.name}</h4>
-                                    <p className="text-sm text-gray-600 mb-2">{faction.description}</p>
-                                    <div className="text-xs text-gray-500">
-                                        {faction.grandAlliance} • {warscrolls.filter(w => w.faction === faction.id).length} unités
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 className="text-lg font-semibold mb-3">
-                            {selectedFaction ? \`Warscrolls - \${selectedFaction.name}\` : 'Tous les Warscrolls'}
-                        </h3>
-                        <div className="grid md:grid-cols-2 gap-4">
-                            {filteredWarscrolls.map(warscroll => (
-                                <WarscrollCard
-                                    key={warscroll.id}
-                                    warscroll={warscroll}
-                                    faction={factions.find(f => f.id === warscroll.faction)}
-                                    onClick={() => setSelectedWarscroll(warscroll)}
-                                />
-                            ))}
-                        </div>
-                        {filteredWarscrolls.length === 0 && (
-                            <div className="text-center text-gray-500 py-12">
-                                Aucun warscroll trouvé
-                            </div>
-                        )}
-                    </div>
-
-                    {selectedWarscroll && (
-                        <WarscrollModal
-                            warscroll={selectedWarscroll}
-                            faction={factions.find(f => f.id === selectedWarscroll.faction)}
-                            onClose={() => setSelectedWarscroll(null)}
-                        />
-                    )}
-                </div>
+            
+            return React.createElement('div', { style: { maxWidth: '1200px', margin: '0 auto', padding: '20px' } },
+                // Header
+                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '15px', padding: '25px', marginBottom: '20px' } },
+                    React.createElement('h1', { style: { fontSize: '28px', fontWeight: 'bold', margin: '0 0 10px 0' } }, '⚔️ Age of Sigmar Companion'),
+                    React.createElement('p', { style: { margin: 0, color: '#666' } }, `${ARMIES_DATABASE.factions.length} factions • ${ARMIES_DATABASE.warscrolls.length} warscrolls`)
+                ),
+                
+                // Nav
+                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '15px', padding: '15px', marginBottom: '20px' } },
+                    React.createElement('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap' } },
+                        ['library', 'tournaments'].map(v => 
+                            React.createElement('button', { 
+                                key: v,
+                                onClick: () => setView(v),
+                                style: { 
+                                    padding: '12px 24px', 
+                                    borderRadius: '8px', 
+                                    border: 'none',
+                                    background: view === v ? '#667eea' : '#fff',
+                                    color: view === v ? '#fff' : '#333',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    boxShadow: view === v ? 'none' : '0 2px 4px rgba(0,0,0,0.1)'
+                                } 
+                            }, v === 'library' ? '📚 Bibliothèque' : '🏆 Tournois')
+                        )
+                    )
+                ),
+                
+                // Content
+                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '15px', padding: '25px' } },
+                    view === 'library' ? [
+                        // Search
+                        React.createElement('input', {
+                            key: 'search',
+                            type: 'text',
+                            placeholder: '🔍 Rechercher...',
+                            value: search,
+                            onChange: (e) => setSearch(e.target.value),
+                            style: { width: '100%', padding: '12px', fontSize: '16px', border: '2px solid #ddd', borderRadius: '8px', marginBottom: '20px' }
+                        }),
+                        
+                        // Factions
+                        React.createElement('h2', { key: 'h2', style: { marginBottom: '15px' } }, 'Factions'),
+                        React.createElement('div', { 
+                            key: 'factions',
+                            style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px', marginBottom: '30px' }
+                        }, ARMIES_DATABASE.factions.map(f => 
+                            React.createElement('div', {
+                                key: f.id,
+                                onClick: () => setSelectedFaction(selectedFaction === f.id ? null : f.id),
+                                style: { 
+                                    padding: '15px', 
+                                    background: selectedFaction === f.id ? '#667eea' : '#f5f5f5',
+                                    color: selectedFaction === f.id ? '#fff' : '#333',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    fontSize: '14px',
+                                    transition: 'all 0.2s',
+                                    border: selectedFaction === f.id ? '2px solid #5568d3' : '2px solid transparent'
+                                }
+                            }, `${f.name} (${ARMIES_DATABASE.warscrolls.filter(w => w.faction === f.id).length})`)
+                        )),
+                        
+                        // Units
+                        React.createElement('h2', { key: 'h3', style: { marginBottom: '15px' } }, 
+                            selectedFaction ? `Warscrolls - ${ARMIES_DATABASE.factions.find(f => f.id === selectedFaction)?.name}` : 'Tous les Warscrolls'
+                        ),
+                        React.createElement('div', {
+                            key: 'units',
+                            style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '15px' }
+                        }, filteredUnits.map(u => 
+                            React.createElement('div', {
+                                key: u.id,
+                                style: { padding: '15px', background: '#fff', border: '2px solid #e5e5e5', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }
+                            },
+                                React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '8px' } },
+                                    React.createElement('div', { style: { fontWeight: 'bold', fontSize: '16px' } }, u.name),
+                                    React.createElement('div', { style: { color: '#667eea', fontWeight: 'bold' } }, u.points + ' pts')
+                                ),
+                                React.createElement('div', { style: { fontSize: '12px', color: '#666' } }, u.role),
+                                React.createElement('div', { style: { fontSize: '11px', color: '#999', marginTop: '4px' } }, 
+                                    ARMIES_DATABASE.factions.find(f => f.id === u.faction)?.name
+                                )
+                            )
+                        ))
+                    ] : React.createElement('div', { style: { textAlign: 'center', padding: '40px', color: '#666' } }, 
+                        'Section Tournois - En cours de développement'
+                    )
+                )
             );
         }
-
-        function WarscrollCard({ warscroll, faction, onClick }) {
-            return (
-                <div className="p-4 bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 rounded-lg cursor-pointer transition-all hover:shadow-lg hover:border-purple-300" onClick={onClick}>
-                    <div className="flex justify-between items-start mb-2">
-                        <div>
-                            <h4 className="font-bold text-gray-800">{warscroll.name}</h4>
-                            <p className="text-xs text-gray-500">{faction?.name}</p>
-                        </div>
-                        <div className="text-right">
-                            <div className="text-xl font-bold text-purple-600">{warscroll.points}</div>
-                            <div className="text-xs text-gray-500">pts</div>
-                        </div>
-                    </div>
-                    <div className="flex gap-2 flex-wrap">
-                        <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-semibold">{warscroll.role}</span>
-                        {warscroll.keywords?.slice(0, 2).map((kw, i) => (
-                            <span key={i} className="px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs">{kw}</span>
-                        ))}
-                    </div>
-                </div>
-            );
-        }
-
-        function WarscrollModal({ warscroll, faction, onClose }) {
-            return (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={onClose}>
-                    <div className="bg-white rounded-xl p-6 max-w-3xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex justify-between items-start mb-6">
-                            <div>
-                                <h2 className="text-3xl font-bold text-gray-800">{warscroll.name}</h2>
-                                <p className="text-gray-600 mt-1">{faction?.name} • {warscroll.role} • {warscroll.points} pts</p>
-                            </div>
-                            <button onClick={onClose} className="text-3xl text-gray-400 hover:text-gray-600">×</button>
-                        </div>
-
-                        <div className="grid grid-cols-4 gap-4 mb-6">
-                            <div className="text-center p-3 bg-blue-50 rounded-lg">
-                                <div className="text-xs text-gray-600 font-semibold uppercase">Move</div>
-                                <div className="text-2xl font-bold text-blue-600">{warscroll.stats.move}</div>
-                            </div>
-                            <div className="text-center p-3 bg-red-50 rounded-lg">
-                                <div className="text-xs text-gray-600 font-semibold uppercase">Health</div>
-                                <div className="text-2xl font-bold text-red-600">{warscroll.stats.health}</div>
-                            </div>
-                            <div className="text-center p-3 bg-green-50 rounded-lg">
-                                <div className="text-xs text-gray-600 font-semibold uppercase">Save</div>
-                                <div className="text-2xl font-bold text-green-600">{warscroll.stats.save}</div>
-                            </div>
-                            <div className="text-center p-3 bg-purple-50 rounded-lg">
-                                <div className="text-xs text-gray-600 font-semibold uppercase">Control</div>
-                                <div className="text-2xl font-bold text-purple-600">{warscroll.stats.control}</div>
-                            </div>
-                        </div>
-
-                        <div className="mb-6">
-                            <h3 className="text-xl font-bold mb-3">Armes</h3>
-                            {warscroll.weapons?.map((weapon, i) => (
-                                <div key={i} className="p-4 bg-gray-50 border border-gray-200 rounded-lg mb-2">
-                                    <div className="font-bold mb-2">{weapon.name} <span className="text-sm text-gray-500">({weapon.type})</span></div>
-                                    <div className="grid grid-cols-6 gap-3 text-sm">
-                                        {weapon.range && <div><span className="text-gray-500">Range:</span> <b>{weapon.range}</b></div>}
-                                        <div><span className="text-gray-500">Attacks:</span> <b>{weapon.attacks}</b></div>
-                                        <div><span className="text-gray-500">Hit:</span> <b>{weapon.hit}</b></div>
-                                        <div><span className="text-gray-500">Wound:</span> <b>{weapon.wound}</b></div>
-                                        <div><span className="text-gray-500">Rend:</span> <b>{weapon.rend}</b></div>
-                                        <div><span className="text-gray-500">Damage:</span> <b>{weapon.damage}</b></div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="mb-6">
-                            <h3 className="text-xl font-bold mb-3">Capacités</h3>
-                            {warscroll.abilities?.map((ability, i) => (
-                                <div key={i} className="p-4 bg-blue-50 border-l-4 border-blue-500 rounded mb-2">
-                                    <div className="font-bold">{ability.name} <span className="text-xs text-gray-500 uppercase">({ability.type})</span></div>
-                                    <p className="text-sm mt-2 text-gray-700">{ability.description}</p>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div>
-                            <h3 className="text-xl font-bold mb-3">Keywords</h3>
-                            <div className="flex flex-wrap gap-2">
-                                {warscroll.keywords?.map((kw, i) => (
-                                    <span key={i} className="px-3 py-1 bg-gray-700 text-white rounded-full text-sm">{kw}</span>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        // ========== GESTION DE TOURNOIS ==========
-        function TournamentsManager({ tournamentsData, setTournamentsData, selectedTournament, setSelectedTournament }) {
-            const [showNewForm, setShowNewForm] = useState(false);
-            const [showAddOpponent, setShowAddOpponent] = useState(false);
-
-            const tournaments = tournamentsData.tournaments || [];
-
-            const addTournament = (tournament) => {
-                const newT = { ...tournament, id: \`tournament-\${Date.now()}\`, opponents: [] };
-                setTournamentsData({ ...tournamentsData, tournaments: [...tournaments, newT] });
-                setSelectedTournament(newT);
-                setShowNewForm(false);
-            };
-
-            const addOpponent = (opponent) => {
-                const updated = tournaments.map(t => {
-                    if (t.id === selectedTournament.id) {
-                        return { ...t, opponents: [...(t.opponents || []), { ...opponent, id: Date.now() }] };
-                    }
-                    return t;
-                });
-                setTournamentsData({ ...tournamentsData, tournaments: updated });
-                setSelectedTournament(updated.find(t => t.id === selectedTournament.id));
-                setShowAddOpponent(false);
-            };
-
-            if (selectedTournament) {
-                return (
-                    <div>
-                        <button onClick={() => setSelectedTournament(null)} className="text-purple-600 hover:underline mb-4">
-                            ← Retour
-                        </button>
-                        <div className="flex justify-between items-center mb-6">
-                            <div>
-                                <h2 className="text-2xl font-bold">{selectedTournament.name}</h2>
-                                <p className="text-gray-600">{selectedTournament.date} • {selectedTournament.rounds} rounds • {selectedTournament.pointsLimit} pts</p>
-                            </div>
-                            <button onClick={() => setShowAddOpponent(true)} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
-                                + Adversaire
-                            </button>
-                        </div>
-
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {selectedTournament.opponents?.map(opp => (
-                                <div key={opp.id} className="p-4 bg-white rounded-lg shadow">
-                                    <h3 className="font-bold text-lg">{opp.name}</h3>
-                                    <p className="text-sm text-gray-600">{opp.nickname}</p>
-                                    <div className="mt-2">
-                                        <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
-                                            {opp.faction}
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {showAddOpponent && <OpponentForm onClose={() => setShowAddOpponent(false)} onAdd={addOpponent} />}
-                    </div>
-                );
-            }
-
-            return (
-                <div>
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-bold">Mes Tournois</h2>
-                        <button onClick={() => setShowNewForm(true)} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
-                            + Nouveau
-                        </button>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-4">
-                        {tournaments.map(t => (
-                            <div key={t.id} className="p-6 bg-white rounded-lg shadow cursor-pointer hover:shadow-lg transition" onClick={() => setSelectedTournament(t)}>
-                                <h3 className="font-bold text-xl mb-2">{t.name}</h3>
-                                <p className="text-gray-600 mb-3">{t.date}</p>
-                                <div className="text-sm text-gray-700">
-                                    <div>🎲 {t.rounds} rounds</div>
-                                    <div>👥 {t.opponents?.length || 0} adversaires</div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {showNewForm && <TournamentForm onClose={() => setShowNewForm(false)} onCreate={addTournament} />}
-                </div>
-            );
-        }
-
-        function TournamentForm({ onClose, onCreate }) {
-            const [name, setName] = useState('');
-            const [date, setDate] = useState('');
-            const [rounds, setRounds] = useState(5);
-            const [pointsLimit, setPointsLimit] = useState(2000);
-
-            return (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={onClose}>
-                    <div className="bg-white rounded-xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-                        <h2 className="text-2xl font-bold mb-4">Nouveau tournoi</h2>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block font-semibold mb-1">Nom</label>
-                                <input type="text" className="w-full px-3 py-2 border rounded" value={name} onChange={(e) => setName(e.target.value)} />
-                            </div>
-                            <div>
-                                <label className="block font-semibold mb-1">Date</label>
-                                <input type="text" className="w-full px-3 py-2 border rounded" value={date} onChange={(e) => setDate(e.target.value)} />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block font-semibold mb-1">Rounds</label>
-                                    <input type="number" className="w-full px-3 py-2 border rounded" value={rounds} onChange={(e) => setRounds(+e.target.value)} />
-                                </div>
-                                <div>
-                                    <label className="block font-semibold mb-1">Points</label>
-                                    <input type="number" className="w-full px-3 py-2 border rounded" value={pointsLimit} onChange={(e) => setPointsLimit(+e.target.value)} />
-                                </div>
-                            </div>
-                            <div className="flex gap-2 pt-4">
-                                <button onClick={onClose} className="flex-1 px-4 py-2 bg-gray-200 rounded">Annuler</button>
-                                <button onClick={() => onCreate({ name, date, rounds, pointsLimit })} className="flex-1 px-4 py-2 bg-purple-600 text-white rounded">Créer</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        function OpponentForm({ onClose, onAdd }) {
-            const [name, setName] = useState('');
-            const [nickname, setNickname] = useState('');
-            const [faction, setFaction] = useState('');
-            const [points, setPoints] = useState(2000);
-
-            return (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={onClose}>
-                    <div className="bg-white rounded-xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-                        <h2 className="text-2xl font-bold mb-4">Ajouter adversaire</h2>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block font-semibold mb-1">Nom</label>
-                                <input type="text" className="w-full px-3 py-2 border rounded" value={name} onChange={(e) => setName(e.target.value)} />
-                            </div>
-                            <div>
-                                <label className="block font-semibold mb-1">Pseudo</label>
-                                <input type="text" className="w-full px-3 py-2 border rounded" value={nickname} onChange={(e) => setNickname(e.target.value)} />
-                            </div>
-                            <div>
-                                <label className="block font-semibold mb-1">Faction</label>
-                                <input type="text" className="w-full px-3 py-2 border rounded" value={faction} onChange={(e) => setFaction(e.target.value)} />
-                            </div>
-                            <div>
-                                <label className="block font-semibold mb-1">Points</label>
-                                <input type="number" className="w-full px-3 py-2 border rounded" value={points} onChange={(e) => setPoints(+e.target.value)} />
-                            </div>
-                            <div className="flex gap-2 pt-4">
-                                <button onClick={onClose} className="flex-1 px-4 py-2 bg-gray-200 rounded">Annuler</button>
-                                <button onClick={() => onAdd({ name, nickname, faction, points })} className="flex-1 px-4 py-2 bg-purple-600 text-white rounded">Ajouter</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        // ========== ANALYSE D'ADVERSAIRES ==========
-        function OpponentsAnalysis({ tournamentsData, selectedOpponent, setSelectedOpponent }) {
-            const allOpponents = tournamentsData.tournaments?.flatMap(t =>
-                t.opponents?.map(opp => ({ ...opp, tournamentName: t.name })) || []
-            ) || [];
-
-            if (selectedOpponent) {
-                return (
-                    <div>
-                        <button onClick={() => setSelectedOpponent(null)} className="text-purple-600 hover:underline mb-4">
-                            ← Retour
-                        </button>
-                        <div className="bg-white rounded-lg p-6">
-                            <h2 className="text-2xl font-bold mb-2">{selectedOpponent.name}</h2>
-                            <p className="text-gray-600">{selectedOpponent.nickname}</p>
-                            <div className="mt-4 space-y-2">
-                                <p><strong>Faction:</strong> {selectedOpponent.faction}</p>
-                                <p><strong>Points:</strong> {selectedOpponent.points}</p>
-                                <p><strong>Tournoi:</strong> {selectedOpponent.tournamentName}</p>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
-
-            return (
-                <div>
-                    <h2 className="text-2xl font-bold mb-6">Tous les adversaires</h2>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {allOpponents.map((opp, i) => (
-                            <div key={i} className="p-4 bg-white rounded-lg shadow cursor-pointer hover:shadow-lg transition" onClick={() => setSelectedOpponent(opp)}>
-                                <h3 className="font-bold text-lg">{opp.name}</h3>
-                                <p className="text-sm text-gray-600">{opp.nickname}</p>
-                                <div className="mt-2">
-                                    <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
-                                        {opp.faction}
-                                    </span>
-                                </div>
-                                <p className="text-xs text-gray-500 mt-2">{opp.tournamentName}</p>
-                            </div>
-                        ))}
-                    </div>
-                    {allOpponents.length === 0 && (
-                        <div className="text-center text-gray-500 py-12">
-                            Aucun adversaire enregistré
-                        </div>
-                    )}
-                </div>
-            );
-        }
-
-        ReactDOM.render(<App />, document.getElementById('root'));
+        
+        ReactDOM.render(React.createElement(App), document.getElementById('root'));
     </script>
 </body>
 </html>
