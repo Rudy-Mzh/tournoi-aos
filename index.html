@@ -177,10 +177,12 @@
                 ]
             },
             warscrolls: [
+                // === HEROES ===
                 {
                     name: "Slann Starmaster",
                     points: 280,
                     role: "Hero, Wizard",
+                    category: "Heroes",
                     move: 5,
                     health: 10,
                     save: 4,
@@ -221,6 +223,7 @@
                     name: "Lord Kroak",
                     points: 430,
                     role: "Hero, Wizard, Unique",
+                    category: "Heroes",
                     move: 5,
                     health: 12,
                     save: 4,
@@ -844,6 +847,570 @@
                             name: "Celestial Lance Formation",
                             type: "Passive",
                             effect: "Les attaques de cette unité avec Charge (+1 Damage) deviennent Charge (+2 Damage) pendant qu'elle a 3+ modèles ou plus."
+                        }
+                    ]
+                },
+
+                // === HEROES ADDITIONNELS ===
+                {
+                    name: "Skink Starpriest",
+                    points: 110,
+                    role: "Hero, Priest, Wizard",
+                    category: "Heroes",
+                    move: 8,
+                    health: 4,
+                    save: 6,
+                    control: 1,
+                    keywords: ["Hero", "Priest", "Wizard", "Skink", "Seraphon"],
+                    weapons: [
+                        {
+                            name: "Serpent Staff",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Celestial Rites",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité SERAPHON amie à 12\" ou moins. Jusqu'à votre prochain hero phase, ajoutez 1 aux jets de save pour cette unité."
+                        },
+                        {
+                            name: "Serpent Staff",
+                            type: "Passive",
+                            effect: "Ce WIZARD connaît le sort Arcane Bolt en plus des autres sorts."
+                        },
+                        {
+                            name: "Star-blessed",
+                            type: "Passive",
+                            effect: "Ce héros a Ward (6+)."
+                        }
+                    ]
+                },
+                {
+                    name: "Skink Starseer",
+                    points: 140,
+                    role: "Hero, Wizard",
+                    category: "Heroes",
+                    move: 8,
+                    health: 5,
+                    save: 6,
+                    control: 1,
+                    keywords: ["Hero", "Wizard", "Skink", "Seraphon"],
+                    weapons: [
+                        {
+                            name: "Astromancer's Staff",
+                            type: "melee",
+                            range: 2,
+                            attacks: 3,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: D3,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Cosmic Herald",
+                            type: "Passive",
+                            effect: "Ajoutez 1 au nombre de sorts que ce WIZARD peut lancer par tour."
+                        },
+                        {
+                            name: "Astral Vision",
+                            type: "Once Per Battle, Your Hero Phase",
+                            effect: "Choisissez une unité amie à 18\" ou moins. Elle peut immédiatement Run ou Retreat."
+                        },
+                        {
+                            name: "Celestial Doom",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité ennemie visible à 18\" ou moins. Lancez un dé. Sur 4+, elle subit D3 blessures mortelles."
+                        }
+                    ]
+                },
+                {
+                    name: "Saurus Scar-Veteran on Carnosaur",
+                    points: 200,
+                    role: "Hero, Monster",
+                    category: "Heroes",
+                    move: 10,
+                    health: 12,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Hero", "Monster", "Saurus", "Carnosaur", "Seraphon"],
+                    weapons: [
+                        {
+                            name: "Celestite War-spear",
+                            type: "melee",
+                            range: 2,
+                            attacks: 5,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: ["Charge (+1 Damage)"]
+                        },
+                        {
+                            name: "Carnosaur's Massive Jaws",
+                            type: "melee",
+                            range: 2,
+                            attacks: 3,
+                            hit: 4,
+                            wound: 2,
+                            rend: 2,
+                            damage: 3,
+                            abilities: ["Companion"]
+                        },
+                        {
+                            name: "Carnosaur's Clawed Forelimbs",
+                            type: "melee",
+                            range: 2,
+                            attacks: 4,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: ["Companion"]
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Wrath of the Seraphon",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de touche pour les attaques de ce héro si ce héro a chargé ce tour."
+                        },
+                        {
+                            name: "Savage Ferocity",
+                            type: "Any Combat Phase",
+                            effect: "Si cette unité a chargé ce tour, les attaques Companion de cette unité ont Crit (2 Hits) pour le reste du tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Saurus Scar-Veteran on Aggradon",
+                    points: 150,
+                    role: "Hero, Cavalry",
+                    category: "Heroes",
+                    move: 10,
+                    health: 10,
+                    save: 4,
+                    control: 2,
+                    keywords: ["Hero", "Cavalry", "Saurus", "Seraphon"],
+                    weapons: [
+                        {
+                            name: "Celestite Warblade",
+                            type: "melee",
+                            range: 1,
+                            attacks: 5,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Aggradon's Razor-sharp Claws",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: ["Companion"]
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Alpha Warbeast",
+                            type: "Passive",
+                            effect: "Si ce héros est à 3\" ou moins d'une unité AGGRADON LANCERS amie au début du combat phase, ajoutez 1 aux jets de touche pour cette unité pour le reste du tour."
+                        },
+                        {
+                            name: "Saurian Savagery",
+                            type: "Once Per Battle, Any Combat Phase",
+                            effect: "Ce héros peut se battre immédiatement, avant toute autre unité."
+                        }
+                    ]
+                },
+                {
+                    name: "Saurus Oldblood",
+                    points: 110,
+                    role: "Hero",
+                    category: "Heroes",
+                    move: 5,
+                    health: 6,
+                    save: 3,
+                    control: 1,
+                    keywords: ["Hero", "Saurus", "Seraphon"],
+                    weapons: [
+                        {
+                            name: "Celestite Greatblade",
+                            type: "melee",
+                            range: 1,
+                            attacks: 6,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Wrath of the Seraphon",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de blessure pour les attaques de ce héros si ce héros a chargé ce tour."
+                        },
+                        {
+                            name: "Cold-blooded Commander",
+                            type: "Your Hero Phase",
+                            effect: "Choisissez une unité SAURUS amie à 12\" ou moins. Elle peut immédiatement Run."
+                        }
+                    ]
+                },
+                {
+                    name: "Engine of the Gods",
+                    points: 260,
+                    role: "Hero, Monster, Priest",
+                    category: "Heroes",
+                    move: 8,
+                    health: 14,
+                    save: 3,
+                    control: 5,
+                    keywords: ["Hero", "Monster", "Priest", "Seraphon"],
+                    weapons: [
+                        {
+                            name: "Skink Priest's Staff",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Stegadon's Massive Horns",
+                            type: "melee",
+                            range: 2,
+                            attacks: 4,
+                            hit: 4,
+                            wound: 2,
+                            rend: 2,
+                            damage: 3,
+                            abilities: ["Charge (+1 Damage)", "Companion"]
+                        },
+                        {
+                            name: "Stegadon's Crushing Stomp",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: ["Companion"]
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Cosmic Engine",
+                            type: "Your Hero Phase",
+                            effect: "Lancez un dé. Sur 1, rien ne se passe. Sur 2-6, appliquez l'effet correspondant : 2-3: Guérissez D3 blessures sur cette unité. 4-5: Choisissez une unité ennemie à 12\", elle subit D3 blessures mortelles. 6: Les deux effets."
+                        },
+                        {
+                            name: "Celestial Conduit",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de casting pour les WIZARD SERAPHON amis à 12\" ou moins."
+                        },
+                        {
+                            name: "Gargantuan",
+                            type: "Passive",
+                            effect: "Cette unité compte comme 5 modèles pour les objectifs."
+                        }
+                    ]
+                },
+
+                // === CAVALRY ADDITIONNELLE ===
+                {
+                    name: "Saurus Knights",
+                    points: 130,
+                    role: "Cavalry",
+                    category: "Cavalry",
+                    move: 10,
+                    health: 10,
+                    save: 4,
+                    control: 1,
+                    keywords: ["Cavalry", "Saurus", "Seraphon", "Champion", "Standard Bearer"],
+                    weapons: [
+                        {
+                            name: "Celestite Blade or Lance",
+                            type: "melee",
+                            range: 2,
+                            attacks: 2,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: ["Charge (+1 Damage)"]
+                        },
+                        {
+                            name: "Cold One's Vicious Bite",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: ["Companion"]
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Blazing Cohort",
+                            type: "Passive",
+                            effect: "Ajoutez 1 aux jets de touche pour cette unité pendant qu'elle est à 12\" ou moins d'un Hero SERAPHON ami."
+                        },
+                        {
+                            name: "Saurus Charge",
+                            type: "Passive",
+                            effect: "Après que cette unité charge, ajoutez 1 aux jets de blessure pour les attaques de cette unité pour le reste du tour."
+                        }
+                    ]
+                },
+
+                // === MONSTERS / WAR MACHINES ADDITIONNELS ===
+                {
+                    name: "Bastiladon with Ark of Sotek",
+                    points: 220,
+                    role: "Monster",
+                    category: "Monsters",
+                    move: 5,
+                    health: 12,
+                    save: 2,
+                    control: 2,
+                    keywords: ["Monster", "Seraphon"],
+                    weapons: [
+                        {
+                            name: "Powerful Jaws",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Ark of Sotek Serpents",
+                            type: "ranged",
+                            range: 12,
+                            attacks: 8,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Impervious Defence",
+                            type: "Passive",
+                            effect: "Cette unité a Ward (5+)."
+                        },
+                        {
+                            name: "Serpents of Sotek",
+                            type: "Your Shooting Phase",
+                            effect: "Après que cette unité tire, lancez un dé pour chaque touche infligée par les Ark of Sotek Serpents. Sur 6+, l'unité ciblée subit 1 blessure mortelle supplémentaire."
+                        },
+                        {
+                            name: "Tide of Serpents Aura",
+                            type: "Passive",
+                            effect: "Les unités ennemies à 3\" ou moins de cette unité ont -1 à leurs jets de touche."
+                        }
+                    ]
+                },
+                {
+                    name: "Razordon Hunting Pack",
+                    points: 110,
+                    role: "Monster",
+                    category: "Monsters",
+                    move: 6,
+                    health: 8,
+                    save: 5,
+                    control: 1,
+                    keywords: ["Monster", "Seraphon"],
+                    weapons: [
+                        {
+                            name: "Razordon Spikes",
+                            type: "ranged",
+                            range: 12,
+                            attacks: 8,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: ["Crit (2 Hits)"]
+                        },
+                        {
+                            name: "Razordon's Slashing Jaws",
+                            type: "melee",
+                            range: 1,
+                            attacks: 4,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 1,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Instinctive Defence",
+                            type: "Passive",
+                            effect: "Si cette unité est chargée, elle peut tirer immédiatement sur l'unité qui charge avant que les attaques de charge soient résolues."
+                        },
+                        {
+                            name: "Barbed Volleys",
+                            type: "Your Shooting Phase",
+                            effect: "Quand cette unité tire, vous pouvez relancer les jets de touche de 1."
+                        }
+                    ]
+                },
+                {
+                    name: "Salamander Hunting Pack",
+                    points: 130,
+                    role: "Monster",
+                    category: "Monsters",
+                    move: 8,
+                    health: 8,
+                    save: 5,
+                    control: 1,
+                    keywords: ["Monster", "Seraphon"],
+                    weapons: [
+                        {
+                            name: "Stream of Fire",
+                            type: "ranged",
+                            range: 12,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 2,
+                            damage: 2,
+                            abilities: []
+                        },
+                        {
+                            name: "Salamander's Burning Jaws",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 4,
+                            wound: 3,
+                            rend: 1,
+                            damage: 2,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Corrosive Fire",
+                            type: "Passive",
+                            effect: "Les attaques de missiles de cette unité ignorent les effets positifs sur le Save de l'unité ciblée (comme le couvert)."
+                        },
+                        {
+                            name: "Voracious Appetite",
+                            type: "Any Combat Phase",
+                            effect: "Si cette unité détruit une unité ennemie en mêlée, vous pouvez guérir D3 blessures sur cette unité."
+                        }
+                    ]
+                },
+                {
+                    name: "Dread Saurian",
+                    points: 480,
+                    role: "Monster, Behemoth",
+                    category: "Monsters",
+                    move: 8,
+                    health: 20,
+                    save: 3,
+                    control: 5,
+                    keywords: ["Monster", "Behemoth", "Seraphon"],
+                    weapons: [
+                        {
+                            name: "Arcanodon Crew's Weapons",
+                            type: "ranged",
+                            range: 12,
+                            attacks: 6,
+                            hit: 4,
+                            wound: 4,
+                            rend: 0,
+                            damage: 1,
+                            abilities: []
+                        },
+                        {
+                            name: "Death Roll",
+                            type: "melee",
+                            range: 2,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: 4,
+                            abilities: []
+                        },
+                        {
+                            name: "Gaping Maw",
+                            type: "melee",
+                            range: 2,
+                            attacks: 6,
+                            hit: 4,
+                            wound: 2,
+                            rend: 2,
+                            damage: 3,
+                            abilities: []
+                        },
+                        {
+                            name: "Crushing Tail",
+                            type: "melee",
+                            range: 3,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: D3,
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Arcane Glyphs",
+                            type: "Passive",
+                            effect: "Ce MONSTER a Ward (5+)."
+                        },
+                        {
+                            name: "Primal Terror",
+                            type: "Passive",
+                            effect: "Les unités ennemies à 3\" ou moins de ce MONSTER ont -1 à leur Bravery."
+                        },
+                        {
+                            name: "Unstoppable Stampede",
+                            type: "Passive",
+                            effect: "Après que cette unité charge, lancez un dé pour chaque unité ennemie à 1\". Sur 2+, cette unité subit D6 blessures mortelles."
+                        },
+                        {
+                            name: "Gargantuan",
+                            type: "Passive",
+                            effect: "Cette unité compte comme 10 modèles pour les objectifs."
                         }
                     ]
                 }
