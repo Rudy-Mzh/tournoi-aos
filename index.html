@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#667eea">
-    <title>AoS Companion</title>
+    <title>AoS Companion - Base Complète</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -12,356 +12,1137 @@
 </head>
 <body style="margin:0;padding:0;font-family:-apple-system,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh">
     <div id="root"></div>
-    
+
     <script type="text/babel">
         const { useState } = React;
-        
-        // BASE DE DONNÉES COMPLÈTE PAR GRANDE ALLIANCE
-        const ARMIES_DB = {
-            alliances: {
-                order: { name: "Order", color: "#4169E1", icon: "⚡" },
-                chaos: { name: "Chaos", color: "#DC143C", icon: "☠️" },
-                death: { name: "Death", color: "#9370DB", icon: "💀" },
-                destruction: { name: "Destruction", color: "#FF8C00", icon: "💥" }
-            },
-            factions: [
-                // ORDER
-                { id: "stormcast", name: "Stormcast Eternals", alliance: "order" },
-                { id: "sylvaneth", name: "Sylvaneth", alliance: "order" },
-                { id: "daughters", name: "Daughters of Khaine", alliance: "order" },
-                { id: "idoneth", name: "Idoneth Deepkin", alliance: "order" },
-                { id: "lumineth", name: "Lumineth Realm-lords", alliance: "order" },
-                { id: "kharadron", name: "Kharadron Overlords", alliance: "order" },
-                { id: "fyreslayers", name: "Fyreslayers", alliance: "order" },
-                { id: "seraphon", name: "Seraphon", alliance: "order" },
-                { id: "cities", name: "Cities of Sigmar", alliance: "order" },
-                
-                // CHAOS
-                { id: "khorne", name: "Blades of Khorne", alliance: "chaos" },
-                { id: "tzeentch", name: "Disciples of Tzeentch", alliance: "chaos" },
-                { id: "nurgle", name: "Maggotkin of Nurgle", alliance: "chaos" },
-                { id: "slaanesh", name: "Hedonites of Slaanesh", alliance: "chaos" },
-                { id: "slaves", name: "Slaves to Darkness", alliance: "chaos" },
-                { id: "skaven", name: "Skaven", alliance: "chaos" },
-                { id: "beasts", name: "Beasts of Chaos", alliance: "chaos" },
-                
-                // DEATH
-                { id: "ossiarch", name: "Ossiarch Bonereapers", alliance: "death" },
-                { id: "nighthaunt", name: "Nighthaunt", alliance: "death" },
-                { id: "soulblight", name: "Soulblight Gravelords", alliance: "death" },
-                { id: "fec", name: "Flesh-eater Courts", alliance: "death" },
-                
-                // DESTRUCTION
-                { id: "ogors", name: "Ogor Mawtribes", alliance: "destruction" },
-                { id: "orruks", name: "Orruk Warclans", alliance: "destruction" },
-                { id: "gloomspite", name: "Gloomspite Gitz", alliance: "destruction" },
-                { id: "behemat", name: "Sons of Behemat", alliance: "destruction" }
-            ],
-            warscrolls: [
-                // STORMCAST ETERNALS
-                { id: "liberators", name: "Liberators", faction: "stormcast", points: 110, role: "Battleline" },
-                { id: "vindictors", name: "Vindictors", faction: "stormcast", points: 130, role: "Battleline" },
-                { id: "judicators", name: "Judicators", faction: "stormcast", points: 180, role: "Ranged" },
-                { id: "lord-imperatant", name: "Lord-Imperatant", faction: "stormcast", points: 170, role: "Hero" },
-                { id: "knight-arcanum", name: "Knight-Arcanum", faction: "stormcast", points: 130, role: "Hero/Wizard" },
-                { id: "annihilators", name: "Annihilators", faction: "stormcast", points: 200, role: "Elite" },
-                { id: "praetors", name: "Praetors", faction: "stormcast", points: 170, role: "Elite" },
-                
-                // SYLVANETH
-                { id: "dryads", name: "Dryads", faction: "sylvaneth", points: 100, role: "Battleline" },
-                { id: "tree-revenants", name: "Tree-Revenants", faction: "sylvaneth", points: 100, role: "Battleline" },
-                { id: "alarielle", name: "Alarielle the Everqueen", faction: "sylvaneth", points: 660, role: "Monster/Hero" },
-                { id: "durthu", name: "Spirit of Durthu", faction: "sylvaneth", points: 320, role: "Monster" },
-                { id: "drycha", name: "Drycha Hamadreth", faction: "sylvaneth", points: 300, role: "Monster/Hero" },
-                { id: "kurnoth-swords", name: "Kurnoth Hunters (Greatswords)", faction: "sylvaneth", points: 190, role: "Elite" },
-                { id: "kurnoth-scythes", name: "Kurnoth Hunters (Scythes)", faction: "sylvaneth", points: 190, role: "Elite" },
-                { id: "spite-revenants", name: "Spite-Revenants", faction: "sylvaneth", points: 80, role: "Infantry" },
-                
-                // DAUGHTERS OF KHAINE
-                { id: "witch-aelves", name: "Witch Aelves", faction: "daughters", points: 100, role: "Battleline" },
-                { id: "blood-sisters", name: "Blood Sisters", faction: "daughters", points: 140, role: "Elite" },
-                { id: "blood-stalkers", name: "Blood Stalkers", faction: "daughters", points: 180, role: "Ranged" },
-                { id: "morathi", name: "Morathi-Khaine", faction: "daughters", points: 680, role: "Monster/Hero" },
-                { id: "avatar-khaine", name: "Avatar of Khaine", faction: "daughters", points: 280, role: "Monster" },
-                { id: "melusai-ironscale", name: "Melusai Ironscale", faction: "daughters", points: 120, role: "Hero" },
-                
-                // IDONETH DEEPKIN
-                { id: "namarti-thralls", name: "Namarti Thralls", faction: "idoneth", points: 100, role: "Battleline" },
-                { id: "namarti-reavers", name: "Namarti Reavers", faction: "idoneth", points: 110, role: "Battleline" },
-                { id: "eidolon", name: "Eidolon of Mathlann", faction: "idoneth", points: 380, role: "Monster/Hero" },
-                { id: "volturnos", name: "Volturnos", faction: "idoneth", points: 280, role: "Hero" },
-                { id: "akhelian-guard", name: "Akhelian Guard", faction: "idoneth", points: 140, role: "Cavalry" },
-                
-                // LUMINETH
-                { id: "vanari-auralan-wardens", name: "Vanari Auralan Wardens", faction: "lumineth", points: 120, role: "Battleline" },
-                { id: "vanari-sentinels", name: "Vanari Auralan Sentinels", faction: "lumineth", points: 140, role: "Ranged" },
-                { id: "avalenor", name: "Avalenor", faction: "lumineth", points: 360, role: "Monster" },
-                { id: "teclis", name: "Teclis", faction: "lumineth", points: 660, role: "Monster/Hero/Wizard" },
-                
-                // KHARADRON OVERLORDS
-                { id: "arkanaut-company", name: "Arkanaut Company", faction: "kharadron", points: 90, role: "Battleline" },
-                { id: "skywardens", name: "Skywardens", faction: "kharadron", points: 130, role: "Fast Attack" },
-                { id: "arkanaut-frigate", name: "Arkanaut Frigate", faction: "kharadron", points: 300, role: "War Machine" },
-                { id: "drekki-flynt", name: "Drekki Flynt", faction: "kharadron", points: 130, role: "Hero" },
-                
-                // FYRESLAYERS
-                { id: "vulkite-berzerkers", name: "Vulkite Berzerkers", faction: "fyreslayers", points: 90, role: "Battleline" },
-                { id: "hearthguard-berzerkers", name: "Hearthguard Berzerkers", faction: "fyreslayers", points: 140, role: "Elite" },
-                { id: "auric-runefather", name: "Auric Runefather on Magmadroth", faction: "fyreslayers", points: 320, role: "Monster/Hero" },
-                
-                // SERAPHON
-                { id: "saurus-warriors", name: "Saurus Warriors", faction: "seraphon", points: 90, role: "Battleline" },
-                { id: "skinks", name: "Skinks", faction: "seraphon", points: 60, role: "Battleline" },
-                { id: "slann", name: "Slann Starmaster", faction: "seraphon", points: 280, role: "Hero/Wizard" },
-                { id: "carnosaur", name: "Saurus Oldblood on Carnosaur", faction: "seraphon", points: 230, role: "Monster/Hero" },
-                { id: "lord-kroak", name: "Lord Kroak", faction: "seraphon", points: 430, role: "Hero/Wizard" },
-                { id: "saurus-guard", name: "Saurus Guard", faction: "seraphon", points: 100, role: "Elite" },
-                
-                // CITIES OF SIGMAR
-                { id: "freeguild-steelhelms", name: "Freeguild Steelhelms", faction: "cities", points: 100, role: "Battleline" },
-                { id: "freeguild-fusiliers", name: "Freeguild Fusiliers", faction: "cities", points: 110, role: "Ranged" },
-                { id: "dreadlord-dragon", name: "Dreadlord on Black Dragon", faction: "cities", points: 300, role: "Monster/Hero" },
-                
-                // BLADES OF KHORNE
-                { id: "bloodreavers", name: "Bloodreavers", faction: "khorne", points: 90, role: "Battleline" },
-                { id: "bloodletters", name: "Bloodletters", faction: "khorne", points: 110, role: "Battleline" },
-                { id: "blood-warriors", name: "Blood Warriors", faction: "khorne", points: 100, role: "Battleline" },
-                { id: "bloodthirster", name: "Bloodthirster of Insensate Rage", faction: "khorne", points: 340, role: "Monster/Hero" },
-                { id: "skarbrand", name: "Skarbrand", faction: "khorne", points: 430, role: "Monster" },
-                { id: "bloodmaster", name: "Bloodmaster", faction: "khorne", points: 90, role: "Hero" },
-                
-                // DISCIPLES OF TZEENTCH
-                { id: "pink-horrors", name: "Pink Horrors", faction: "tzeentch", points: 220, role: "Battleline" },
-                { id: "kairic-acolytes", name: "Kairic Acolytes", faction: "tzeentch", points: 100, role: "Battleline" },
-                { id: "lord-of-change", name: "Lord of Change", faction: "tzeentch", points: 380, role: "Monster/Hero/Wizard" },
-                { id: "kairos", name: "Kairos Fateweaver", faction: "tzeentch", points: 410, role: "Monster/Hero/Wizard" },
-                { id: "flamers", name: "Flamers", faction: "tzeentch", points: 110, role: "Ranged" },
-                
-                // MAGGOTKIN OF NURGLE
-                { id: "plaguebearers", name: "Plaguebearers", faction: "nurgle", points: 140, role: "Battleline" },
-                { id: "putrid-blightkings", name: "Putrid Blightkings", faction: "nurgle", points: 250, role: "Elite" },
-                { id: "great-unclean-one", name: "Great Unclean One", faction: "nurgle", points: 500, role: "Monster/Hero/Wizard" },
-                { id: "rotigus", name: "Rotigus", faction: "nurgle", points: 520, role: "Monster" },
-                
-                // HEDONITES OF SLAANESH
-                { id: "daemonettes", name: "Daemonettes", faction: "slaanesh", points: 110, role: "Battleline" },
-                { id: "blissbarb-archers", name: "Blissbarb Archers", faction: "slaanesh", points: 120, role: "Ranged" },
-                { id: "keeper-of-secrets", name: "Keeper of Secrets", faction: "slaanesh", points: 340, role: "Monster/Hero/Wizard" },
-                { id: "shalaxi", name: "Shalaxi Helbane", faction: "slaanesh", points: 380, role: "Monster/Hero" },
-                
-                // SLAVES TO DARKNESS
-                { id: "chaos-warriors", name: "Chaos Warriors", faction: "slaves", points: 90, role: "Battleline" },
-                { id: "chaos-knights", name: "Chaos Knights", faction: "slaves", points: 140, role: "Cavalry" },
-                { id: "chaos-lord-karkadrak", name: "Chaos Lord on Karkadrak", faction: "slaves", points: 240, role: "Monster/Hero" },
-                { id: "archaon", name: "Archaon the Everchosen", faction: "slaves", points: 840, role: "Monster/Hero" },
-                
-                // SKAVEN
-                { id: "clanrats", name: "Clanrats", faction: "skaven", points: 90, role: "Battleline" },
-                { id: "stormvermin", name: "Stormvermin", faction: "skaven", points: 110, role: "Battleline" },
-                { id: "plague-monks", name: "Plague Monks", faction: "skaven", points: 90, role: "Infantry" },
-                { id: "verminlord", name: "Verminlord Warpseer", faction: "skaven", points: 300, role: "Monster/Hero" },
-                { id: "grey-seer", name: "Grey Seer", faction: "skaven", points: 120, role: "Hero/Wizard" },
-                { id: "plague-furnace", name: "Plague Furnace", faction: "skaven", points: 230, role: "War Machine" },
-                
-                // BEASTS OF CHAOS
-                { id: "gors", name: "Gors", faction: "beasts", points: 70, role: "Battleline" },
-                { id: "ungors", name: "Ungors", faction: "beasts", points: 60, role: "Battleline" },
-                { id: "beastlord", name: "Beastlord", faction: "beasts", points: 100, role: "Hero" },
-                { id: "ghorgon", name: "Ghorgon", faction: "beasts", points: 180, role: "Monster" },
-                
-                // OSSIARCH BONEREAPERS
-                { id: "mortek-guard", name: "Mortek Guard", faction: "ossiarch", points: 130, role: "Battleline" },
-                { id: "kavalos", name: "Kavalos Deathriders", faction: "ossiarch", points: 180, role: "Battleline/Cavalry" },
-                { id: "nagash", name: "Nagash, Supreme Lord of the Undead", faction: "ossiarch", points: 900, role: "Monster/Hero/Wizard" },
-                { id: "mortisan", name: "Mortisan Soulmason", faction: "ossiarch", points: 150, role: "Hero/Wizard" },
-                { id: "morghast-archai", name: "Morghast Archai", faction: "ossiarch", points: 190, role: "Elite" },
-                
-                // NIGHTHAUNT
-                { id: "chainrasps", name: "Chainrasp Horde", faction: "nighthaunt", points: 90, role: "Battleline" },
-                { id: "spirit-hosts", name: "Spirit Hosts", faction: "nighthaunt", points: 125, role: "Battleline" },
-                { id: "lady-olynder", name: "Lady Olynder", faction: "nighthaunt", points: 220, role: "Hero/Wizard" },
-                { id: "black-coach", name: "Black Coach", faction: "nighthaunt", points: 280, role: "War Machine" },
-                { id: "dreadscythe-harridans", name: "Dreadscythe Harridans", faction: "nighthaunt", points: 100, role: "Infantry" },
-                
-                // SOULBLIGHT GRAVELORDS
-                { id: "deathrattle-skeletons", name: "Deathrattle Skeletons", faction: "soulblight", points: 80, role: "Battleline" },
-                { id: "blood-knights", name: "Blood Knights", faction: "soulblight", points: 210, role: "Elite/Cavalry" },
-                { id: "vampire-lord", name: "Vampire Lord", faction: "soulblight", points: 140, role: "Hero" },
-                { id: "neferata", name: "Neferata", faction: "soulblight", points: 380, role: "Monster/Hero/Wizard" },
-                { id: "vengorian-lord", name: "Vengorian Lord", faction: "soulblight", points: 280, role: "Monster/Hero" },
-                
-                // FLESH-EATER COURTS
-                { id: "crypt-ghouls", name: "Crypt Ghouls", faction: "fec", points: 70, role: "Battleline" },
-                { id: "crypt-horrors", name: "Crypt Horrors", faction: "fec", points: 160, role: "Elite" },
-                { id: "terrorgheist", name: "Terrorgheist", faction: "fec", points: 300, role: "Monster" },
-                { id: "zombie-dragon", name: "Zombie Dragon", faction: "fec", points: 360, role: "Monster" },
-                { id: "ushoran", name: "Ushoran", faction: "fec", points: 380, role: "Monster/Hero" },
-                
-                // OGOR MAWTRIBES
-                { id: "ogor-gluttons", name: "Ogor Gluttons", faction: "ogors", points: 140, role: "Battleline" },
-                { id: "ironguts", name: "Ironguts", faction: "ogors", points: 210, role: "Elite" },
-                { id: "frostlord-stonehorn", name: "Frostlord on Stonehorn", faction: "ogors", points: 430, role: "Monster/Hero" },
-                { id: "butcher", name: "Butcher", faction: "ogors", points: 140, role: "Hero/Wizard" },
-                { id: "ironblaster", name: "Ironblaster", faction: "ogors", points: 120, role: "War Machine" },
-                
-                // ORRUK WARCLANS
-                { id: "ardboys", name: "Ardboyz", faction: "orruks", points: 90, role: "Battleline" },
-                { id: "brutes", name: "Brutes", faction: "orruks", points: 140, role: "Elite" },
-                { id: "megaboss-maw-krusha", name: "Megaboss on Maw-krusha", faction: "orruks", points: 480, role: "Monster/Hero" },
-                { id: "gore-gruntas", name: "Gore-gruntas", faction: "orruks", points: 170, role: "Cavalry" },
-                
-                // GLOOMSPITE GITZ
-                { id: "stabbas", name: "Stabbas", faction: "gloomspite", points: 130, role: "Battleline" },
-                { id: "squig-hoppers", name: "Squig Hoppers", faction: "gloomspite", points: 90, role: "Fast Attack" },
-                { id: "mangler-squigs", name: "Mangler Squigs", faction: "gloomspite", points: 240, role: "Monster" },
-                { id: "loonboss-giant-cave-squig", name: "Loonboss on Giant Cave Squig", faction: "gloomspite", points: 110, role: "Hero" },
-                
-                // SONS OF BEHEMAT
-                { id: "mancrusher-gargant", name: "Mancrusher Gargant", faction: "behemat", points: 170, role: "Monster/Battleline" },
-                { id: "mega-gargant", name: "Mega-Gargant", faction: "behemat", points: 490, role: "Monster" },
-                { id: "king-brodd", name: "King Brodd", faction: "behemat", points: 530, role: "Monster/Hero" }
-            ]
-        };
-        
-        function App() {
-            const [selectedAlliance, setSelectedAlliance] = useState(null);
-            const [selectedFaction, setSelectedFaction] = useState(null);
-            const [search, setSearch] = useState('');
-            
-            const filteredFactions = selectedAlliance 
-                ? ARMIES_DB.factions.filter(f => f.alliance === selectedAlliance)
-                : ARMIES_DB.factions;
-            
-            const filteredUnits = ARMIES_DB.warscrolls.filter(w => {
-                const matchSearch = w.name.toLowerCase().includes(search.toLowerCase());
-                const matchFaction = !selectedFaction || w.faction === selectedFaction;
-                const matchAlliance = !selectedAlliance || ARMIES_DB.factions.find(f => f.id === w.faction)?.alliance === selectedAlliance;
-                return matchSearch && matchFaction && matchAlliance;
-            });
-            
-            return React.createElement('div', { style: { maxWidth: '1400px', margin: '0 auto', padding: '15px' } },
-                // Header
-                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '20px', marginBottom: '15px' } },
-                    React.createElement('h1', { style: { fontSize: '24px', fontWeight: 'bold', margin: '0 0 8px 0' } }, '⚔️ Age of Sigmar - Toutes les Armées'),
-                    React.createElement('p', { style: { margin: 0, color: '#666', fontSize: '14px' } }, 
-                        `${ARMIES_DB.factions.length} factions • ${ARMIES_DB.warscrolls.length} warscrolls • 4 Grandes Alliances`
-                    )
-                ),
-                
-                // Grandes Alliances
-                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px', marginBottom: '15px' } },
-                    React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '12px' } }, 'Grandes Alliances'),
-                    React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' } },
-                        Object.entries(ARMIES_DB.alliances).map(([key, alliance]) => {
-                            const factionCount = ARMIES_DB.factions.filter(f => f.alliance === key).length;
-                            return React.createElement('button', {
-                                key: key,
-                                onClick: () => {
-                                    setSelectedAlliance(selectedAlliance === key ? null : key);
-                                    setSelectedFaction(null);
-                                },
-                                style: { 
-                                    padding: '12px',
-                                    borderRadius: '8px',
-                                    border: 'none',
-                                    background: selectedAlliance === key ? alliance.color : '#f5f5f5',
-                                    color: selectedAlliance === key ? '#fff' : '#333',
-                                    fontWeight: '600',
-                                    fontSize: '14px',
-                                    cursor: 'pointer',
-                                    textAlign: 'center'
-                                }
-                            }, `${alliance.icon} ${alliance.name} (${factionCount})`)
-                        })
-                    )
-                ),
-                
-                // Search
-                React.createElement('div', { style: { marginBottom: '15px' } },
-                    React.createElement('input', {
-                        type: 'text',
-                        placeholder: '🔍 Rechercher une unité...',
-                        value: search,
-                        onChange: (e) => setSearch(e.target.value),
-                        style: { 
-                            width: '100%', 
-                            padding: '12px', 
-                            fontSize: '16px', 
-                            border: '2px solid #ddd', 
-                            borderRadius: '8px',
-                            background: 'rgba(255,255,255,0.95)'
-                        }
-                    })
-                ),
-                
-                // Factions par alliance
-                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px', marginBottom: '15px' } },
-                    React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '12px' } }, 
-                        selectedAlliance 
-                            ? `Factions ${ARMIES_DB.alliances[selectedAlliance].name}` 
-                            : 'Toutes les Factions'
-                    ),
-                    React.createElement('div', { 
-                        style: { 
-                            display: 'grid', 
-                            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', 
-                            gap: '8px' 
-                        }
-                    }, filteredFactions.map(f => {
-                        const unitCount = ARMIES_DB.warscrolls.filter(w => w.faction === f.id).length;
-                        return React.createElement('div', {
-                            key: f.id,
-                            onClick: () => setSelectedFaction(selectedFaction === f.id ? null : f.id),
-                            style: { 
-                                padding: '12px',
-                                background: selectedFaction === f.id ? '#667eea' : '#f5f5f5',
-                                color: selectedFaction === f.id ? '#fff' : '#333',
-                                borderRadius: '8px',
-                                cursor: 'pointer',
-                                fontWeight: '600',
-                                fontSize: '13px',
-                                border: selectedFaction === f.id ? '2px solid #5568d3' : '2px solid transparent',
-                                transition: 'all 0.2s'
-                            }
-                        }, `${f.name} (${unitCount})`)
-                    }))
-                ),
-                
-                // Warscrolls
-                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
-                    React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '12px' } }, 
-                        `Warscrolls (${filteredUnits.length})`
-                    ),
-                    React.createElement('div', {
-                        style: { 
-                            display: 'grid', 
-                            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
-                            gap: '10px' 
-                        }
-                    }, filteredUnits.map(u => {
-                        const faction = ARMIES_DB.factions.find(f => f.id === u.faction);
-                        return React.createElement('div', {
-                            key: u.id,
-                            style: { 
-                                padding: '12px',
-                                background: '#fff',
-                                border: '2px solid #e5e5e5',
-                                borderRadius: '8px',
-                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-                            }
+
+        // BASE DE DONNÉES ULTRA-COMPLÈTE
+        const COMPLETE_DB = {
+            // SERAPHON - 100% COMPLET
+            seraphon: {
+                name: "Seraphon",
+                alliance: "order",
+                color: "#00CED1",
+
+                battleTraits: [
+                    {
+                        name: "The Great Plan",
+                        description: "Au début de la bataille, choisissez un Asterism. Vous pouvez débloquer d'autres Asterisms avec 'Further the Great Plan'."
+                    },
+                    {
+                        name: "Further the Great Plan",
+                        description: "Débloquez des Asterisms supplémentaires en remplissant des conditions pendant la bataille."
+                    }
+                ],
+
+                asterisms: [
+                    {
+                        name: "Chotec the Fierce",
+                        unlock: "Débloqué au début",
+                        effect: "Une fois par tour, après qu'une unité SERAPHON amie a chargé, lancez un dé. Sur 4+, infligez D3 blessures mortelles à l'unité ennemie la plus proche à 3\" ou moins."
+                    },
+                    {
+                        name: "Dracothion the Great",
+                        unlock: "Un Hero SERAPHON ami utilise une Heroic Action",
+                        effect: "Les unités SERAPHON amies ajoutent 1 à leur caractéristique de Move."
+                    },
+                    {
+                        name: "Huanchi the Agile",
+                        unlock: "3+ unités SERAPHON amies sont en couvert",
+                        effect: "Les unités SERAPHON amies en couvert ont Ward (6+)."
+                    },
+                    {
+                        name: "Itzl the Tamer",
+                        unlock: "3+ unités ennemies détruites",
+                        effect: "Ajoutez 1 aux jets de touche pour les attaques de mêlée des SKINK."
+                    },
+                    {
+                        name: "Quetzl the Preserver",
+                        unlock: "Aucune unité ennemie entièrement dans votre territoire",
+                        effect: "Les unités SAURUS amies ont Ward (6+)."
+                    },
+                    {
+                        name: "Tepok the Wise",
+                        unlock: "Un WIZARD SERAPHON lance un sort avec un jet naturel de 10+",
+                        effect: "Ajoutez 1 aux jets de casting pour les WIZARD SERAPHON amis."
+                    },
+                    {
+                        name: "Tlazcotl the Defender",
+                        unlock: "Contrôlez 2+ objectifs",
+                        effect: "Les unités SERAPHON amies à 6\" d'un objectif ignorent les effets négatifs sur leur Save (excluant Rend)."
+                    },
+                    {
+                        name: "Tzunki the Protector",
+                        unlock: "Toutes vos unités sont à 12\"+ des bords de table",
+                        effect: "Les unités SERAPHON amies ignorent les modificateurs négatifs de Move."
+                    }
+                ],
+
+                heroicTraits: [
+                    {
+                        name: "Dominant Predator",
+                        type: "SAURUS hero uniquement",
+                        effect: "Ce héros peut lancer une Heroic Action même s'il est déjà activé ce tour."
+                    },
+                    {
+                        name: "Prime Warbeast",
+                        type: "MONSTER uniquement",
+                        effect: "Ajoutez 1 aux jets de blessure pour les attaques de mêlée de ce MONSTER."
+                    },
+                    {
+                        name: "Cunning",
+                        type: "SKINK hero uniquement",
+                        effect: "Une fois par bataille, ce héros peut utiliser la capacité Redeploy sans dépenser un Command Point."
+                    },
+                    {
+                        name: "Arcane Might",
+                        type: "WIZARD uniquement",
+                        effect: "Ajoutez 1 au nombre de sorts que ce WIZARD peut tenter de lancer par tour."
+                    },
+                    {
+                        name: "Disciplined Fury",
+                        type: "N'importe quel hero",
+                        effect: "Ajoutez 3\" à la portée de la capacité de commandement de ce héros."
+                    },
+                    {
+                        name: "Master of the Material Plane",
+                        type: "SLANN uniquement",
+                        effect: "Ajoutez 1 aux jets de dispel pour ce WIZARD."
+                    }
+                ],
+
+                artefacts: [
+                    {
+                        name: "Sacred Stegadon Helm",
+                        type: "SAURUS hero uniquement",
+                        effect: "Le porteur a Ward (5+)."
+                    },
+                    {
+                        name: "Serpent God Dagger",
+                        type: "N'importe quel hero",
+                        effect: "Une fois par bataille, après que le porteur a combattu, choisissez une unité ennemie à 3\" ou moins. Lancez un dé. Sur 2+, infligez D6 blessures mortelles."
+                    },
+                    {
+                        name: "Cloak of Feathers",
+                        type: "N'importe quel hero",
+                        effect: "Le porteur peut Fly et ajoute 3\" à sa caractéristique de Move."
+                    },
+                    {
+                        name: "Incandescent Rectrices",
+                        type: "SKINK hero uniquement",
+                        effect: "Les attaques de missiles du porteur ont Crit (2 Hits)."
+                    },
+                    {
+                        name: "Blade of Realities",
+                        type: "N'importe quel hero",
+                        effect: "Choisissez une arme de mêlée du porteur. Elle a Rend (-3) et inflige des blessures mortelles sur un jet de blessure de 6+."
+                    },
+                    {
+                        name: "Light of Dracothion",
+                        type: "SLANN uniquement",
+                        effect: "Une fois par tour, vous pouvez relancer un jet de casting ou de dispel pour le porteur."
+                    }
+                ],
+
+                spellLores: {
+                    celestialManipulation: [
+                        {
+                            name: "Celestial Equilibrium",
+                            castingValue: 7,
+                            range: "12\"",
+                            effect: "Choisissez une unité amie à portée. Ajoutez 1 à ses jets de save jusqu'à votre prochain hero phase."
                         },
-                            React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '6px' } },
-                                React.createElement('div', { style: { fontWeight: 'bold', fontSize: '14px' } }, u.name),
-                                React.createElement('div', { style: { color: '#667eea', fontWeight: 'bold', fontSize: '14px' } }, u.points + ' pts')
-                            ),
-                            React.createElement('div', { style: { fontSize: '11px', color: '#666', marginBottom: '4px' } }, u.role),
-                            React.createElement('div', { style: { fontSize: '10px', color: '#999' } }, faction?.name)
+                        {
+                            name: "Drain Magic",
+                            castingValue: 7,
+                            range: "18\"",
+                            effect: "Choisissez un WIZARD ennemi visible à portée. Soustrayez 1 de ses jets de casting jusqu'à votre prochain hero phase."
+                        },
+                        {
+                            name: "Mystical Unforging",
+                            castingValue: 7,
+                            range: "12\"",
+                            effect: "Choisissez une unité ennemie à portée. Désactivez un artefact qu'elle possède jusqu'à votre prochain hero phase."
+                        }
+                    ],
+                    primalJungles: [
+                        {
+                            name: "Feral Roar",
+                            castingValue: 6,
+                            range: "12\"",
+                            effect: "Choisissez une unité SERAPHON amie à portée. Elle peut immédiatement faire un move normal."
+                        },
+                        {
+                            name: "Meteoric Convocation",
+                            castingValue: 7,
+                            range: "Unlimited",
+                            effect: "Choisissez un point sur le champ de bataille. Lancez 6 dés pour chaque unité à 6\" de ce point. Pour chaque 5+, cette unité subit 1 blessure mortelle."
+                        },
+                        {
+                            name: "Tide of Serpents",
+                            castingValue: 6,
+                            range: "18\"",
+                            effect: "Choisissez une unité ennemie visible à portée. Elle subit D3 blessures mortelles. Si c'est un MONSTER, elle subit D6 blessures mortelles."
+                        }
+                    ]
+                },
+
+                warscrolls: [
+                    {
+                        name: "Slann Starmaster",
+                        points: 280,
+                        role: "Hero, Wizard",
+                        move: 5,
+                        health: 10,
+                        save: 4,
+                        control: 2,
+                        keywords: ["Hero", "Wizard", "Slann", "Seraphon"],
+                        weapons: [
+                            {
+                                name: "Celestial Staff",
+                                type: "melee",
+                                range: 2,
+                                attacks: 4,
+                                hit: 3,
+                                wound: 3,
+                                rend: 1,
+                                damage: 2,
+                                abilities: []
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Supreme Master of Order",
+                                type: "Passive",
+                                effect: "Ajoutez 1 aux jets de casting pour ce WIZARD. De plus, ce WIZARD peut tenter de lancer 2 sorts par tour au lieu de 1."
+                            },
+                            {
+                                name: "Celestial Conjuration",
+                                type: "Reaction: You declared a Run or Retreat ability",
+                                effect: "Vous pouvez retirer cette unité et la redéployer n'importe où sur le champ de bataille à plus de 9\" de toutes les unités ennemies."
+                            },
+                            {
+                                name: "Empowered Spellcasting",
+                                type: "Any Hero Phase",
+                                effect: "Si ce WIZARD lance avec succès un sort avec un jet non modifié de 10+, vous pouvez ajouter 1 au nombre de sorts qu'il peut lancer ce tour."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Lord Kroak",
+                        points: 430,
+                        role: "Hero, Wizard, Unique",
+                        move: 5,
+                        health: 12,
+                        save: 4,
+                        control: 2,
+                        keywords: ["Hero", "Wizard", "Slann", "Seraphon", "Unique", "Lord Kroak"],
+                        weapons: [
+                            {
+                                name: "Spectral Claws",
+                                type: "melee",
+                                range: 2,
+                                attacks: 6,
+                                hit: 3,
+                                wound: 2,
+                                rend: 2,
+                                damage: 2,
+                                abilities: []
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Dead for Countless Ages",
+                                type: "Passive",
+                                effect: "Ce héros a Ward (4+)."
+                            },
+                            {
+                                name: "Supreme Master of Order",
+                                type: "Passive",
+                                effect: "Ajoutez 2 aux jets de casting pour ce WIZARD. Ce WIZARD peut tenter de lancer 3 sorts par tour."
+                            },
+                            {
+                                name: "Celestial Deliverance",
+                                type: "Once Per Battle, Your Hero Phase",
+                                effect: "Lancez 10 dés. Pour chaque 2+, choisissez une unité ennemie visible à 18\" et infligez 1 blessure mortelle. Si 3+ blessures mortelles sont allouées à la même unité, elle est Slowed jusqu'à votre prochain hero phase."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Saurus Oldblood on Carnosaur",
+                        points: 230,
+                        role: "Hero, Monster",
+                        move: 10,
+                        health: 12,
+                        save: 4,
+                        control: 2,
+                        keywords: ["Hero", "Monster", "Saurus", "Carnosaur", "Seraphon"],
+                        weapons: [
+                            {
+                                name: "Warblade",
+                                type: "melee",
+                                range: 1,
+                                attacks: 6,
+                                hit: 3,
+                                wound: 3,
+                                rend: 1,
+                                damage: 2,
+                                abilities: []
+                            },
+                            {
+                                name: "Carnosaur's Massive Jaws",
+                                type: "melee",
+                                range: 2,
+                                attacks: 3,
+                                hit: 4,
+                                wound: 2,
+                                rend: 2,
+                                damage: 3,
+                                abilities: ["Companion"]
+                            },
+                            {
+                                name: "Carnosaur's Clawed Forelimbs",
+                                type: "melee",
+                                range: 2,
+                                attacks: 4,
+                                hit: 4,
+                                wound: 3,
+                                rend: 1,
+                                damage: 2,
+                                abilities: ["Companion"]
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Primal Rage",
+                                type: "Passive",
+                                effect: "Après que cette unité charge, ajoutez 1 aux jets de touche pour les attaques Companion de cette unité pour le reste du tour."
+                            },
+                            {
+                                name: "Bloodroar",
+                                type: "Your Charge Phase",
+                                effect: "Choisissez une unité ennemie à 12\" ou moins. Lancez un dé. Sur 3+, cette unité est Frightened pour le reste du tour."
+                            },
+                            {
+                                name: "Apex Predator",
+                                type: "Passive",
+                                effect: "Ajoutez 1 aux jets de blessure pour les attaques de cette unité qui ciblent un MONSTER."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Saurus Astrolith Bearer",
+                        points: 140,
+                        role: "Hero, Totem",
+                        move: 5,
+                        health: 6,
+                        save: 4,
+                        control: 1,
+                        keywords: ["Hero", "Totem", "Saurus", "Seraphon"],
+                        weapons: [
+                            {
+                                name: "Celestite War-pick",
+                                type: "melee",
+                                range: 1,
+                                attacks: 3,
+                                hit: 3,
+                                wound: 3,
+                                rend: 1,
+                                damage: 1,
+                                abilities: []
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Celestial Conduit",
+                                type: "Passive",
+                                effect: "Ajoutez 1 aux jets de casting pour les WIZARD SERAPHON amis à 12\" ou moins de ce totem."
+                            },
+                            {
+                                name: "Revivifying Energies",
+                                type: "Your Hero Phase",
+                                effect: "Lancez un dé pour chaque unité SERAPHON amie à 12\" ou moins. Sur 4+, vous pouvez guérir jusqu'à D3 blessures allouées à cette unité."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Saurus Warriors",
+                        points: 90,
+                        role: "Battleline, Infantry",
+                        move: 5,
+                        health: 10,
+                        save: 4,
+                        control: 1,
+                        keywords: ["Infantry", "Saurus", "Seraphon", "Champion", "Standard Bearer"],
+                        weapons: [
+                            {
+                                name: "Celestite Club or Blade",
+                                type: "melee",
+                                range: 1,
+                                attacks: 2,
+                                hit: 3,
+                                wound: 3,
+                                rend: 1,
+                                damage: 1,
+                                abilities: []
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Ordered Cohort",
+                                type: "Passive",
+                                effect: "Ajoutez 1 aux jets de touche pour cette unité pendant qu'elle est à 12\" ou moins d'un Hero SERAPHON ami."
+                            },
+                            {
+                                name: "Saurus Fury",
+                                type: "Any Combat Phase",
+                                effect: "Si cette unité a chargé ce tour, ajoutez 1 aux jets de blessure pour les attaques de cette unité pour le reste du tour."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Saurus Guard",
+                        points: 100,
+                        role: "Infantry",
+                        move: 5,
+                        health: 10,
+                        save: 3,
+                        control: 1,
+                        keywords: ["Infantry", "Saurus", "Seraphon", "Champion", "Standard Bearer"],
+                        weapons: [
+                            {
+                                name: "Celestite Polearm",
+                                type: "melee",
+                                range: 2,
+                                attacks: 2,
+                                hit: 3,
+                                wound: 3,
+                                rend: 1,
+                                damage: 1,
+                                abilities: ["Crit (Mortal)"]
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Sworn Guardians",
+                                type: "Passive",
+                                effect: "Pendant qu'une unité SLANN amie est à 3\" ou moins de cette unité, les attaques qui ciblent cette unité SLANN doivent cibler cette unité à la place si possible."
+                            },
+                            {
+                                name: "Selfless Protectors",
+                                type: "Reaction: You declared a Fight ability for this unit",
+                                effect: "Si un Hero SERAPHON ami est à 3\" ou moins, cette unité a Strike-first pour le reste du tour."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Skinks",
+                        points: 60,
+                        role: "Battleline, Infantry",
+                        move: 8,
+                        health: 5,
+                        save: 6,
+                        control: 1,
+                        keywords: ["Infantry", "Skink", "Seraphon", "Champion"],
+                        weapons: [
+                            {
+                                name: "Meteoric Javelins",
+                                type: "ranged",
+                                range: 12,
+                                attacks: 2,
+                                hit: 4,
+                                wound: 4,
+                                rend: 0,
+                                damage: 1,
+                                abilities: []
+                            },
+                            {
+                                name: "Star-buckler and Blade",
+                                type: "melee",
+                                range: 1,
+                                attacks: 1,
+                                hit: 4,
+                                wound: 4,
+                                rend: 0,
+                                damage: 1,
+                                abilities: []
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Celestial Cohort",
+                                type: "Passive",
+                                effect: "Cette unité a Ward (6+) pendant qu'elle est en couvert."
+                            },
+                            {
+                                name: "Skittering Horde",
+                                type: "Passive",
+                                effect: "Cette unité peut se déplacer à travers le terrain et les unités comme si elle pouvait Fly, mais ne peut pas finir un mouvement sur du terrain infranchissable."
+                            },
+                            {
+                                name: "Wary Fighters",
+                                type: "Your Movement Phase",
+                                effect: "Cette unité peut Retreat et tirer dans la même phase."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Skink Priest",
+                        points: 110,
+                        role: "Hero, Priest",
+                        move: 8,
+                        health: 4,
+                        save: 6,
+                        control: 1,
+                        keywords: ["Hero", "Priest", "Skink", "Seraphon"],
+                        weapons: [
+                            {
+                                name: "Serpent Staff",
+                                type: "melee",
+                                range: 1,
+                                attacks: 2,
+                                hit: 4,
+                                wound: 4,
+                                rend: 0,
+                                damage: 1,
+                                abilities: []
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Heavenly Rites",
+                                type: "Your Hero Phase",
+                                effect: "Lancez un dé. Sur 3+, choisissez un effet : (1) Une unité SERAPHON amie à 12\" gagne Ward (6+) jusqu'à votre prochain hero phase, (2) Infligez D3 blessures mortelles à une unité ennemie visible à 12\"."
+                            },
+                            {
+                                name: "Priestly Prayers",
+                                type: "Prayer (4+), Your Hero Phase",
+                                effect: "Choisissez une unité SERAPHON amie à 12\". Elle peut immédiatement Run ou Shoot."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Chameleon Skinks",
+                        points: 110,
+                        role: "Infantry",
+                        move: 8,
+                        health: 5,
+                        save: 6,
+                        control: 1,
+                        keywords: ["Infantry", "Skink", "Seraphon", "Champion"],
+                        weapons: [
+                            {
+                                name: "Dartpipe",
+                                type: "ranged",
+                                range: 16,
+                                attacks: 3,
+                                hit: 3,
+                                wound: 4,
+                                rend: 0,
+                                damage: 1,
+                                abilities: ["Crit (Auto-wound)"]
+                            },
+                            {
+                                name: "Chameleon Blade",
+                                type: "melee",
+                                range: 1,
+                                attacks: 1,
+                                hit: 4,
+                                wound: 4,
+                                rend: 0,
+                                damage: 1,
+                                abilities: []
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Disappear from Sight",
+                                type: "Passive",
+                                effect: "Cette unité ne peut pas être ciblée par des attaques de missiles si elle est à 12\"+ de l'attaquant et en couvert."
+                            },
+                            {
+                                name: "Perfect Ambush",
+                                type: "Deployment Phase",
+                                effect: "Au lieu de déployer cette unité normalement, vous pouvez la placer en réserve. À votre premier movement phase, déployez-la n'importe où à 9\"+ des unités ennemies."
+                            },
+                            {
+                                name: "Star-venom",
+                                type: "Passive",
+                                effect: "Ajoutez 1 aux jets de blessure pour les attaques de missiles de cette unité."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Kroxigor",
+                        points: 140,
+                        role: "Infantry",
+                        move: 6,
+                        health: 15,
+                        save: 4,
+                        control: 2,
+                        keywords: ["Infantry", "Kroxigor", "Seraphon"],
+                        weapons: [
+                            {
+                                name: "Drakebite Maul",
+                                type: "melee",
+                                range: 2,
+                                attacks: 4,
+                                hit: 4,
+                                wound: 2,
+                                rend: 1,
+                                damage: 2,
+                                abilities: []
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Brutal Blows",
+                                type: "Passive",
+                                effect: "Ajoutez 1 au Damage des attaques de cette unité qui ciblent des unités avec un Save de 4+ ou mieux."
+                            },
+                            {
+                                name: "Sweeping Strikes",
+                                type: "Any Combat Phase",
+                                effect: "Si cette unité a chargé ce tour, les attaques de cette unité ont Crit (2 Hits) pour le reste du tour."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Bastiladon with Solar Engine",
+                        points: 220,
+                        role: "Monster, War Machine",
+                        move: 5,
+                        health: 12,
+                        save: 2,
+                        control: 2,
+                        keywords: ["Monster", "War Machine", "Seraphon"],
+                        weapons: [
+                            {
+                                name: "Powerful Jaws",
+                                type: "melee",
+                                range: 1,
+                                attacks: 3,
+                                hit: 4,
+                                wound: 3,
+                                rend: 1,
+                                damage: 2,
+                                abilities: []
+                            },
+                            {
+                                name: "Solar Engine",
+                                type: "ranged",
+                                range: 18,
+                                attacks: 3,
+                                hit: 3,
+                                wound: 3,
+                                rend: 2,
+                                damage: 3,
+                                abilities: ["Crit (2 Hits)"]
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Impervious Defence",
+                                type: "Passive",
+                                effect: "Cette unité a Ward (5+)."
+                            },
+                            {
+                                name: "Light of the Heavens",
+                                type: "Your Shooting Phase",
+                                effect: "Au lieu de tirer normalement, choisissez jusqu'à 3 unités ennemies différentes visibles à 18\". Lancez un dé pour chaque unité. Sur 3+, elle subit D3 blessures mortelles."
+                            },
+                            {
+                                name: "Tide of Serpents Aura",
+                                type: "Passive",
+                                effect: "Les unités ennemies à 3\" ou moins de cette unité ont -1 à leurs jets de touche."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Stegadon",
+                        points: 260,
+                        role: "Monster",
+                        move: 8,
+                        health: 14,
+                        save: 3,
+                        control: 5,
+                        keywords: ["Monster", "Seraphon"],
+                        weapons: [
+                            {
+                                name: "Sunfire Throwers",
+                                type: "ranged",
+                                range: 8,
+                                attacks: 6,
+                                hit: 3,
+                                wound: 3,
+                                rend: 1,
+                                damage: 1,
+                                abilities: []
+                            },
+                            {
+                                name: "Massive Horns",
+                                type: "melee",
+                                range: 2,
+                                attacks: 4,
+                                hit: 4,
+                                wound: 2,
+                                rend: 2,
+                                damage: 3,
+                                abilities: ["Charge (+1 Damage)"]
+                            },
+                            {
+                                name: "Grinding Jaws",
+                                type: "melee",
+                                range: 1,
+                                attacks: 2,
+                                hit: 4,
+                                wound: 3,
+                                rend: 1,
+                                damage: 2,
+                                abilities: []
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Unstoppable Stampede",
+                                type: "Passive",
+                                effect: "Après que cette unité charge, lancez un dé pour chaque unité ennemie à 1\". Sur 2+, cette unité subit D3 blessures mortelles."
+                            },
+                            {
+                                name: "Skink Alpha Strike",
+                                type: "Passive",
+                                effect: "Les attaques de missiles de cette unité ont Anti-Infantry (+1 Rend)."
+                            },
+                            {
+                                name: "Gargantuan",
+                                type: "Passive",
+                                effect: "Cette unité compte comme 5 modèles pour les objectifs."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Ripperdactyl Riders",
+                        points: 100,
+                        role: "Cavalry",
+                        move: 12,
+                        health: 10,
+                        save: 5,
+                        control: 1,
+                        keywords: ["Cavalry", "Skink", "Seraphon", "Fly"],
+                        weapons: [
+                            {
+                                name: "Moonstone Spear",
+                                type: "melee",
+                                range: 2,
+                                attacks: 2,
+                                hit: 4,
+                                wound: 4,
+                                rend: 0,
+                                damage: 1,
+                                abilities: []
+                            },
+                            {
+                                name: "Ripperdactyl's Vicious Beak",
+                                type: "melee",
+                                range: 1,
+                                attacks: 2,
+                                hit: 4,
+                                wound: 3,
+                                rend: 1,
+                                damage: 1,
+                                abilities: ["Companion"]
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Blot Toad",
+                                type: "Deployment Phase",
+                                effect: "Choisissez une unité ennemie. Les attaques de cette unité contre cette unité ennemie ont +1 pour toucher."
+                            },
+                            {
+                                name: "Swooping Slayers",
+                                type: "Passive",
+                                effect: "Après que cette unité charge, elle peut immédiatement se battre."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Terradon Riders",
+                        points: 100,
+                        role: "Cavalry",
+                        move: 14,
+                        health: 10,
+                        save: 5,
+                        control: 1,
+                        keywords: ["Cavalry", "Skink", "Seraphon", "Fly"],
+                        weapons: [
+                            {
+                                name: "Sunleech Bolas",
+                                type: "ranged",
+                                range: 12,
+                                attacks: 2,
+                                hit: 4,
+                                wound: 4,
+                                rend: 0,
+                                damage: 1,
+                                abilities: ["Crit (Auto-wound)"]
+                            },
+                            {
+                                name: "Starstrike Javelin",
+                                type: "melee",
+                                range: 2,
+                                attacks: 2,
+                                hit: 4,
+                                wound: 4,
+                                rend: 0,
+                                damage: 1,
+                                abilities: []
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Deadly Cargo",
+                                type: "Once Per Battle, End of Any Movement Phase",
+                                effect: "Choisissez un point visible à 1\" ou moins de cette unité. Lancez 6 dés pour chaque unité à 3\" de ce point. Pour chaque 5+, cette unité subit 1 blessure mortelle."
+                            },
+                            {
+                                name: "Swooping Dive",
+                                type: "Passive",
+                                effect: "Cette unité peut charger même si elle a Run ce tour."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Aggradon Lancers",
+                        points: 200,
+                        role: "Cavalry",
+                        move: 10,
+                        health: 20,
+                        save: 4,
+                        control: 2,
+                        keywords: ["Cavalry", "Saurus", "Seraphon", "Champion"],
+                        weapons: [
+                            {
+                                name: "Celestite Lance",
+                                type: "melee",
+                                range: 2,
+                                attacks: 3,
+                                hit: 3,
+                                wound: 3,
+                                rend: 1,
+                                damage: 2,
+                                abilities: ["Charge (+1 Damage)"]
+                            },
+                            {
+                                name: "Aggradon's Razor-sharp Claws",
+                                type: "melee",
+                                range: 1,
+                                attacks: 4,
+                                hit: 4,
+                                wound: 3,
+                                rend: 1,
+                                damage: 1,
+                                abilities: ["Companion"]
+                            }
+                        ],
+                        abilities: [
+                            {
+                                name: "Primal Fury",
+                                type: "Passive",
+                                effect: "Après que cette unité charge, ajoutez 1 aux jets de touche pour cette unité pour le reste du tour."
+                            },
+                            {
+                                name: "Celestial Lance Formation",
+                                type: "Passive",
+                                effect: "Les attaques de cette unité avec Charge (+1 Damage) deviennent Charge (+2 Damage) pendant qu'elle a 3+ modèles ou plus."
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        function App() {
+            const [view, setView] = useState('factions'); // 'factions' ou 'detail'
+            const [selectedFaction, setSelectedFaction] = useState(null);
+            const [detailTab, setDetailTab] = useState('traits'); // 'traits', 'warscrolls'
+            const [selectedUnit, setSelectedUnit] = useState(null);
+
+            if (view === 'detail' && selectedFaction) {
+                const faction = COMPLETE_DB[selectedFaction];
+
+                return React.createElement('div', { style: { maxWidth: '1400px', margin: '0 auto', padding: '10px' } },
+                    // Header
+                    React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px', marginBottom: '10px' } },
+                        React.createElement('button', {
+                            onClick: () => { setView('factions'); setSelectedFaction(null); },
+                            style: {
+                                padding: '8px 16px',
+                                background: '#667eea',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                marginBottom: '10px',
+                                fontWeight: '600'
+                            }
+                        }, '← Retour'),
+                        React.createElement('h1', { style: { fontSize: '26px', fontWeight: 'bold', margin: '0', color: faction.color } }, faction.name),
+                        React.createElement('p', { style: { margin: '5px 0 0 0', color: '#666' } },
+                            `${faction.warscrolls.length} Warscrolls • Grande Alliance: ${faction.alliance.toUpperCase()}`
                         )
-                    }))
+                    ),
+
+                    // Tabs
+                    React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '10px', marginBottom: '10px' } },
+                        React.createElement('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } },
+                            ['traits', 'warscrolls'].map(tab =>
+                                React.createElement('button', {
+                                    key: tab,
+                                    onClick: () => { setDetailTab(tab); setSelectedUnit(null); },
+                                    style: {
+                                        padding: '10px 20px',
+                                        background: detailTab === tab ? faction.color : '#f5f5f5',
+                                        color: detailTab === tab ? '#fff' : '#333',
+                                        border: 'none',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                        fontWeight: '600',
+                                        fontSize: '14px'
+                                    }
+                                }, tab === 'traits' ? '🎯 Traits & Artefacts' : '⚔️ Warscrolls')
+                            )
+                        )
+                    ),
+
+                    // Content
+                    detailTab === 'traits'
+                        ? React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+                            // Battle Traits
+                            React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                                React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color: faction.color } }, '⚡ Battle Traits'),
+                                faction.battleTraits.map((trait, i) =>
+                                    React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                        React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, trait.name),
+                                        React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, trait.description)
+                                    )
+                                )
+                            ),
+
+                            // Asterisms
+                            faction.asterisms && React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                                React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color: faction.color } }, '✨ Asterisms'),
+                                faction.asterisms.map((ast, i) =>
+                                    React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                        React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, ast.name),
+                                        React.createElement('div', { style: { fontSize: '11px', color: '#888', marginBottom: '4px', fontStyle: 'italic' } }, `Débloqué: ${ast.unlock}`),
+                                        React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, ast.effect)
+                                    )
+                                )
+                            ),
+
+                            // Heroic Traits
+                            React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                                React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color: faction.color } }, '🦁 Heroic Traits'),
+                                faction.heroicTraits.map((trait, i) =>
+                                    React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                        React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, trait.name),
+                                        React.createElement('div', { style: { fontSize: '11px', color: '#888', marginBottom: '4px', fontStyle: 'italic' } }, trait.type),
+                                        React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, trait.effect)
+                                    )
+                                )
+                            ),
+
+                            // Artefacts
+                            React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                                React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color: faction.color } }, '💎 Artefacts of Power'),
+                                faction.artefacts.map((art, i) =>
+                                    React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                        React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, art.name),
+                                        React.createElement('div', { style: { fontSize: '11px', color: '#888', marginBottom: '4px', fontStyle: 'italic' } }, art.type),
+                                        React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, art.effect)
+                                    )
+                                )
+                            ),
+
+                            // Spell Lores
+                            faction.spellLores && React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                                React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px', color: faction.color } }, '🔮 Spell Lores'),
+                                Object.entries(faction.spellLores).map(([loreName, spells], i) =>
+                                    React.createElement('div', { key: i, style: { marginBottom: '15px' } },
+                                        React.createElement('h3', { style: { fontSize: '16px', fontWeight: 'bold', marginBottom: '8px', textTransform: 'capitalize' } },
+                                            loreName.replace(/([A-Z])/g, ' $1').trim()
+                                        ),
+                                        spells.map((spell, j) =>
+                                            React.createElement('div', { key: j, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                                React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, spell.name),
+                                                React.createElement('div', { style: { fontSize: '11px', color: '#888', marginBottom: '4px' } },
+                                                    `Casting Value: ${spell.castingValue} • Range: ${spell.range}`
+                                                ),
+                                                React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, spell.effect)
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                        : selectedUnit
+                            ? React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                                React.createElement('button', {
+                                    onClick: () => setSelectedUnit(null),
+                                    style: {
+                                        padding: '6px 12px',
+                                        background: '#f5f5f5',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        cursor: 'pointer',
+                                        marginBottom: '10px',
+                                        fontWeight: '600'
+                                    }
+                                }, '← Retour aux warscrolls'),
+                                React.createElement('h2', { style: { fontSize: '22px', fontWeight: 'bold', marginBottom: '10px', color: faction.color } }, selectedUnit.name),
+
+                                // Stats
+                                React.createElement('div', { style: { marginBottom: '15px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                    React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '8px' } }, '📊 Caractéristiques'),
+                                    React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '8px', fontSize: '13px' } },
+                                        React.createElement('div', null, React.createElement('strong', null, 'Move:'), ` ${selectedUnit.move}"`),
+                                        React.createElement('div', null, React.createElement('strong', null, 'Health:'), ` ${selectedUnit.health}`),
+                                        React.createElement('div', null, React.createElement('strong', null, 'Save:'), ` ${selectedUnit.save}+`),
+                                        React.createElement('div', null, React.createElement('strong', null, 'Control:'), ` ${selectedUnit.control}`),
+                                        React.createElement('div', null, React.createElement('strong', null, 'Points:'), ` ${selectedUnit.points}`)
+                                    )
+                                ),
+
+                                // Weapons
+                                React.createElement('div', { style: { marginBottom: '15px' } },
+                                    React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '8px', fontSize: '16px' } }, '⚔️ Armes'),
+                                    selectedUnit.weapons.map((weapon, i) =>
+                                        React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                            React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } },
+                                                `${weapon.name} ${weapon.type === 'ranged' ? '🏹' : '⚔️'}`
+                                            ),
+                                            React.createElement('div', { style: { fontSize: '12px', color: '#555', marginBottom: '4px' } },
+                                                `Range: ${weapon.range}" • Attacks: ${weapon.attacks} • Hit: ${weapon.hit}+ • Wound: ${weapon.wound}+ • Rend: ${weapon.rend} • Damage: ${weapon.damage}`
+                                            ),
+                                            weapon.abilities.length > 0 && React.createElement('div', { style: { fontSize: '11px', color: '#888', fontStyle: 'italic' } },
+                                                `Abilities: ${weapon.abilities.join(', ')}`
+                                            )
+                                        )
+                                    )
+                                ),
+
+                                // Abilities
+                                React.createElement('div', { style: { marginBottom: '15px' } },
+                                    React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '8px', fontSize: '16px' } }, '✨ Capacités'),
+                                    selectedUnit.abilities.map((ability, i) =>
+                                        React.createElement('div', { key: i, style: { marginBottom: '10px', padding: '10px', background: '#f9f9f9', borderRadius: '8px' } },
+                                            React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '4px' } }, ability.name),
+                                            React.createElement('div', { style: { fontSize: '11px', color: '#888', marginBottom: '4px', fontStyle: 'italic' } }, ability.type),
+                                            React.createElement('div', { style: { fontSize: '13px', color: '#555' } }, ability.effect)
+                                        )
+                                    )
+                                ),
+
+                                // Keywords
+                                React.createElement('div', { style: { marginBottom: '15px' } },
+                                    React.createElement('div', { style: { fontWeight: 'bold', marginBottom: '8px', fontSize: '16px' } }, '🏷️ Keywords'),
+                                    React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '6px' } },
+                                        selectedUnit.keywords.map((kw, i) =>
+                                            React.createElement('span', {
+                                                key: i,
+                                                style: {
+                                                    padding: '4px 8px',
+                                                    background: faction.color,
+                                                    color: '#fff',
+                                                    borderRadius: '4px',
+                                                    fontSize: '11px',
+                                                    fontWeight: '600'
+                                                }
+                                            }, kw)
+                                        )
+                                    )
+                                )
+                            )
+                            : React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                                React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' } },
+                                    `⚔️ Warscrolls (${faction.warscrolls.length})`
+                                ),
+                                React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px' } },
+                                    faction.warscrolls.map((unit, i) =>
+                                        React.createElement('div', {
+                                            key: i,
+                                            onClick: () => setSelectedUnit(unit),
+                                            style: {
+                                                padding: '12px',
+                                                background: '#fff',
+                                                border: '2px solid #e5e5e5',
+                                                borderRadius: '8px',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s',
+                                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                                            }
+                                        },
+                                            React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '6px' } },
+                                                React.createElement('div', { style: { fontWeight: 'bold', fontSize: '14px' } }, unit.name),
+                                                React.createElement('div', { style: { color: faction.color, fontWeight: 'bold', fontSize: '14px' } }, unit.points + ' pts')
+                                            ),
+                                            React.createElement('div', { style: { fontSize: '11px', color: '#666', marginBottom: '6px' } }, unit.role),
+                                            React.createElement('div', { style: { fontSize: '11px', color: '#999', display: 'flex', gap: '6px' } },
+                                                React.createElement('span', null, `M: ${unit.move}"`),
+                                                React.createElement('span', null, `HP: ${unit.health}`),
+                                                React.createElement('span', null, `Sv: ${unit.save}+`)
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                );
+            }
+
+            // Vue principale - Sélection de faction
+            return React.createElement('div', { style: { maxWidth: '1400px', margin: '0 auto', padding: '15px' } },
+                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '20px', marginBottom: '15px' } },
+                    React.createElement('h1', { style: { fontSize: '26px', fontWeight: 'bold', margin: '0 0 8px 0' } }, '⚔️ AoS Companion - Base Complète'),
+                    React.createElement('p', { style: { margin: 0, color: '#666', fontSize: '14px' } },
+                        'Actuellement disponible: Seraphon (100% complet)'
+                    )
+                ),
+
+                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                    React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '12px' } }, 'Factions Disponibles'),
+                    React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '10px' } },
+                        Object.entries(COMPLETE_DB).map(([key, faction]) =>
+                            React.createElement('div', {
+                                key: key,
+                                onClick: () => { setSelectedFaction(key); setView('detail'); },
+                                style: {
+                                    padding: '20px',
+                                    background: '#fff',
+                                    border: `3px solid ${faction.color}`,
+                                    borderRadius: '12px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                                }
+                            },
+                                React.createElement('div', { style: { fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: faction.color } }, faction.name),
+                                React.createElement('div', { style: { fontSize: '12px', color: '#666', marginBottom: '8px' } },
+                                    `${faction.warscrolls.length} Warscrolls • ${faction.heroicTraits.length} Heroic Traits • ${faction.artefacts.length} Artefacts`
+                                ),
+                                React.createElement('div', { style: { fontSize: '11px', color: '#999', textTransform: 'uppercase', fontWeight: '600' } },
+                                    `Grande Alliance: ${faction.alliance}`
+                                ),
+                                React.createElement('div', { style: { marginTop: '10px', padding: '6px 12px', background: '#e8f5e9', color: '#2e7d32', borderRadius: '6px', fontSize: '11px', fontWeight: '600', textAlign: 'center' } },
+                                    '✓ 100% COMPLET'
+                                )
+                            )
+                        )
+                    )
                 )
             );
         }
-        
+
         ReactDOM.render(React.createElement(App), document.getElementById('root'));
     </script>
 </body>
