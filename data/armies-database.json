@@ -1,0 +1,239 @@
+{
+  "factions": [
+    {
+      "id": "sylvaneth",
+      "name": "Sylvaneth",
+      "grandAlliance": "Order",
+      "description": "Esprits de la nature vengeurs protégeant les royaumes",
+      "battleTraits": [
+        "Walk the Spirit Paths",
+        "Strike and Fade"
+      ],
+      "formations": [
+        {
+          "id": "wargrove-burgeoning",
+          "name": "Wargrove of the Burgeoning",
+          "description": "Formation axée sur la croissance et l'expansion rapide",
+          "abilities": [
+            "Bonus de régénération",
+            "Synergies avec les Wyldwoods"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kharadron-overlords",
+      "name": "Kharadron Overlords",
+      "grandAlliance": "Order",
+      "description": "Duardins technologiquement avancés volant sur leurs navires aériens",
+      "battleTraits": [
+        "Skyvessels",
+        "Footnotes"
+      ],
+      "formations": [
+        {
+          "id": "endrineers-guild",
+          "name": "Endrineers Guild Expeditionary Force",
+          "description": "Force expéditionnaire des ingénieurs",
+          "abilities": [
+            "Bonus de réparation",
+            "Redéploiement des unités volantes"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "daughters-of-khaine",
+      "name": "Daughters of Khaine",
+      "grandAlliance": "Order",
+      "description": "Adoratrices sanglantes de Khaine",
+      "battleTraits": [
+        "Blood Rites",
+        "Fanatical Faith"
+      ],
+      "formations": [
+        {
+          "id": "scathcoven",
+          "name": "Scáthcoven",
+          "description": "Coven de sorcières guerrières",
+          "abilities": [
+            "Bonus de sorts",
+            "Invocations améliorées"
+          ]
+        }
+      ]
+    }
+  ],
+  "warscrolls": [
+    {
+      "id": "warsong-revenant",
+      "name": "Warsong Revenant",
+      "faction": "sylvaneth",
+      "points": 200,
+      "role": "Hero",
+      "stats": {
+        "move": "12\"",
+        "health": 9,
+        "save": "4+",
+        "control": 2
+      },
+      "weapons": [
+        {
+          "name": "Wyldwood Scythe",
+          "type": "melee",
+          "attacks": 4,
+          "hit": "3+",
+          "wound": "3+",
+          "rend": "-1",
+          "damage": "2"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Song of Warding",
+          "type": "passive",
+          "description": "Ward save 6+ pour les unités Sylvaneth à 12\""
+        },
+        {
+          "name": "Alarielle's Wrath",
+          "type": "active",
+          "description": "Une fois par bataille, inflige D3 blessures mortelles à une unité ennemie"
+        }
+      ],
+      "keywords": ["Hero", "Wizard", "Sylvaneth", "Warsong Revenant"],
+      "spells": ["Spellcaster (1)"]
+    },
+    {
+      "id": "drycha-hamadreth",
+      "name": "Drycha Hamadreth",
+      "faction": "sylvaneth",
+      "points": 300,
+      "role": "Monster",
+      "stats": {
+        "move": "10\"",
+        "health": 12,
+        "save": "4+",
+        "control": 5
+      },
+      "weapons": [
+        {
+          "name": "Thorned Slenderthings",
+          "type": "melee",
+          "attacks": 6,
+          "hit": "3+",
+          "wound": "3+",
+          "rend": "-2",
+          "damage": "2"
+        },
+        {
+          "name": "Swarm of Flitterfuries",
+          "type": "ranged",
+          "range": "10\"",
+          "attacks": "2D6",
+          "hit": "4+",
+          "wound": "4+",
+          "rend": "0",
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Mercurial Aspect",
+          "type": "passive",
+          "description": "Change de forme entre Enraged et Embittered"
+        },
+        {
+          "name": "Colony of Flitterfuries",
+          "type": "active",
+          "description": "Inflige des blessures mortelles aux unités proches"
+        }
+      ],
+      "keywords": ["Hero", "Monster", "Wizard", "Sylvaneth", "Drycha Hamadreth"],
+      "spells": ["Spellcaster (1)"]
+    },
+    {
+      "id": "spirit-of-durthu",
+      "name": "Spirit of Durthu",
+      "faction": "sylvaneth",
+      "points": 320,
+      "role": "Monster",
+      "stats": {
+        "move": "8\"",
+        "health": 12,
+        "save": "3+",
+        "control": 5
+      },
+      "weapons": [
+        {
+          "name": "Massive Impaling Talons",
+          "type": "melee",
+          "attacks": 5,
+          "hit": "3+",
+          "wound": "2+",
+          "rend": "-2",
+          "damage": "3"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Ancient Protector",
+          "type": "passive",
+          "description": "+1 aux jets de touche contre les ennemis qui ont chargé"
+        },
+        {
+          "name": "Groundshaking Stomp",
+          "type": "active",
+          "description": "Inflige D3 blessures mortelles après une charge"
+        }
+      ],
+      "keywords": ["Monster", "Sylvaneth", "Treelord", "Spirit of Durthu"]
+    },
+    {
+      "id": "drekki-flynt",
+      "name": "Drekki Flynt",
+      "faction": "kharadron-overlords",
+      "points": 130,
+      "role": "Hero",
+      "stats": {
+        "move": "4\"",
+        "health": 5,
+        "save": "4+",
+        "control": 2
+      },
+      "weapons": [
+        {
+          "name": "Aethermatic Saw",
+          "type": "melee",
+          "attacks": 4,
+          "hit": "3+",
+          "wound": "3+",
+          "rend": "-1",
+          "damage": "1"
+        },
+        {
+          "name": "Vulcaniser Pistol",
+          "type": "ranged",
+          "range": "9\"",
+          "attacks": 3,
+          "hit": "3+",
+          "wound": "3+",
+          "rend": "-1",
+          "damage": "1"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Aether-Khemist",
+          "type": "passive",
+          "description": "Améliore les armes à distance des unités proches"
+        },
+        {
+          "name": "Opportunistic Privateer",
+          "type": "active",
+          "description": "Gagne des bonus en capturant des objectifs"
+        }
+      ],
+      "keywords": ["Hero", "Duardin", "Kharadron Overlords", "Skyvessel", "Drekki Flynt"]
+    }
+  ]
+}

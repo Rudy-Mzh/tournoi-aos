@@ -1,0 +1,60 @@
+{
+  "tournaments": [
+    {
+      "id": "porte-poitiers-2024",
+      "name": "La Bataille de la Porte de Poitiers",
+      "date": "2024",
+      "rounds": 5,
+      "pointsLimit": 2000,
+      "opponents": [
+        {
+          "id": 1,
+          "name": "Simon Midy",
+          "nickname": "Mictlantecuhtli",
+          "faction": "sylvaneth",
+          "formation": "wargrove-burgeoning",
+          "points": 1990,
+          "drops": 4,
+          "battleTactics": ["Scouting Force", "Restless Energy"],
+          "regiments": [
+            {
+              "name": "General's Regiment",
+              "units": [
+                { "warscrollId": "warsong-revenant", "count": 1, "reinforced": false, "points": 220, "role": "General", "enhancements": ["Spellsinger"] },
+                { "warscrollId": "dryads", "count": 1, "reinforced": true, "points": 180 },
+                { "warscrollId": "tree-revenants", "count": 1, "reinforced": false, "points": 90 }
+              ]
+            },
+            {
+              "name": "Regiment 1",
+              "units": [
+                { "warscrollId": "branchwych", "count": 1, "reinforced": false, "points": 110 },
+                { "warscrollId": "kurnoth-hunters-scythes", "count": 1, "reinforced": true, "points": 380 }
+              ]
+            },
+            {
+              "name": "Regiment 2",
+              "units": [
+                { "warscrollId": "drycha-hamadreth", "count": 1, "reinforced": false, "points": 300, "notes": "Scourge of Ghyran" },
+                { "warscrollId": "revenant-seekers", "count": 1, "reinforced": false, "points": 230, "notes": "SoG" },
+                { "warscrollId": "spite-revenants", "count": 1, "reinforced": true, "points": 160 }
+              ]
+            },
+            {
+              "name": "Regiment 3",
+              "units": [
+                { "warscrollId": "spirit-of-durthu", "count": 1, "reinforced": false, "points": 320, "artefact": "Glamourweave" }
+              ]
+            }
+          ],
+          "analysis": {
+            "strengths": "Mobilité via Wyldwoods, régénération D3, unités puissantes (Drycha, Durthu)",
+            "weaknesses": "Dépendant des Wyldwoods, vulnérable au tir de masse",
+            "keyThreats": ["Drycha Hamadreth", "Spirit of Durthu", "Kurnoth Hunters"],
+            "tacticalNotes": "Contrôler les Wyldwoods = neutraliser 50% de leur mobilité"
+          }
+        }
+      ]
+    }
+  ]
+}
