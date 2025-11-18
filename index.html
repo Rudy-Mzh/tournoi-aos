@@ -12,42 +12,56 @@
 </head>
 <body style="margin:0;padding:0;font-family:-apple-system,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh">
     <div id="root"></div>
-    <div id="loading" style="display:flex;align-items:center;justify-content:center;min-height:100vh;color:white;font-size:24px">
-        Chargement de l'application...
-    </div>
     
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState } = React;
         
-        // Masquer le loading une fois React chargé
-        document.getElementById('loading').style.display = 'none';
-        
-        // DONNÉES COMPLÈTES DES ARMÉES AOS
-        const ARMIES_DATABASE = {
+        // BASE DE DONNÉES COMPLÈTE PAR GRANDE ALLIANCE
+        const ARMIES_DB = {
+            alliances: {
+                order: { name: "Order", color: "#4169E1", icon: "⚡" },
+                chaos: { name: "Chaos", color: "#DC143C", icon: "☠️" },
+                death: { name: "Death", color: "#9370DB", icon: "💀" },
+                destruction: { name: "Destruction", color: "#FF8C00", icon: "💥" }
+            },
             factions: [
-                { id: "stormcast", name: "Stormcast Eternals", alliance: "Order", color: "#FFD700" },
-                { id: "sylvaneth", name: "Sylvaneth", alliance: "Order", color: "#228B22" },
-                { id: "daughters", name: "Daughters of Khaine", alliance: "Order", color: "#8B0000" },
-                { id: "idoneth", name: "Idoneth Deepkin", alliance: "Order", color: "#4682B4" },
-                { id: "lumineth", name: "Lumineth Realm-lords", alliance: "Order", color: "#F0E68C" },
-                { id: "kharadron", name: "Kharadron Overlords", alliance: "Order", color: "#B8860B" },
-                { id: "fyreslayers", name: "Fyreslayers", alliance: "Order", color: "#FF4500" },
-                { id: "seraphon", name: "Seraphon", alliance: "Order", color: "#32CD32" },
-                { id: "ossiarch", name: "Ossiarch Bonereapers", alliance: "Death", color: "#DEB887" },
-                { id: "nighthaunt", name: "Nighthaunt", alliance: "Death", color: "#9370DB" },
-                { id: "soulblight", name: "Soulblight Gravelords", alliance: "Death", color: "#8B0000" },
-                { id: "fec", name: "Flesh-eater Courts", alliance: "Death", color: "#8B4513" },
-                { id: "khorne", name: "Blades of Khorne", alliance: "Chaos", color: "#DC143C" },
-                { id: "tzeentch", name: "Disciples of Tzeentch", alliance: "Chaos", color: "#4169E1" },
-                { id: "nurgle", name: "Maggotkin of Nurgle", alliance: "Chaos", color: "#556B2F" },
-                { id: "slaanesh", name: "Hedonites of Slaanesh", alliance: "Chaos", color: "#FF1493" },
-                { id: "skaven", name: "Skaven", alliance: "Chaos", color: "#2F4F4F" },
-                { id: "ogors", name: "Ogor Mawtribes", alliance: "Destruction", color: "#8B4513" }
+                // ORDER
+                { id: "stormcast", name: "Stormcast Eternals", alliance: "order" },
+                { id: "sylvaneth", name: "Sylvaneth", alliance: "order" },
+                { id: "daughters", name: "Daughters of Khaine", alliance: "order" },
+                { id: "idoneth", name: "Idoneth Deepkin", alliance: "order" },
+                { id: "lumineth", name: "Lumineth Realm-lords", alliance: "order" },
+                { id: "kharadron", name: "Kharadron Overlords", alliance: "order" },
+                { id: "fyreslayers", name: "Fyreslayers", alliance: "order" },
+                { id: "seraphon", name: "Seraphon", alliance: "order" },
+                { id: "cities", name: "Cities of Sigmar", alliance: "order" },
+                
+                // CHAOS
+                { id: "khorne", name: "Blades of Khorne", alliance: "chaos" },
+                { id: "tzeentch", name: "Disciples of Tzeentch", alliance: "chaos" },
+                { id: "nurgle", name: "Maggotkin of Nurgle", alliance: "chaos" },
+                { id: "slaanesh", name: "Hedonites of Slaanesh", alliance: "chaos" },
+                { id: "slaves", name: "Slaves to Darkness", alliance: "chaos" },
+                { id: "skaven", name: "Skaven", alliance: "chaos" },
+                { id: "beasts", name: "Beasts of Chaos", alliance: "chaos" },
+                
+                // DEATH
+                { id: "ossiarch", name: "Ossiarch Bonereapers", alliance: "death" },
+                { id: "nighthaunt", name: "Nighthaunt", alliance: "death" },
+                { id: "soulblight", name: "Soulblight Gravelords", alliance: "death" },
+                { id: "fec", name: "Flesh-eater Courts", alliance: "death" },
+                
+                // DESTRUCTION
+                { id: "ogors", name: "Ogor Mawtribes", alliance: "destruction" },
+                { id: "orruks", name: "Orruk Warclans", alliance: "destruction" },
+                { id: "gloomspite", name: "Gloomspite Gitz", alliance: "destruction" },
+                { id: "behemat", name: "Sons of Behemat", alliance: "destruction" }
             ],
             warscrolls: [
                 // STORMCAST ETERNALS
                 { id: "liberators", name: "Liberators", faction: "stormcast", points: 110, role: "Battleline" },
                 { id: "vindictors", name: "Vindictors", faction: "stormcast", points: 130, role: "Battleline" },
+                { id: "judicators", name: "Judicators", faction: "stormcast", points: 180, role: "Ranged" },
                 { id: "lord-imperatant", name: "Lord-Imperatant", faction: "stormcast", points: 170, role: "Hero" },
                 { id: "knight-arcanum", name: "Knight-Arcanum", faction: "stormcast", points: 130, role: "Hero/Wizard" },
                 { id: "annihilators", name: "Annihilators", faction: "stormcast", points: 200, role: "Elite" },
@@ -60,150 +74,290 @@
                 { id: "durthu", name: "Spirit of Durthu", faction: "sylvaneth", points: 320, role: "Monster" },
                 { id: "drycha", name: "Drycha Hamadreth", faction: "sylvaneth", points: 300, role: "Monster/Hero" },
                 { id: "kurnoth-swords", name: "Kurnoth Hunters (Greatswords)", faction: "sylvaneth", points: 190, role: "Elite" },
+                { id: "kurnoth-scythes", name: "Kurnoth Hunters (Scythes)", faction: "sylvaneth", points: 190, role: "Elite" },
+                { id: "spite-revenants", name: "Spite-Revenants", faction: "sylvaneth", points: 80, role: "Infantry" },
                 
                 // DAUGHTERS OF KHAINE
                 { id: "witch-aelves", name: "Witch Aelves", faction: "daughters", points: 100, role: "Battleline" },
                 { id: "blood-sisters", name: "Blood Sisters", faction: "daughters", points: 140, role: "Elite" },
+                { id: "blood-stalkers", name: "Blood Stalkers", faction: "daughters", points: 180, role: "Ranged" },
                 { id: "morathi", name: "Morathi-Khaine", faction: "daughters", points: 680, role: "Monster/Hero" },
                 { id: "avatar-khaine", name: "Avatar of Khaine", faction: "daughters", points: 280, role: "Monster" },
+                { id: "melusai-ironscale", name: "Melusai Ironscale", faction: "daughters", points: 120, role: "Hero" },
                 
                 // IDONETH DEEPKIN
                 { id: "namarti-thralls", name: "Namarti Thralls", faction: "idoneth", points: 100, role: "Battleline" },
                 { id: "namarti-reavers", name: "Namarti Reavers", faction: "idoneth", points: 110, role: "Battleline" },
                 { id: "eidolon", name: "Eidolon of Mathlann", faction: "idoneth", points: 380, role: "Monster/Hero" },
                 { id: "volturnos", name: "Volturnos", faction: "idoneth", points: 280, role: "Hero" },
+                { id: "akhelian-guard", name: "Akhelian Guard", faction: "idoneth", points: 140, role: "Cavalry" },
                 
-                // OSSIARCH BONEREAPERS
-                { id: "mortek-guard", name: "Mortek Guard", faction: "ossiarch", points: 130, role: "Battleline" },
-                { id: "kavalos", name: "Kavalos Deathriders", faction: "ossiarch", points: 180, role: "Battleline" },
-                { id: "nagash", name: "Nagash", faction: "ossiarch", points: 900, role: "Monster/Hero/Wizard" },
-                { id: "mortisan", name: "Mortisan Soulmason", faction: "ossiarch", points: 150, role: "Hero/Wizard" },
+                // LUMINETH
+                { id: "vanari-auralan-wardens", name: "Vanari Auralan Wardens", faction: "lumineth", points: 120, role: "Battleline" },
+                { id: "vanari-sentinels", name: "Vanari Auralan Sentinels", faction: "lumineth", points: 140, role: "Ranged" },
+                { id: "avalenor", name: "Avalenor", faction: "lumineth", points: 360, role: "Monster" },
+                { id: "teclis", name: "Teclis", faction: "lumineth", points: 660, role: "Monster/Hero/Wizard" },
+                
+                // KHARADRON OVERLORDS
+                { id: "arkanaut-company", name: "Arkanaut Company", faction: "kharadron", points: 90, role: "Battleline" },
+                { id: "skywardens", name: "Skywardens", faction: "kharadron", points: 130, role: "Fast Attack" },
+                { id: "arkanaut-frigate", name: "Arkanaut Frigate", faction: "kharadron", points: 300, role: "War Machine" },
+                { id: "drekki-flynt", name: "Drekki Flynt", faction: "kharadron", points: 130, role: "Hero" },
+                
+                // FYRESLAYERS
+                { id: "vulkite-berzerkers", name: "Vulkite Berzerkers", faction: "fyreslayers", points: 90, role: "Battleline" },
+                { id: "hearthguard-berzerkers", name: "Hearthguard Berzerkers", faction: "fyreslayers", points: 140, role: "Elite" },
+                { id: "auric-runefather", name: "Auric Runefather on Magmadroth", faction: "fyreslayers", points: 320, role: "Monster/Hero" },
+                
+                // SERAPHON
+                { id: "saurus-warriors", name: "Saurus Warriors", faction: "seraphon", points: 90, role: "Battleline" },
+                { id: "skinks", name: "Skinks", faction: "seraphon", points: 60, role: "Battleline" },
+                { id: "slann", name: "Slann Starmaster", faction: "seraphon", points: 280, role: "Hero/Wizard" },
+                { id: "carnosaur", name: "Saurus Oldblood on Carnosaur", faction: "seraphon", points: 230, role: "Monster/Hero" },
+                { id: "lord-kroak", name: "Lord Kroak", faction: "seraphon", points: 430, role: "Hero/Wizard" },
+                { id: "saurus-guard", name: "Saurus Guard", faction: "seraphon", points: 100, role: "Elite" },
+                
+                // CITIES OF SIGMAR
+                { id: "freeguild-steelhelms", name: "Freeguild Steelhelms", faction: "cities", points: 100, role: "Battleline" },
+                { id: "freeguild-fusiliers", name: "Freeguild Fusiliers", faction: "cities", points: 110, role: "Ranged" },
+                { id: "dreadlord-dragon", name: "Dreadlord on Black Dragon", faction: "cities", points: 300, role: "Monster/Hero" },
                 
                 // BLADES OF KHORNE
                 { id: "bloodreavers", name: "Bloodreavers", faction: "khorne", points: 90, role: "Battleline" },
                 { id: "bloodletters", name: "Bloodletters", faction: "khorne", points: 110, role: "Battleline" },
-                { id: "bloodthirster", name: "Bloodthirster", faction: "khorne", points: 340, role: "Monster/Hero" },
+                { id: "blood-warriors", name: "Blood Warriors", faction: "khorne", points: 100, role: "Battleline" },
+                { id: "bloodthirster", name: "Bloodthirster of Insensate Rage", faction: "khorne", points: 340, role: "Monster/Hero" },
                 { id: "skarbrand", name: "Skarbrand", faction: "khorne", points: 430, role: "Monster" },
+                { id: "bloodmaster", name: "Bloodmaster", faction: "khorne", points: 90, role: "Hero" },
                 
                 // DISCIPLES OF TZEENTCH
                 { id: "pink-horrors", name: "Pink Horrors", faction: "tzeentch", points: 220, role: "Battleline" },
+                { id: "kairic-acolytes", name: "Kairic Acolytes", faction: "tzeentch", points: 100, role: "Battleline" },
                 { id: "lord-of-change", name: "Lord of Change", faction: "tzeentch", points: 380, role: "Monster/Hero/Wizard" },
                 { id: "kairos", name: "Kairos Fateweaver", faction: "tzeentch", points: 410, role: "Monster/Hero/Wizard" },
+                { id: "flamers", name: "Flamers", faction: "tzeentch", points: 110, role: "Ranged" },
+                
+                // MAGGOTKIN OF NURGLE
+                { id: "plaguebearers", name: "Plaguebearers", faction: "nurgle", points: 140, role: "Battleline" },
+                { id: "putrid-blightkings", name: "Putrid Blightkings", faction: "nurgle", points: 250, role: "Elite" },
+                { id: "great-unclean-one", name: "Great Unclean One", faction: "nurgle", points: 500, role: "Monster/Hero/Wizard" },
+                { id: "rotigus", name: "Rotigus", faction: "nurgle", points: 520, role: "Monster" },
+                
+                // HEDONITES OF SLAANESH
+                { id: "daemonettes", name: "Daemonettes", faction: "slaanesh", points: 110, role: "Battleline" },
+                { id: "blissbarb-archers", name: "Blissbarb Archers", faction: "slaanesh", points: 120, role: "Ranged" },
+                { id: "keeper-of-secrets", name: "Keeper of Secrets", faction: "slaanesh", points: 340, role: "Monster/Hero/Wizard" },
+                { id: "shalaxi", name: "Shalaxi Helbane", faction: "slaanesh", points: 380, role: "Monster/Hero" },
+                
+                // SLAVES TO DARKNESS
+                { id: "chaos-warriors", name: "Chaos Warriors", faction: "slaves", points: 90, role: "Battleline" },
+                { id: "chaos-knights", name: "Chaos Knights", faction: "slaves", points: 140, role: "Cavalry" },
+                { id: "chaos-lord-karkadrak", name: "Chaos Lord on Karkadrak", faction: "slaves", points: 240, role: "Monster/Hero" },
+                { id: "archaon", name: "Archaon the Everchosen", faction: "slaves", points: 840, role: "Monster/Hero" },
                 
                 // SKAVEN
                 { id: "clanrats", name: "Clanrats", faction: "skaven", points: 90, role: "Battleline" },
                 { id: "stormvermin", name: "Stormvermin", faction: "skaven", points: 110, role: "Battleline" },
+                { id: "plague-monks", name: "Plague Monks", faction: "skaven", points: 90, role: "Infantry" },
                 { id: "verminlord", name: "Verminlord Warpseer", faction: "skaven", points: 300, role: "Monster/Hero" },
+                { id: "grey-seer", name: "Grey Seer", faction: "skaven", points: 120, role: "Hero/Wizard" },
+                { id: "plague-furnace", name: "Plague Furnace", faction: "skaven", points: 230, role: "War Machine" },
                 
-                // SERAPHON
-                { id: "saurus-warriors", name: "Saurus Warriors", faction: "seraphon", points: 90, role: "Battleline" },
-                { id: "slann", name: "Slann Starmaster", faction: "seraphon", points: 280, role: "Hero/Wizard" },
-                { id: "carnosaur", name: "Saurus Oldblood on Carnosaur", faction: "seraphon", points: 230, role: "Monster/Hero" },
+                // BEASTS OF CHAOS
+                { id: "gors", name: "Gors", faction: "beasts", points: 70, role: "Battleline" },
+                { id: "ungors", name: "Ungors", faction: "beasts", points: 60, role: "Battleline" },
+                { id: "beastlord", name: "Beastlord", faction: "beasts", points: 100, role: "Hero" },
+                { id: "ghorgon", name: "Ghorgon", faction: "beasts", points: 180, role: "Monster" },
+                
+                // OSSIARCH BONEREAPERS
+                { id: "mortek-guard", name: "Mortek Guard", faction: "ossiarch", points: 130, role: "Battleline" },
+                { id: "kavalos", name: "Kavalos Deathriders", faction: "ossiarch", points: 180, role: "Battleline/Cavalry" },
+                { id: "nagash", name: "Nagash, Supreme Lord of the Undead", faction: "ossiarch", points: 900, role: "Monster/Hero/Wizard" },
+                { id: "mortisan", name: "Mortisan Soulmason", faction: "ossiarch", points: 150, role: "Hero/Wizard" },
+                { id: "morghast-archai", name: "Morghast Archai", faction: "ossiarch", points: 190, role: "Elite" },
+                
+                // NIGHTHAUNT
+                { id: "chainrasps", name: "Chainrasp Horde", faction: "nighthaunt", points: 90, role: "Battleline" },
+                { id: "spirit-hosts", name: "Spirit Hosts", faction: "nighthaunt", points: 125, role: "Battleline" },
+                { id: "lady-olynder", name: "Lady Olynder", faction: "nighthaunt", points: 220, role: "Hero/Wizard" },
+                { id: "black-coach", name: "Black Coach", faction: "nighthaunt", points: 280, role: "War Machine" },
+                { id: "dreadscythe-harridans", name: "Dreadscythe Harridans", faction: "nighthaunt", points: 100, role: "Infantry" },
+                
+                // SOULBLIGHT GRAVELORDS
+                { id: "deathrattle-skeletons", name: "Deathrattle Skeletons", faction: "soulblight", points: 80, role: "Battleline" },
+                { id: "blood-knights", name: "Blood Knights", faction: "soulblight", points: 210, role: "Elite/Cavalry" },
+                { id: "vampire-lord", name: "Vampire Lord", faction: "soulblight", points: 140, role: "Hero" },
+                { id: "neferata", name: "Neferata", faction: "soulblight", points: 380, role: "Monster/Hero/Wizard" },
+                { id: "vengorian-lord", name: "Vengorian Lord", faction: "soulblight", points: 280, role: "Monster/Hero" },
+                
+                // FLESH-EATER COURTS
+                { id: "crypt-ghouls", name: "Crypt Ghouls", faction: "fec", points: 70, role: "Battleline" },
+                { id: "crypt-horrors", name: "Crypt Horrors", faction: "fec", points: 160, role: "Elite" },
+                { id: "terrorgheist", name: "Terrorgheist", faction: "fec", points: 300, role: "Monster" },
+                { id: "zombie-dragon", name: "Zombie Dragon", faction: "fec", points: 360, role: "Monster" },
+                { id: "ushoran", name: "Ushoran", faction: "fec", points: 380, role: "Monster/Hero" },
+                
+                // OGOR MAWTRIBES
+                { id: "ogor-gluttons", name: "Ogor Gluttons", faction: "ogors", points: 140, role: "Battleline" },
+                { id: "ironguts", name: "Ironguts", faction: "ogors", points: 210, role: "Elite" },
+                { id: "frostlord-stonehorn", name: "Frostlord on Stonehorn", faction: "ogors", points: 430, role: "Monster/Hero" },
+                { id: "butcher", name: "Butcher", faction: "ogors", points: 140, role: "Hero/Wizard" },
+                { id: "ironblaster", name: "Ironblaster", faction: "ogors", points: 120, role: "War Machine" },
+                
+                // ORRUK WARCLANS
+                { id: "ardboys", name: "Ardboyz", faction: "orruks", points: 90, role: "Battleline" },
+                { id: "brutes", name: "Brutes", faction: "orruks", points: 140, role: "Elite" },
+                { id: "megaboss-maw-krusha", name: "Megaboss on Maw-krusha", faction: "orruks", points: 480, role: "Monster/Hero" },
+                { id: "gore-gruntas", name: "Gore-gruntas", faction: "orruks", points: 170, role: "Cavalry" },
+                
+                // GLOOMSPITE GITZ
+                { id: "stabbas", name: "Stabbas", faction: "gloomspite", points: 130, role: "Battleline" },
+                { id: "squig-hoppers", name: "Squig Hoppers", faction: "gloomspite", points: 90, role: "Fast Attack" },
+                { id: "mangler-squigs", name: "Mangler Squigs", faction: "gloomspite", points: 240, role: "Monster" },
+                { id: "loonboss-giant-cave-squig", name: "Loonboss on Giant Cave Squig", faction: "gloomspite", points: 110, role: "Hero" },
+                
+                // SONS OF BEHEMAT
+                { id: "mancrusher-gargant", name: "Mancrusher Gargant", faction: "behemat", points: 170, role: "Monster/Battleline" },
+                { id: "mega-gargant", name: "Mega-Gargant", faction: "behemat", points: 490, role: "Monster" },
+                { id: "king-brodd", name: "King Brodd", faction: "behemat", points: 530, role: "Monster/Hero" }
             ]
         };
         
         function App() {
-            const [view, setView] = useState('library');
-            const [search, setSearch] = useState('');
+            const [selectedAlliance, setSelectedAlliance] = useState(null);
             const [selectedFaction, setSelectedFaction] = useState(null);
-            const [tournaments, setTournaments] = useState([]);
+            const [search, setSearch] = useState('');
             
-            const filteredUnits = ARMIES_DATABASE.warscrolls.filter(w => {
+            const filteredFactions = selectedAlliance 
+                ? ARMIES_DB.factions.filter(f => f.alliance === selectedAlliance)
+                : ARMIES_DB.factions;
+            
+            const filteredUnits = ARMIES_DB.warscrolls.filter(w => {
                 const matchSearch = w.name.toLowerCase().includes(search.toLowerCase());
                 const matchFaction = !selectedFaction || w.faction === selectedFaction;
-                return matchSearch && matchFaction;
+                const matchAlliance = !selectedAlliance || ARMIES_DB.factions.find(f => f.id === w.faction)?.alliance === selectedAlliance;
+                return matchSearch && matchFaction && matchAlliance;
             });
             
-            return React.createElement('div', { style: { maxWidth: '1200px', margin: '0 auto', padding: '20px' } },
+            return React.createElement('div', { style: { maxWidth: '1400px', margin: '0 auto', padding: '15px' } },
                 // Header
-                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '15px', padding: '25px', marginBottom: '20px' } },
-                    React.createElement('h1', { style: { fontSize: '28px', fontWeight: 'bold', margin: '0 0 10px 0' } }, '⚔️ Age of Sigmar Companion'),
-                    React.createElement('p', { style: { margin: 0, color: '#666' } }, `${ARMIES_DATABASE.factions.length} factions • ${ARMIES_DATABASE.warscrolls.length} warscrolls`)
-                ),
-                
-                // Nav
-                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '15px', padding: '15px', marginBottom: '20px' } },
-                    React.createElement('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap' } },
-                        ['library', 'tournaments'].map(v => 
-                            React.createElement('button', { 
-                                key: v,
-                                onClick: () => setView(v),
-                                style: { 
-                                    padding: '12px 24px', 
-                                    borderRadius: '8px', 
-                                    border: 'none',
-                                    background: view === v ? '#667eea' : '#fff',
-                                    color: view === v ? '#fff' : '#333',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    boxShadow: view === v ? 'none' : '0 2px 4px rgba(0,0,0,0.1)'
-                                } 
-                            }, v === 'library' ? '📚 Bibliothèque' : '🏆 Tournois')
-                        )
+                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '20px', marginBottom: '15px' } },
+                    React.createElement('h1', { style: { fontSize: '24px', fontWeight: 'bold', margin: '0 0 8px 0' } }, '⚔️ Age of Sigmar - Toutes les Armées'),
+                    React.createElement('p', { style: { margin: 0, color: '#666', fontSize: '14px' } }, 
+                        `${ARMIES_DB.factions.length} factions • ${ARMIES_DB.warscrolls.length} warscrolls • 4 Grandes Alliances`
                     )
                 ),
                 
-                // Content
-                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '15px', padding: '25px' } },
-                    view === 'library' ? [
-                        // Search
-                        React.createElement('input', {
-                            key: 'search',
-                            type: 'text',
-                            placeholder: '🔍 Rechercher...',
-                            value: search,
-                            onChange: (e) => setSearch(e.target.value),
-                            style: { width: '100%', padding: '12px', fontSize: '16px', border: '2px solid #ddd', borderRadius: '8px', marginBottom: '20px' }
-                        }),
-                        
-                        // Factions
-                        React.createElement('h2', { key: 'h2', style: { marginBottom: '15px' } }, 'Factions'),
-                        React.createElement('div', { 
-                            key: 'factions',
-                            style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px', marginBottom: '30px' }
-                        }, ARMIES_DATABASE.factions.map(f => 
-                            React.createElement('div', {
-                                key: f.id,
-                                onClick: () => setSelectedFaction(selectedFaction === f.id ? null : f.id),
+                // Grandes Alliances
+                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px', marginBottom: '15px' } },
+                    React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '12px' } }, 'Grandes Alliances'),
+                    React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' } },
+                        Object.entries(ARMIES_DB.alliances).map(([key, alliance]) => {
+                            const factionCount = ARMIES_DB.factions.filter(f => f.alliance === key).length;
+                            return React.createElement('button', {
+                                key: key,
+                                onClick: () => {
+                                    setSelectedAlliance(selectedAlliance === key ? null : key);
+                                    setSelectedFaction(null);
+                                },
                                 style: { 
-                                    padding: '15px', 
-                                    background: selectedFaction === f.id ? '#667eea' : '#f5f5f5',
-                                    color: selectedFaction === f.id ? '#fff' : '#333',
+                                    padding: '12px',
                                     borderRadius: '8px',
-                                    cursor: 'pointer',
+                                    border: 'none',
+                                    background: selectedAlliance === key ? alliance.color : '#f5f5f5',
+                                    color: selectedAlliance === key ? '#fff' : '#333',
                                     fontWeight: '600',
                                     fontSize: '14px',
-                                    transition: 'all 0.2s',
-                                    border: selectedFaction === f.id ? '2px solid #5568d3' : '2px solid transparent'
+                                    cursor: 'pointer',
+                                    textAlign: 'center'
                                 }
-                            }, `${f.name} (${ARMIES_DATABASE.warscrolls.filter(w => w.faction === f.id).length})`)
-                        )),
-                        
-                        // Units
-                        React.createElement('h2', { key: 'h3', style: { marginBottom: '15px' } }, 
-                            selectedFaction ? `Warscrolls - ${ARMIES_DATABASE.factions.find(f => f.id === selectedFaction)?.name}` : 'Tous les Warscrolls'
-                        ),
-                        React.createElement('div', {
-                            key: 'units',
-                            style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '15px' }
-                        }, filteredUnits.map(u => 
-                            React.createElement('div', {
-                                key: u.id,
-                                style: { padding: '15px', background: '#fff', border: '2px solid #e5e5e5', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }
-                            },
-                                React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '8px' } },
-                                    React.createElement('div', { style: { fontWeight: 'bold', fontSize: '16px' } }, u.name),
-                                    React.createElement('div', { style: { color: '#667eea', fontWeight: 'bold' } }, u.points + ' pts')
-                                ),
-                                React.createElement('div', { style: { fontSize: '12px', color: '#666' } }, u.role),
-                                React.createElement('div', { style: { fontSize: '11px', color: '#999', marginTop: '4px' } }, 
-                                    ARMIES_DATABASE.factions.find(f => f.id === u.faction)?.name
-                                )
-                            )
-                        ))
-                    ] : React.createElement('div', { style: { textAlign: 'center', padding: '40px', color: '#666' } }, 
-                        'Section Tournois - En cours de développement'
+                            }, `${alliance.icon} ${alliance.name} (${factionCount})`)
+                        })
                     )
+                ),
+                
+                // Search
+                React.createElement('div', { style: { marginBottom: '15px' } },
+                    React.createElement('input', {
+                        type: 'text',
+                        placeholder: '🔍 Rechercher une unité...',
+                        value: search,
+                        onChange: (e) => setSearch(e.target.value),
+                        style: { 
+                            width: '100%', 
+                            padding: '12px', 
+                            fontSize: '16px', 
+                            border: '2px solid #ddd', 
+                            borderRadius: '8px',
+                            background: 'rgba(255,255,255,0.95)'
+                        }
+                    })
+                ),
+                
+                // Factions par alliance
+                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px', marginBottom: '15px' } },
+                    React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '12px' } }, 
+                        selectedAlliance 
+                            ? `Factions ${ARMIES_DB.alliances[selectedAlliance].name}` 
+                            : 'Toutes les Factions'
+                    ),
+                    React.createElement('div', { 
+                        style: { 
+                            display: 'grid', 
+                            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', 
+                            gap: '8px' 
+                        }
+                    }, filteredFactions.map(f => {
+                        const unitCount = ARMIES_DB.warscrolls.filter(w => w.faction === f.id).length;
+                        return React.createElement('div', {
+                            key: f.id,
+                            onClick: () => setSelectedFaction(selectedFaction === f.id ? null : f.id),
+                            style: { 
+                                padding: '12px',
+                                background: selectedFaction === f.id ? '#667eea' : '#f5f5f5',
+                                color: selectedFaction === f.id ? '#fff' : '#333',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                fontWeight: '600',
+                                fontSize: '13px',
+                                border: selectedFaction === f.id ? '2px solid #5568d3' : '2px solid transparent',
+                                transition: 'all 0.2s'
+                            }
+                        }, `${f.name} (${unitCount})`)
+                    }))
+                ),
+                
+                // Warscrolls
+                React.createElement('div', { style: { background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '15px' } },
+                    React.createElement('h2', { style: { fontSize: '18px', fontWeight: 'bold', marginBottom: '12px' } }, 
+                        `Warscrolls (${filteredUnits.length})`
+                    ),
+                    React.createElement('div', {
+                        style: { 
+                            display: 'grid', 
+                            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
+                            gap: '10px' 
+                        }
+                    }, filteredUnits.map(u => {
+                        const faction = ARMIES_DB.factions.find(f => f.id === u.faction);
+                        return React.createElement('div', {
+                            key: u.id,
+                            style: { 
+                                padding: '12px',
+                                background: '#fff',
+                                border: '2px solid #e5e5e5',
+                                borderRadius: '8px',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                            }
+                        },
+                            React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '6px' } },
+                                React.createElement('div', { style: { fontWeight: 'bold', fontSize: '14px' } }, u.name),
+                                React.createElement('div', { style: { color: '#667eea', fontWeight: 'bold', fontSize: '14px' } }, u.points + ' pts')
+                            ),
+                            React.createElement('div', { style: { fontSize: '11px', color: '#666', marginBottom: '4px' } }, u.role),
+                            React.createElement('div', { style: { fontSize: '10px', color: '#999' } }, faction?.name)
+                        )
+                    }))
                 )
             );
         }
