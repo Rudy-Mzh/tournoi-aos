@@ -1417,6 +1417,418 @@
             ]
         };
 
+        // SONS OF BEHEMAT - 100% COMPLET
+        const SONS_OF_BEHEMAT_COMPLETE = {
+            battleTraits: [
+                {
+                    name: "Mightier Makes Rightier",
+                    description: "Vous pouvez choisir une Tribu pour votre armée : Taker Tribe, Breaker Tribe, Stomper Tribe ou Boss Tribe. Chaque tribu donne des capacités spéciales."
+                },
+                {
+                    name: "Timberrr!",
+                    description: "Chaque fois qu'un modèle MEGA-GARGANT ou MANCRUSHER ami est tué, les joueurs lancent les dés. Le gagnant choisit un point à 3\" ou moins du modèle tué. Infligez D3 blessures mortelles à chaque unité à 3\" de ce point ayant une Health inférieure au modèle tué."
+                },
+                {
+                    name: "Son of Behemat",
+                    description: "Si cette unité devrait être automatiquement détruite, elle n'est pas automatiquement détruite. À la place, allouez 6 points de dégâts à cette unité."
+                },
+                {
+                    name: "Gargant Charge",
+                    description: "Une unité MEGA-GARGANT ou MANCRUSHER amie qui a chargé ce tour peut utiliser une capacité spéciale de charge."
+                }
+            ],
+
+            tribes: [
+                {
+                    name: "Taker Tribe",
+                    effect: "Pendant le déploiement, choisissez un héros SONS OF BEHEMAT ami non-unique sans artefact et donnez-lui un artefact supplémentaire. De plus, les unités amies ajoutent 1 à leurs jets de capture d'objectifs."
+                },
+                {
+                    name: "Breaker Tribe",
+                    effect: "Les MEGA-GARGANTS amis ont Ward (6+) pendant qu'ils sont en combat avec d'autres MEGA-GARGANTS amis. De plus, ils infligent 1 blessure mortelle supplémentaire avec Timberrr!"
+                },
+                {
+                    name: "Stomper Tribe",
+                    effect: "Vous pouvez choisir deux unités MEGA-GARGANT ou MANCRUSHER amies pour utiliser la capacité 'Jump Up and Down' (au lieu d'une seule)."
+                },
+                {
+                    name: "Boss Tribe",
+                    effect: "Une fois par tour, quand vous déclarez une Fight ability pour un MEGA-GARGANT, choisissez un MANCRUSHER ami entièrement à 12\" qui n'a pas encore combattu. Il peut combattre immédiatement après."
+                }
+            ],
+
+            heroicTraits: [
+                {
+                    name: "Furious Temper",
+                    type: "N'importe quel hero",
+                    effect: "Ajoutez 2 aux Attacks de toutes les armes de mêlée de ce héros."
+                },
+                {
+                    name: "Louder Than Words",
+                    type: "N'importe quel hero",
+                    effect: "Une fois par bataille, ce héros peut utiliser une capacité de commandement gratuitement (0 CP)."
+                },
+                {
+                    name: "Very Acquisitive",
+                    type: "N'importe quel hero",
+                    effect: "Ce héros peut avoir 2 artefacts au lieu d'1."
+                },
+                {
+                    name: "Grabby",
+                    type: "N'importe quel hero",
+                    effect: "Ajoutez 1 aux jets de touche pour les attaques de ce héros qui ciblent une unité ennemie contestant un objectif."
+                },
+                {
+                    name: "Mega-Grump",
+                    type: "N'importe quel hero",
+                    effect: "Ce héros a Ward (5+) après avoir subi 25 points de dégâts ou plus."
+                },
+                {
+                    name: "Terrifying Hulk",
+                    type: "N'importe quel hero",
+                    effect: "Réaction - Quand un ennemi déclare une charge à 12\" ou moins : Vous pouvez changer un dé de charge à un 1."
+                }
+            ],
+
+            artefacts: [
+                {
+                    name: "The Kingslaughter Cowl",
+                    type: "N'importe quel hero",
+                    effect: "Ajoutez 2 aux Attacks de toutes les armes de mêlée de ce héros quand il attaque un HERO ennemi."
+                },
+                {
+                    name: "Glowy Lantern",
+                    type: "N'importe quel hero",
+                    effect: "Une fois par bataille, au début de n'importe quelle phase, vous pouvez guérir D6+6 blessures allouées au porteur."
+                },
+                {
+                    name: "Club of the First Oak",
+                    type: "N'importe quel hero",
+                    effect: "Choisissez une arme de mêlée du porteur. Les attaques critiques (6 non modifié pour toucher) avec cette arme infligent 2D6 dégâts au lieu du Damage normal."
+                },
+                {
+                    name: "Extra-Calloused Feet",
+                    type: "N'importe quel hero",
+                    effect: "Le porteur peut courir et charger dans le même tour. De plus, ajoutez 1 à la Distance de Move du porteur."
+                },
+                {
+                    name: "Jaws of the Mogalodon",
+                    type: "N'importe quel hero",
+                    effect: "Choisissez une arme de mêlée du porteur. Elle gagne Crit (2 Hits)."
+                },
+                {
+                    name: "Enchanted Portcullis",
+                    type: "N'importe quel hero",
+                    effect: "Le porteur a Ward (5+)."
+                }
+            ],
+
+            warscrolls: [
+                {
+                    name: "King Brodd",
+                    points: 530,
+                    role: "Hero, Monster, Priest, Unique",
+                    category: "Heroes",
+                    move: 10,
+                    health: 45,
+                    save: 3,
+                    control: 5,
+                    keywords: ["Hero", "Monster", "Priest", "Mega-Gargant", "Sons of Behemat", "Unique", "King Brodd"],
+                    weapons: [
+                        {
+                            name: "Obelisk of Tor Crania",
+                            type: "melee",
+                            range: 3,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: 6,
+                            abilities: []
+                        },
+                        {
+                            name: "King Brodd's Massive Fists",
+                            type: "melee",
+                            range: 2,
+                            attacks: 6,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: 4,
+                            abilities: []
+                        },
+                        {
+                            name: "King Brodd's Almighty Stomp",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 2,
+                            rend: 1,
+                            damage: "D3",
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Son of Behemat",
+                            type: "Passive",
+                            effect: "Si cette unité devrait être automatiquement détruite, elle n'est pas automatiquement détruite. À la place, allouez 6 points de dégâts."
+                        },
+                        {
+                            name: "Power of Behemat",
+                            type: "Prayer (3+), Your Hero Phase",
+                            effect: "Si réussi, choisissez un effet : (1) Les MEGA-GARGANTS amis ont +1 Move jusqu'à votre prochain hero phase, (2) Guérissez D6 blessures sur tous les MEGA-GARGANTS amis, (3) Les MEGA-GARGANTS amis ajoutent 1 à leurs jets de touche jusqu'à votre prochain hero phase."
+                        },
+                        {
+                            name: "Royal Decree",
+                            type: "Once Per Battle, Your Hero Phase",
+                            effect: "Jusqu'à votre prochain hero phase, vous pouvez utiliser jusqu'à 3 Rampages par tour au lieu d'1."
+                        },
+                        {
+                            name: "Crushing Charge",
+                            type: "Passive",
+                            effect: "Si cette unité a chargé ce tour, cette unité a Strike-first pour le reste du tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Mega-Gargant (Gatebreaker)",
+                    points: 490,
+                    role: "Monster, Battleline",
+                    category: "Monsters",
+                    move: 10,
+                    health: 35,
+                    save: 4,
+                    control: 5,
+                    keywords: ["Monster", "Mega-Gargant", "Gatebreaker", "Sons of Behemat"],
+                    weapons: [
+                        {
+                            name: "Fortcrusha Flail",
+                            type: "melee",
+                            range: 3,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: 5,
+                            abilities: []
+                        },
+                        {
+                            name: "Mega-Gargant's Almighty Stomp",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 2,
+                            rend: 1,
+                            damage: "D3",
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Son of Behemat",
+                            type: "Passive",
+                            effect: "Si cette unité devrait être automatiquement détruite, elle n'est pas automatiquement détruite. À la place, allouez 6 points de dégâts."
+                        },
+                        {
+                            name: "Smash Down",
+                            type: "Once Per Turn, Any Combat Phase",
+                            effect: "Choisissez un terrain à 3\" ou moins de cette unité. Lancez un dé. Sur 3+, ce terrain est détruit (retirez-le). Toutes les unités à 3\" de ce terrain subissent D3 blessures mortelles."
+                        },
+                        {
+                            name: "Timber!",
+                            type: "Passive",
+                            effect: "Quand ce modèle est tué, lancez les dés avec votre adversaire. Le gagnant choisit un point à 3\" du modèle. Infligez D3 blessures mortelles à chaque unité à 3\" avec une Health inférieure."
+                        },
+                        {
+                            name: "Rampage: Earth-shaking Roar",
+                            type: "Once Per Turn, Your Charge Phase",
+                            effect: "Lancez un dé pour chaque unité ennemie à 15\" ou moins. Sur 4+, cette unité est Frightened jusqu'à la fin du tour."
+                        }
+                    ]
+                },
+                {
+                    name: "Mega-Gargant (Kraken-eater)",
+                    points: 490,
+                    role: "Monster, Battleline",
+                    category: "Monsters",
+                    move: 12,
+                    health: 35,
+                    save: 4,
+                    control: 5,
+                    keywords: ["Monster", "Mega-Gargant", "Kraken-eater", "Sons of Behemat"],
+                    weapons: [
+                        {
+                            name: "Shipwrecka Warclub",
+                            type: "melee",
+                            range: 3,
+                            attacks: 5,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: 4,
+                            abilities: []
+                        },
+                        {
+                            name: "Mega-Gargant's Almighty Stomp",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 2,
+                            rend: 1,
+                            damage: "D3",
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Son of Behemat",
+                            type: "Passive",
+                            effect: "Si cette unité devrait être automatiquement détruite, elle n'est pas automatiquement détruite. À la place, allouez 6 points de dégâts."
+                        },
+                        {
+                            name: "Stuff 'Em in Me Bag",
+                            type: "Once Per Turn, Any Combat Phase",
+                            effect: "Si cette unité est en combat avec une unité ennemie de taille inférieure, lancez un dé. Sur 3+, tuez instantanément D3 modèles de cette unité (après qu'elle ait combattu)."
+                        },
+                        {
+                            name: "Get Orf Me Land!",
+                            type: "Passive",
+                            effect: "Cette unité peut Run et Charge dans le même tour."
+                        },
+                        {
+                            name: "Rampage: Dead Cunning",
+                            type: "Once Per Turn, Any Hero Phase",
+                            effect: "Cette unité peut immédiatement faire un move normal. Elle peut Retreat si elle est en combat."
+                        }
+                    ]
+                },
+                {
+                    name: "Mega-Gargant (Warstomper)",
+                    points: 490,
+                    role: "Monster, Battleline",
+                    category: "Monsters",
+                    move: 10,
+                    health: 35,
+                    save: 4,
+                    control: 5,
+                    keywords: ["Monster", "Mega-Gargant", "Warstomper", "Sons of Behemat"],
+                    weapons: [
+                        {
+                            name: "Titanic Boulderclub",
+                            type: "melee",
+                            range: 3,
+                            attacks: 3,
+                            hit: 4,
+                            wound: 2,
+                            rend: 2,
+                            damage: 6,
+                            abilities: []
+                        },
+                        {
+                            name: "Mega-Gargant's Hurled Boulder",
+                            type: "ranged",
+                            range: 18,
+                            attacks: 1,
+                            hit: 3,
+                            wound: 2,
+                            rend: 2,
+                            damage: "D6",
+                            abilities: []
+                        },
+                        {
+                            name: "Mega-Gargant's Almighty Stomp",
+                            type: "melee",
+                            range: 1,
+                            attacks: 3,
+                            hit: 3,
+                            wound: 2,
+                            rend: 1,
+                            damage: "D3",
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Son of Behemat",
+                            type: "Passive",
+                            effect: "Si cette unité devrait être automatiquement détruite, elle n'est pas automatiquement détruite. À la place, allouez 6 points de dégâts."
+                        },
+                        {
+                            name: "Jump Up and Down",
+                            type: "Once Per Turn, Your Movement Phase",
+                            effect: "Lancez un dé pour chaque unité ennemie à 10\" ou moins. Sur 4+, cette unité subit D3 blessures mortelles. Sur 6+, elle subit D6 blessures mortelles."
+                        },
+                        {
+                            name: "Hurled Boulder",
+                            type: "Your Shooting Phase",
+                            effect: "Cette unité peut tirer même si elle a Run ou Retreated ce tour."
+                        },
+                        {
+                            name: "Rampage: Bellowing Mockery",
+                            type: "Once Per Turn, Enemy Hero Phase",
+                            effect: "Choisissez une unité ennemie à 15\" ou moins. Cette unité ne peut pas utiliser de capacités de commandement jusqu'à la fin de la phase."
+                        }
+                    ]
+                },
+                {
+                    name: "Mancrusher Gargants",
+                    points: 170,
+                    role: "Monster, Battleline",
+                    category: "Monsters",
+                    move: 10,
+                    health: 12,
+                    save: 5,
+                    control: 2,
+                    keywords: ["Monster", "Mancrusher", "Sons of Behemat"],
+                    weapons: [
+                        {
+                            name: "Massive Club",
+                            type: "melee",
+                            range: 2,
+                            attacks: 4,
+                            hit: 3,
+                            wound: 3,
+                            rend: 1,
+                            damage: 3,
+                            abilities: []
+                        },
+                        {
+                            name: "Mighty Kick",
+                            type: "melee",
+                            range: 1,
+                            attacks: 2,
+                            hit: 4,
+                            wound: 3,
+                            rend: 0,
+                            damage: "D3",
+                            abilities: []
+                        }
+                    ],
+                    abilities: [
+                        {
+                            name: "Son of Behemat",
+                            type: "Passive",
+                            effect: "Si cette unité devrait être automatiquement détruite, elle n'est pas automatiquement détruite. À la place, allouez 6 points de dégâts."
+                        },
+                        {
+                            name: "Timber!",
+                            type: "Passive",
+                            effect: "Quand ce modèle est tué, lancez les dés avec votre adversaire. Le gagnant choisit un point à 3\" du modèle. Infligez D3 blessures mortelles à chaque unité à 3\" avec une Health inférieure."
+                        },
+                        {
+                            name: "Stomping Charge",
+                            type: "Passive",
+                            effect: "Si cette unité a chargé ce tour, ajoutez 1 aux jets de touche pour les attaques de cette unité pour le reste du tour."
+                        }
+                    ]
+                }
+            ]
+        };
+
         // BASE DE DONNÉES SIMPLIFIÉE POUR TOUTES LES ARMÉES
         const ARMIES_DB = {
             alliances: {
@@ -1456,7 +1868,7 @@
                 { id: "ogors", name: "Ogor Mawtribes", alliance: "destruction" },
                 { id: "orruks", name: "Orruk Warclans", alliance: "destruction" },
                 { id: "gloomspite", name: "Gloomspite Gitz", alliance: "destruction" },
-                { id: "behemat", name: "Sons of Behemat", alliance: "destruction" }
+                { id: "behemat", name: "Sons of Behemat", alliance: "destruction", complete: true }
             ],
             warscrolls: [
                 // STORMCAST ETERNALS
