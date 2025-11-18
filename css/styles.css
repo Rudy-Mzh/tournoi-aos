@@ -1,8 +1,33 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     margin: 0;
     padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Optimisations mobile */
+* {
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+    .nav-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-content {
+        max-width: 95%;
+        max-height: 85vh;
+    }
+
+    .stat-block {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 .glass-effect {
